@@ -16,17 +16,17 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route element={<Root />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/event" element={<Profile />} />
-          <Route path="/payment" element={<Payment />} />
+        <Route path="/" element={<Root />}>
+          <Route index element={<Home />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="event" element={<Profile />} />
+          <Route path="payment" element={<Payment />} />
         </Route>
-        <Route path="/organizer" element={<Organizer />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/events" element={<Event />} />
-          <Route path="/approval" element={<Approval />} />
-          <Route path="/report" element={<Report />} />
+        <Route path="organizer" element={<Organizer />}>
+          <Route index element={<Dashboard />} />
+          <Route path="events" element={<Event />} />
+          <Route path="approval" element={<Approval />} />
+          <Route path="report" element={<Report />} />
         </Route>
       </Routes>
     </BrowserRouter>
