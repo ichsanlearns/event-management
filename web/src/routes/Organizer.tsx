@@ -3,14 +3,15 @@ import SideBar from "../components/SideBar";
 
 function Organizer() {
   return (
-    <>
-      <div className="flex">
-        <SideBar />
-        <div className="flex justify-center items-center bg-black w-screen h-screen text-white text-3xl font-bold">
-          <Outlet />
-        </div>
+    <div className="flex min-h-screen bg-slate-100 dark:bg-slate-900">
+      {/* Sidebar */}
+      <SideBar />
+
+      {/* Page Content */}
+      <div className="flex-1">
+        <Outlet />
       </div>
-    </>
+    </div>
   );
 }
 
