@@ -6,11 +6,217 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
+enum Category {
+  MUSIC
+  SPORT
+  THEATRE
+}
 
+enum Role {
+  CUSTOMER
+  EVENT_ORGANIZER
+}
+
+enum Types {
+  EARLYBIRD
+  REGULER
+  VIP
+}
+
+enum Status {
+  WAITING_PAYMENT
+  WAITING_CONFIRMATION
+  DONE
+  REJECTED
+  EXPIRED
+  CANCELED
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  role Role
+  referral_code String @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  Events Event[]
+  Reviewed Review[]
+  Ordered Order[]
+  Points Point[]
+  Coupon Coupon[]
+  Referring Coupon[] @relation("PointGiven")
+  
+
+  @@map("users")
+}
+
+model Event {
+  id String @id @default(uuid())
+  name String
+  price Decimal
+  description String
+  category Category
+  city String
+  available_seats Int
+  organizer_id String
+
+  start_date DateTime
+  end_date DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  eventOrganizer User @relation(fields: [organizer_id], references: [id])
+
+  Tickets Ticket[]
+  Vouchers Voucher[]
+  GotReviewed Review[]
+
+  @@map("events")
+}
+
+model Review {
+  id String @id @default(uuid())
+  user_id String
+  event_id String
+  comment String
+  rating Decimal
+
+  created_at DateTime @default(now()) 
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  Customer User @relation(fields: [user_id], references: [id])
+  Event Event @relation(fields: [event_id], references: [id])
+
+  @@map("reviews")
+}
+
+model Ticket {
+  id String @id @default(uuid())
+  event_id String
+  type Types
+  price Decimal
+  Quota Int
+
+  created_at DateTime @default(now()) 
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  EventName Event @relation(fields: [event_id], references: [id])
+  OrderedList OrderItem[]
+
+  @@map("tickets")
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  ticket_id String
+  order_id String
+  quantity Int
+  price Decimal
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  TicketType Ticket @relation(fields: [ticket_id], references: [id])
+  ListOrder Order @relation(fields: [order_id], references: [id])
+
+  @@map("order_items")
+}
+
+model Order {
+  id String @id @default(uuid())
+  customer_id String
+  status Status
+  using_point Boolean
+  total Decimal
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  OrderList OrderItem[]
+  Payment Payment?
+
+  Customer User @relation(fields: [customer_id], references: [id])
+
+  @@map("orders")
+}
+
+model Payment {
+  id String @id @default(uuid())
+  order_id String @unique
+  voucher_id String?
+  total_before Decimal
+  total Decimal
+  deadline DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  Voucher Voucher? @relation(fields: [voucher_id], references: [id])
+  Order Order @relation(fields: [order_id], references: [id])
+
+  @@map("payments")
+}
+
+model Voucher {
+  id String @id @default(uuid())
+  event_id String
+  code String @unique
+  discount_amount Int
+
+  start_date DateTime
+  end_date DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
+
+  Payments Payment[]
+  Events Event @relation(fields: [event_id], references: [id])
+
+  @@map("vouchers")
+}
+
+model Point {
+  id String @id @default(uuid())
+  user_id String
+  amount Int
+  expired_at DateTime
+
+  User User @relation(fields: [user_id], references: [id])
+  
+  
+  @@map("points")
+}
+
+model Coupon {
+  id String @id @default(uuid())
+  user_id String
+  amount Int
+  expired_at DateTime
+  referrer_id String
+
+  User User @relation(fields: [user_id], references: [id])
+  Referrer User @relation("PointGiven",fields: [referrer_id], references: [id])
+
+  @@map("coupons")
+
+}
