@@ -1,34 +1,40 @@
 import { Link, useLocation } from "react-router";
+import { LayoutDashboard, Calendar, Users, BarChart3 } from "lucide-react";
 
 function SideBar() {
   const location = useLocation();
 
   const menu = [
-    { label: "Dashboard", path: "" },
-    { label: "Events", path: "events" },
-    { label: "Approval", path: "approval" },
-    { label: "Reports", path: "report" },
+    { label: "Dashboard", path: "", icon: LayoutDashboard },
+    { label: "Events", path: "events", icon: Calendar },
+    { label: "Approval", path: "approval", icon: Users },
+    { label: "Reports", path: "report", icon: BarChart3 },
   ];
 
   return (
-    <aside className="w-[20%] min-w-[220px] h-screen bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 hidden lg:flex flex-col">
+    <aside className="w-[20%] min-w-55 h-screen bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 hidden lg:flex flex-col">
       {/* Logo */}
       <div className="p-6 text-xl font-bold text-indigo-600">EventFlow</div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 space-y-1 text-sm">
+      <nav className="flex-1 px-4 space-y-1 text-xl">
+        <p className="px-3 py-2 text-xs text-slate-400 uppercase tracking-wide">Management</p>
+
         {menu.map((item) => {
           const isActive = location.pathname === `/dashboard/${item.path}` || (item.path === "" && location.pathname === "/dashboard");
+
+          const Icon = item.icon;
 
           return (
             <Link
               key={item.label}
               to={item.path}
-              className={`block px-4 py-2 rounded-lg transition
+              className={`flex items-center gap-3 px-4 py-2 rounded-lg transition
                 ${isActive ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-medium" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"}
               `}
             >
-              {item.label}
+              <Icon className="w-4 h-4" />
+              <span>{item.label}</span>
             </Link>
           );
         })}
