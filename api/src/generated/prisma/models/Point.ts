@@ -39,6 +39,9 @@ export type PointMinAggregateOutputType = {
   user_id: string | null
   amount: number | null
   expired_at: Date | null
+  created_at: Date | null
+  updated_at: Date | null
+  deleted_at: Date | null
 }
 
 export type PointMaxAggregateOutputType = {
@@ -46,6 +49,9 @@ export type PointMaxAggregateOutputType = {
   user_id: string | null
   amount: number | null
   expired_at: Date | null
+  created_at: Date | null
+  updated_at: Date | null
+  deleted_at: Date | null
 }
 
 export type PointCountAggregateOutputType = {
@@ -53,6 +59,9 @@ export type PointCountAggregateOutputType = {
   user_id: number
   amount: number
   expired_at: number
+  created_at: number
+  updated_at: number
+  deleted_at: number
   _all: number
 }
 
@@ -70,6 +79,9 @@ export type PointMinAggregateInputType = {
   user_id?: true
   amount?: true
   expired_at?: true
+  created_at?: true
+  updated_at?: true
+  deleted_at?: true
 }
 
 export type PointMaxAggregateInputType = {
@@ -77,6 +89,9 @@ export type PointMaxAggregateInputType = {
   user_id?: true
   amount?: true
   expired_at?: true
+  created_at?: true
+  updated_at?: true
+  deleted_at?: true
 }
 
 export type PointCountAggregateInputType = {
@@ -84,6 +99,9 @@ export type PointCountAggregateInputType = {
   user_id?: true
   amount?: true
   expired_at?: true
+  created_at?: true
+  updated_at?: true
+  deleted_at?: true
   _all?: true
 }
 
@@ -178,6 +196,9 @@ export type PointGroupByOutputType = {
   user_id: string
   amount: number
   expired_at: Date
+  created_at: Date
+  updated_at: Date
+  deleted_at: Date | null
   _count: PointCountAggregateOutputType | null
   _avg: PointAvgAggregateOutputType | null
   _sum: PointSumAggregateOutputType | null
@@ -208,6 +229,9 @@ export type PointWhereInput = {
   user_id?: Prisma.StringFilter<"Point"> | string
   amount?: Prisma.IntFilter<"Point"> | number
   expired_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  created_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableFilter<"Point"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -216,6 +240,9 @@ export type PointOrderByWithRelationInput = {
   user_id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
   User?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -227,6 +254,9 @@ export type PointWhereUniqueInput = Prisma.AtLeast<{
   user_id?: Prisma.StringFilter<"Point"> | string
   amount?: Prisma.IntFilter<"Point"> | number
   expired_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  created_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableFilter<"Point"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -235,6 +265,9 @@ export type PointOrderByWithAggregationInput = {
   user_id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PointCountOrderByAggregateInput
   _avg?: Prisma.PointAvgOrderByAggregateInput
   _max?: Prisma.PointMaxOrderByAggregateInput
@@ -250,12 +283,18 @@ export type PointScalarWhereWithAggregatesInput = {
   user_id?: Prisma.StringWithAggregatesFilter<"Point"> | string
   amount?: Prisma.IntWithAggregatesFilter<"Point"> | number
   expired_at?: Prisma.DateTimeWithAggregatesFilter<"Point"> | Date | string
+  created_at?: Prisma.DateTimeWithAggregatesFilter<"Point"> | Date | string
+  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Point"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Point"> | Date | string | null
 }
 
 export type PointCreateInput = {
   id?: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
   User: Prisma.UserCreateNestedOneWithoutPointsInput
 }
 
@@ -264,12 +303,18 @@ export type PointUncheckedCreateInput = {
   user_id: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type PointUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   User?: Prisma.UserUpdateOneRequiredWithoutPointsNestedInput
 }
 
@@ -278,6 +323,9 @@ export type PointUncheckedUpdateInput = {
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PointCreateManyInput = {
@@ -285,12 +333,18 @@ export type PointCreateManyInput = {
   user_id: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type PointUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PointUncheckedUpdateManyInput = {
@@ -298,6 +352,9 @@ export type PointUncheckedUpdateManyInput = {
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PointListRelationFilter = {
@@ -315,6 +372,9 @@ export type PointCountOrderByAggregateInput = {
   user_id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrder
 }
 
 export type PointAvgOrderByAggregateInput = {
@@ -326,6 +386,9 @@ export type PointMaxOrderByAggregateInput = {
   user_id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrder
 }
 
 export type PointMinOrderByAggregateInput = {
@@ -333,6 +396,9 @@ export type PointMinOrderByAggregateInput = {
   user_id?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrder
 }
 
 export type PointSumOrderByAggregateInput = {
@@ -385,12 +451,18 @@ export type PointCreateWithoutUserInput = {
   id?: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type PointUncheckedCreateWithoutUserInput = {
   id?: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type PointCreateOrConnectWithoutUserInput = {
@@ -427,30 +499,45 @@ export type PointScalarWhereInput = {
   user_id?: Prisma.StringFilter<"Point"> | string
   amount?: Prisma.IntFilter<"Point"> | number
   expired_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  created_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Point"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableFilter<"Point"> | Date | string | null
 }
 
 export type PointCreateManyUserInput = {
   id?: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type PointUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PointUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PointUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -460,6 +547,9 @@ export type PointSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   user_id?: boolean
   amount?: boolean
   expired_at?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["point"]>
 
@@ -468,6 +558,9 @@ export type PointSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   user_id?: boolean
   amount?: boolean
   expired_at?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["point"]>
 
@@ -476,6 +569,9 @@ export type PointSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   user_id?: boolean
   amount?: boolean
   expired_at?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["point"]>
 
@@ -484,9 +580,12 @@ export type PointSelectScalar = {
   user_id?: boolean
   amount?: boolean
   expired_at?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
 }
 
-export type PointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "amount" | "expired_at", ExtArgs["result"]["point"]>
+export type PointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "amount" | "expired_at" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["point"]>
 export type PointInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -507,6 +606,9 @@ export type $PointPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     user_id: string
     amount: number
     expired_at: Date
+    created_at: Date
+    updated_at: Date
+    deleted_at: Date | null
   }, ExtArgs["result"]["point"]>
   composites: {}
 }
@@ -935,6 +1037,9 @@ export interface PointFieldRefs {
   readonly user_id: Prisma.FieldRef<"Point", 'String'>
   readonly amount: Prisma.FieldRef<"Point", 'Int'>
   readonly expired_at: Prisma.FieldRef<"Point", 'DateTime'>
+  readonly created_at: Prisma.FieldRef<"Point", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"Point", 'DateTime'>
+  readonly deleted_at: Prisma.FieldRef<"Point", 'DateTime'>
 }
     
 

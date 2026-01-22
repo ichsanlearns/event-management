@@ -28,6 +28,8 @@ enum Types {
   EARLYBIRD
   REGULER
   VIP
+  FULL_EVENT
+  DAILY_PASS
 }
 
 enum Status {
@@ -199,7 +201,12 @@ model Point {
   id String @id @default(uuid())
   user_id String
   amount Int
+
   expired_at DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
 
   User User @relation(fields: [user_id], references: [id])
   
@@ -213,6 +220,10 @@ model Coupon {
   amount Int
   expired_at DateTime
   referrer_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
 
   User User @relation(fields: [user_id], references: [id])
   Referrer User @relation("PointGiven",fields: [referrer_id], references: [id])

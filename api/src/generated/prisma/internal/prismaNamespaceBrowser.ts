@@ -203,7 +203,10 @@ export const PointScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
   amount: 'amount',
-  expired_at: 'expired_at'
+  expired_at: 'expired_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
 } as const
 
 export type PointScalarFieldEnum = (typeof PointScalarFieldEnum)[keyof typeof PointScalarFieldEnum]
@@ -214,7 +217,10 @@ export const CouponScalarFieldEnum = {
   user_id: 'user_id',
   amount: 'amount',
   expired_at: 'expired_at',
-  referrer_id: 'referrer_id'
+  referrer_id: 'referrer_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
 } as const
 
 export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]

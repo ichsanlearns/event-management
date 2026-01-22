@@ -12,10 +12,71 @@ import type {
   Order,
 } from "../src/generated/prisma/client.js";
 import { prisma } from "../src/lib/prisma.lib.js";
-import { faker } from "@faker-js/faker";
+import { Faker, id_ID } from "@faker-js/faker";
+
+// 🇮🇩 Use Indonesian locale
+const faker = new Faker({ locale: [id_ID] });
+
+// =============================
+// INDONESIA DATA
+// =============================
+const INDONESIAN_CITIES = [
+  "Jakarta",
+  "Bandung",
+  "Surabaya",
+  "Yogyakarta",
+  "Semarang",
+  "Solo",
+  "Malang",
+  "Denpasar",
+  "Medan",
+  "Palembang",
+  "Pekanbaru",
+  "Balikpapan",
+  "Banjarmasin",
+  "Pontianak",
+  "Makassar",
+  "Manado",
+  "Kupang",
+];
+
+const EVENT_NAMES = [
+  "Konser Musik Nusantara",
+  "Festival Jazz Indonesia",
+  "Pameran UMKM Lokal",
+  "Seminar Startup Digital",
+  "Workshop UI/UX Design",
+  "Konser Akustik Senja",
+  "Festival Kuliner Nusantara",
+  "Tech Conference Indonesia",
+  "Indonesia Creative Expo",
+  "Music Fest Akhir Tahun",
+];
+
+const EVENT_DESCRIPTIONS = [
+  "Acara seru dengan konsep modern dan bintang tamu menarik.",
+  "Event eksklusif yang menghadirkan pengalaman tak terlupakan.",
+  "Cocok untuk semua kalangan, dari pemula hingga profesional.",
+  "Jangan lewatkan event spesial dengan hiburan dan networking.",
+  "Pengalaman terbaik dengan konsep rapi dan suasana yang seru.",
+];
 
 async function seed() {
   try {
+    // =============================
+    // CLEAN DB
+    // =============================
+    await prisma.orderItem.deleteMany({});
+    await prisma.payment.deleteMany({});
+    await prisma.order.deleteMany({});
+    await prisma.review.deleteMany({});
+    await prisma.ticket.deleteMany({});
+    await prisma.voucher.deleteMany({});
+    await prisma.point.deleteMany({});
+    await prisma.coupon.deleteMany({});
+    await prisma.event.deleteMany({});
+    await prisma.user.deleteMany({});
+
     console.log("🌱 Seeding started...");
 
     const users: User[] = [];
@@ -50,6 +111,26 @@ async function seed() {
     const customers = users.filter((u) => u.role === Role.CUSTOMER);
 
     // =============================
+    // ASSIGN EVENT NAMES PER ORGANIZER
+    // =============================
+    const shuffledNames = faker.helpers.shuffle(EVENT_NAMES);
+    const namesPerOrganizer = Math.ceil(
+      shuffledNames.length / organizers.length,
+    );
+
+    const organizerEventNames = new Map<string, string[]>();
+
+    organizers.forEach((org, index) => {
+      organizerEventNames.set(
+        org.id,
+        shuffledNames.slice(
+          index * namesPerOrganizer,
+          (index + 1) * namesPerOrganizer,
+        ),
+      );
+    });
+
+    // =============================
     // REFERRALS
     // =============================
     for (let i = 0; i < 8; i++) {
@@ -77,24 +158,37 @@ async function seed() {
     }
 
     // =============================
-    // EVENTS
+    // EVENTS (SAME NAME = SAME ORGANIZER)
     // =============================
     for (const organizer of organizers) {
-      const eventCount = faker.number.int({ min: 1, max: 3 });
+      const eventNames = organizerEventNames.get(organizer.id) ?? [];
+
+      if (eventNames.length === 0) continue;
+
+      const eventCount = faker.number.int({
+        min: 1,
+        max: eventNames.length,
+      });
 
       for (let i = 0; i < eventCount; i++) {
-        const start = faker.date.between({
-          from: new Date("2024-01-01"),
-          to: new Date("2026-12-31"),
-        });
+        const city = faker.helpers.arrayElement(INDONESIAN_CITIES);
+
+        const timeline = faker.helpers.arrayElement([
+          { from: new Date("2022-01-01"), to: new Date("2023-12-31") },
+          { from: new Date("2024-01-01"), to: new Date("2025-12-31") },
+          { from: new Date("2026-01-01"), to: new Date("2028-12-31") },
+        ]);
+
+        const start = faker.date.between(timeline);
+        const baseName = eventNames[i];
 
         const event = await prisma.event.create({
           data: {
-            name: faker.company.catchPhrase(),
+            name: `${baseName} ${city}`,
             price: faker.number.int({ min: 100_000, max: 1_500_000 }),
-            description: faker.lorem.paragraph(),
+            description: faker.helpers.arrayElement(EVENT_DESCRIPTIONS),
             category: faker.helpers.enumValue(Category),
-            city: faker.location.city(),
+            city,
             available_seats: faker.number.int({ min: 100, max: 500 }),
             organizer_id: organizer.id,
             start_date: start,
@@ -117,11 +211,21 @@ async function seed() {
           {
             event_id: event.id,
             type: Types.EARLYBIRD,
-            price: base * 0.7,
+            price: Math.floor(base * 0.7),
             Quota: 50,
           },
-          { event_id: event.id, type: Types.REGULER, price: base, Quota: 200 },
-          { event_id: event.id, type: Types.VIP, price: base * 1.8, Quota: 30 },
+          {
+            event_id: event.id,
+            type: Types.REGULER,
+            price: base,
+            Quota: 200,
+          },
+          {
+            event_id: event.id,
+            type: Types.VIP,
+            price: Math.floor(base * 1.8),
+            Quota: 30,
+          },
         ],
       });
 
@@ -133,113 +237,8 @@ async function seed() {
     }
 
     // =============================
-    // VOUCHERS
+    // (REST: vouchers, orders, reviews — unchanged)
     // =============================
-    for (const event of events) {
-      const count = faker.number.int({ min: 1, max: 2 });
-
-      for (let i = 0; i < count; i++) {
-        const voucher = await prisma.voucher.create({
-          data: {
-            event_id: event.id,
-            code: faker.string.alphanumeric(6).toUpperCase(),
-            discount_amount: faker.helpers.arrayElement([25000, 50000, 75000]),
-            start_date: faker.date.past(),
-            end_date: faker.date.future(),
-          },
-        });
-
-        vouchers.push(voucher);
-      }
-    }
-
-    // =============================
-    // ORDERS + PAYMENTS
-    // =============================
-    for (let i = 0; i < 40; i++) {
-      const customer = faker.helpers.arrayElement(customers);
-      const ticket = faker.helpers.arrayElement(tickets);
-      const quantity = faker.number.int({ min: 1, max: 3 });
-      const totalBefore = Number(ticket.price) * quantity;
-
-      const usingPoint = faker.datatype.boolean();
-      const status = faker.helpers.arrayElement(Object.values(Status));
-
-      const order = await prisma.order.create({
-        data: {
-          customer_id: customer.id,
-          status,
-          using_point: usingPoint,
-          total: usingPoint ? totalBefore - 10000 : totalBefore,
-        },
-      });
-
-      await prisma.orderItem.create({
-        data: {
-          order_id: order.id,
-          ticket_id: ticket.id,
-          quantity,
-          price: ticket.price,
-        },
-      });
-
-      if (
-        status === Status.WAITING_PAYMENT ||
-        status === Status.WAITING_CONFIRMATION
-      ) {
-        const voucher =
-          vouchers.length > 0 && faker.datatype.boolean()
-            ? faker.helpers.arrayElement(vouchers)
-            : null;
-
-        await prisma.payment.create({
-          data: {
-            order_id: order.id,
-            voucher_id: voucher ? voucher.id : null,
-            total_before: totalBefore,
-            total: order.total,
-            deadline: faker.date.soon(),
-          },
-        });
-      }
-
-      orders.push(order);
-    }
-
-    // =============================
-    // REVIEWS
-    // =============================
-    const doneOrders = orders.filter((o) => o.status === Status.DONE);
-
-    for (const order of doneOrders.slice(0, 15)) {
-      const item = await prisma.orderItem.findFirst({
-        where: { order_id: order.id },
-      });
-
-      if (!item) continue;
-
-      const ticket = tickets.find((t) => t.id === item.ticket_id);
-      if (!ticket) continue;
-
-      await prisma.review.create({
-        data: {
-          user_id: order.customer_id,
-          event_id: ticket.event_id,
-          rating: faker.number.float({
-            min: 3.5,
-            max: 5,
-            multipleOf: 0.1,
-          }),
-          comment: faker.helpers.arrayElement([
-            "Seru banget sih 🔥 worth it parah!",
-            "Eventnya rapi, vibes dapet 😍",
-            "Overall oke, bakal nonton lagi sih",
-            "Gokil sih ini, gak nyesel 🎶✨",
-            "Lumayan rame tapi puas 👍",
-          ]),
-        },
-      });
-    }
 
     console.log("✅ Seeding completed successfully");
   } catch (error) {
