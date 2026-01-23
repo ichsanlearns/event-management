@@ -20,3 +20,9 @@ export async function getByEmail(email: string, password: string) {
     select: { password: true },
   });
 }
+
+export async function getByReferral(referralCode: string) {
+  return await prisma.user.findUnique({
+    where: { referral_code: referralCode },
+  });
+}

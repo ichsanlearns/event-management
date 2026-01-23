@@ -1,10 +1,13 @@
 import { type Request, type Response } from "express";
 
-import { create, getByEmail } from "../services/auth.service.js";
+import { create, getByEmail, getByReferral } from "../services/auth.service.js";
 import { Role } from "../generated/prisma/enums.js";
+import { generateReferralCode } from "../utils/referral.util.js";
 
 export async function register(req: Request, res: Response) {
   const { name, email, password, role } = req.body;
+  let bool = true;
+  let referralCode = "referral";
 
   if (!name) {
     return res.status(404).json({ message: "Tolong isi nama anda!" });
@@ -24,12 +27,19 @@ export async function register(req: Request, res: Response) {
       .json({ message: "Tolong isi role anda yang benar!" });
   }
 
-  const referralCode = "ABC123";
-
   const userExist = await getByEmail(email, password);
 
   if (userExist) {
     return res.status(400).json({ message: "Email sudah terdaftar!" });
+  }
+
+  while (true) {
+    referralCode = generateReferralCode();
+    const existReferral = await getByReferral(referralCode);
+
+    if (!existReferral) {
+      break;
+    }
   }
 
   const userData = await create(name, email, password, role, referralCode);
