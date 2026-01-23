@@ -40,6 +40,9 @@ export type CouponMinAggregateOutputType = {
   amount: number | null
   expired_at: Date | null
   referrer_id: string | null
+  created_at: Date | null
+  updated_at: Date | null
+  deleted_at: Date | null
 }
 
 export type CouponMaxAggregateOutputType = {
@@ -48,6 +51,9 @@ export type CouponMaxAggregateOutputType = {
   amount: number | null
   expired_at: Date | null
   referrer_id: string | null
+  created_at: Date | null
+  updated_at: Date | null
+  deleted_at: Date | null
 }
 
 export type CouponCountAggregateOutputType = {
@@ -56,6 +62,9 @@ export type CouponCountAggregateOutputType = {
   amount: number
   expired_at: number
   referrer_id: number
+  created_at: number
+  updated_at: number
+  deleted_at: number
   _all: number
 }
 
@@ -74,6 +83,9 @@ export type CouponMinAggregateInputType = {
   amount?: true
   expired_at?: true
   referrer_id?: true
+  created_at?: true
+  updated_at?: true
+  deleted_at?: true
 }
 
 export type CouponMaxAggregateInputType = {
@@ -82,6 +94,9 @@ export type CouponMaxAggregateInputType = {
   amount?: true
   expired_at?: true
   referrer_id?: true
+  created_at?: true
+  updated_at?: true
+  deleted_at?: true
 }
 
 export type CouponCountAggregateInputType = {
@@ -90,6 +105,9 @@ export type CouponCountAggregateInputType = {
   amount?: true
   expired_at?: true
   referrer_id?: true
+  created_at?: true
+  updated_at?: true
+  deleted_at?: true
   _all?: true
 }
 
@@ -185,6 +203,9 @@ export type CouponGroupByOutputType = {
   amount: number
   expired_at: Date
   referrer_id: string
+  created_at: Date
+  updated_at: Date
+  deleted_at: Date | null
   _count: CouponCountAggregateOutputType | null
   _avg: CouponAvgAggregateOutputType | null
   _sum: CouponSumAggregateOutputType | null
@@ -216,6 +237,9 @@ export type CouponWhereInput = {
   amount?: Prisma.IntFilter<"Coupon"> | number
   expired_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
   referrer_id?: Prisma.StringFilter<"Coupon"> | string
+  created_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableFilter<"Coupon"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   Referrer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -226,6 +250,9 @@ export type CouponOrderByWithRelationInput = {
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
   referrer_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
   User?: Prisma.UserOrderByWithRelationInput
   Referrer?: Prisma.UserOrderByWithRelationInput
 }
@@ -239,6 +266,9 @@ export type CouponWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.IntFilter<"Coupon"> | number
   expired_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
   referrer_id?: Prisma.StringFilter<"Coupon"> | string
+  created_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableFilter<"Coupon"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   Referrer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -249,6 +279,9 @@ export type CouponOrderByWithAggregationInput = {
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
   referrer_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CouponCountOrderByAggregateInput
   _avg?: Prisma.CouponAvgOrderByAggregateInput
   _max?: Prisma.CouponMaxOrderByAggregateInput
@@ -265,12 +298,18 @@ export type CouponScalarWhereWithAggregatesInput = {
   amount?: Prisma.IntWithAggregatesFilter<"Coupon"> | number
   expired_at?: Prisma.DateTimeWithAggregatesFilter<"Coupon"> | Date | string
   referrer_id?: Prisma.StringWithAggregatesFilter<"Coupon"> | string
+  created_at?: Prisma.DateTimeWithAggregatesFilter<"Coupon"> | Date | string
+  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Coupon"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Coupon"> | Date | string | null
 }
 
 export type CouponCreateInput = {
   id?: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
   User: Prisma.UserCreateNestedOneWithoutCouponInput
   Referrer: Prisma.UserCreateNestedOneWithoutReferringInput
 }
@@ -281,12 +320,18 @@ export type CouponUncheckedCreateInput = {
   amount: number
   expired_at: Date | string
   referrer_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type CouponUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   User?: Prisma.UserUpdateOneRequiredWithoutCouponNestedInput
   Referrer?: Prisma.UserUpdateOneRequiredWithoutReferringNestedInput
 }
@@ -297,6 +342,9 @@ export type CouponUncheckedUpdateInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referrer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CouponCreateManyInput = {
@@ -305,12 +353,18 @@ export type CouponCreateManyInput = {
   amount: number
   expired_at: Date | string
   referrer_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type CouponUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CouponUncheckedUpdateManyInput = {
@@ -319,6 +373,9 @@ export type CouponUncheckedUpdateManyInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referrer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CouponListRelationFilter = {
@@ -337,6 +394,9 @@ export type CouponCountOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
   referrer_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrder
 }
 
 export type CouponAvgOrderByAggregateInput = {
@@ -349,6 +409,9 @@ export type CouponMaxOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
   referrer_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrder
 }
 
 export type CouponMinOrderByAggregateInput = {
@@ -357,6 +420,9 @@ export type CouponMinOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   expired_at?: Prisma.SortOrder
   referrer_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  deleted_at?: Prisma.SortOrder
 }
 
 export type CouponSumOrderByAggregateInput = {
@@ -451,6 +517,9 @@ export type CouponCreateWithoutUserInput = {
   id?: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
   Referrer: Prisma.UserCreateNestedOneWithoutReferringInput
 }
 
@@ -459,6 +528,9 @@ export type CouponUncheckedCreateWithoutUserInput = {
   amount: number
   expired_at: Date | string
   referrer_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type CouponCreateOrConnectWithoutUserInput = {
@@ -475,6 +547,9 @@ export type CouponCreateWithoutReferrerInput = {
   id?: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
   User: Prisma.UserCreateNestedOneWithoutCouponInput
 }
 
@@ -483,6 +558,9 @@ export type CouponUncheckedCreateWithoutReferrerInput = {
   user_id: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type CouponCreateOrConnectWithoutReferrerInput = {
@@ -520,6 +598,9 @@ export type CouponScalarWhereInput = {
   amount?: Prisma.IntFilter<"Coupon"> | number
   expired_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
   referrer_id?: Prisma.StringFilter<"Coupon"> | string
+  created_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Coupon"> | Date | string
+  deleted_at?: Prisma.DateTimeNullableFilter<"Coupon"> | Date | string | null
 }
 
 export type CouponUpsertWithWhereUniqueWithoutReferrerInput = {
@@ -543,6 +624,9 @@ export type CouponCreateManyUserInput = {
   amount: number
   expired_at: Date | string
   referrer_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type CouponCreateManyReferrerInput = {
@@ -550,12 +634,18 @@ export type CouponCreateManyReferrerInput = {
   user_id: string
   amount: number
   expired_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
 }
 
 export type CouponUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Referrer?: Prisma.UserUpdateOneRequiredWithoutReferringNestedInput
 }
 
@@ -564,6 +654,9 @@ export type CouponUncheckedUpdateWithoutUserInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referrer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CouponUncheckedUpdateManyWithoutUserInput = {
@@ -571,12 +664,18 @@ export type CouponUncheckedUpdateManyWithoutUserInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referrer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CouponUpdateWithoutReferrerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   User?: Prisma.UserUpdateOneRequiredWithoutCouponNestedInput
 }
 
@@ -585,6 +684,9 @@ export type CouponUncheckedUpdateWithoutReferrerInput = {
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CouponUncheckedUpdateManyWithoutReferrerInput = {
@@ -592,6 +694,9 @@ export type CouponUncheckedUpdateManyWithoutReferrerInput = {
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   expired_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -602,6 +707,9 @@ export type CouponSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   amount?: boolean
   expired_at?: boolean
   referrer_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Referrer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["coupon"]>
@@ -612,6 +720,9 @@ export type CouponSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   amount?: boolean
   expired_at?: boolean
   referrer_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Referrer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["coupon"]>
@@ -622,6 +733,9 @@ export type CouponSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   amount?: boolean
   expired_at?: boolean
   referrer_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Referrer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["coupon"]>
@@ -632,9 +746,12 @@ export type CouponSelectScalar = {
   amount?: boolean
   expired_at?: boolean
   referrer_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  deleted_at?: boolean
 }
 
-export type CouponOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "amount" | "expired_at" | "referrer_id", ExtArgs["result"]["coupon"]>
+export type CouponOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "amount" | "expired_at" | "referrer_id" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["coupon"]>
 export type CouponInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Referrer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -660,6 +777,9 @@ export type $CouponPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     amount: number
     expired_at: Date
     referrer_id: string
+    created_at: Date
+    updated_at: Date
+    deleted_at: Date | null
   }, ExtArgs["result"]["coupon"]>
   composites: {}
 }
@@ -1090,6 +1210,9 @@ export interface CouponFieldRefs {
   readonly amount: Prisma.FieldRef<"Coupon", 'Int'>
   readonly expired_at: Prisma.FieldRef<"Coupon", 'DateTime'>
   readonly referrer_id: Prisma.FieldRef<"Coupon", 'String'>
+  readonly created_at: Prisma.FieldRef<"Coupon", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"Coupon", 'DateTime'>
+  readonly deleted_at: Prisma.FieldRef<"Coupon", 'DateTime'>
 }
     
 

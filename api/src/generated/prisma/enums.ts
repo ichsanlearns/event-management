@@ -29,7 +29,9 @@ export type Role = (typeof Role)[keyof typeof Role]
 export const Types = {
   EARLYBIRD: 'EARLYBIRD',
   REGULER: 'REGULER',
-  VIP: 'VIP'
+  VIP: 'VIP',
+  FULL_EVENT: 'FULL_EVENT',
+  DAILY_PASS: 'DAILY_PASS'
 } as const
 
 export type Types = (typeof Types)[keyof typeof Types]
