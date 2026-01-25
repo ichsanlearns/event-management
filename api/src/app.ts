@@ -5,6 +5,7 @@ import express, {
 } from "express";
 
 import authRoutes from "./routes/auth.route.js";
+import eventRoutes from "./routes/event.route.js";
 
 const app: Application = express();
 const PORT: number = 8000;
@@ -18,6 +19,7 @@ app.get("/api/status", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/event", eventRoutes);
 
 app.listen(PORT, () => console.info(`Server is listening on port: ${PORT}`));
 
