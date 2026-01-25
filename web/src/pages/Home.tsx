@@ -1,5 +1,7 @@
+import Card from "../components/Card";
+
 function Home() {
-  return <main>Home</main>;
+  return <main><Card /></main>;
 }
 
 export default Home;

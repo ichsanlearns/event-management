@@ -4,6 +4,8 @@ import express, {
   type Response,
 } from "express";
 
+import cors from "cors";
+
 import authRoutes from "./routes/auth.route.js";
 import eventRoutes from "./routes/event.route.js";
 
@@ -11,6 +13,7 @@ const app: Application = express();
 const PORT: number = 8000;
 
 app.use(express.json());
+app.use(cors({origin: `${process.env.WEB_URL}`}));
 
 app.get("/api/status", (req: Request, res: Response) => {
   res
@@ -19,7 +22,7 @@ app.get("/api/status", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.use("/api/event", eventRoutes);
+app.use("/api/events", eventRoutes);
 
 app.listen(PORT, () => console.info(`Server is listening on port: ${PORT}`));
 
