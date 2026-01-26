@@ -103,6 +103,7 @@ export const EventScalarFieldEnum = {
   city: 'city',
   available_seats: 'available_seats',
   organizer_id: 'organizer_id',
+  image: 'image',
   start_date: 'start_date',
   end_date: 'end_date',
   created_at: 'created_at',

@@ -45,6 +45,7 @@ export type EventMinAggregateOutputType = {
   city: string | null
   available_seats: number | null
   organizer_id: string | null
+  image: string | null
   start_date: Date | null
   end_date: Date | null
   created_at: Date | null
@@ -61,6 +62,7 @@ export type EventMaxAggregateOutputType = {
   city: string | null
   available_seats: number | null
   organizer_id: string | null
+  image: string | null
   start_date: Date | null
   end_date: Date | null
   created_at: Date | null
@@ -77,6 +79,7 @@ export type EventCountAggregateOutputType = {
   city: number
   available_seats: number
   organizer_id: number
+  image: number
   start_date: number
   end_date: number
   created_at: number
@@ -105,6 +108,7 @@ export type EventMinAggregateInputType = {
   city?: true
   available_seats?: true
   organizer_id?: true
+  image?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -121,6 +125,7 @@ export type EventMaxAggregateInputType = {
   city?: true
   available_seats?: true
   organizer_id?: true
+  image?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -137,6 +142,7 @@ export type EventCountAggregateInputType = {
   city?: true
   available_seats?: true
   organizer_id?: true
+  image?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -240,6 +246,7 @@ export type EventGroupByOutputType = {
   city: string
   available_seats: number
   organizer_id: string
+  image: string | null
   start_date: Date
   end_date: Date | null
   created_at: Date
@@ -279,6 +286,7 @@ export type EventWhereInput = {
   city?: Prisma.StringFilter<"Event"> | string
   available_seats?: Prisma.IntFilter<"Event"> | number
   organizer_id?: Prisma.StringFilter<"Event"> | string
+  image?: Prisma.StringNullableFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -299,6 +307,7 @@ export type EventOrderByWithRelationInput = {
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -322,6 +331,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   city?: Prisma.StringFilter<"Event"> | string
   available_seats?: Prisma.IntFilter<"Event"> | number
   organizer_id?: Prisma.StringFilter<"Event"> | string
+  image?: Prisma.StringNullableFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -342,6 +352,7 @@ export type EventOrderByWithAggregationInput = {
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -366,6 +377,7 @@ export type EventScalarWhereWithAggregatesInput = {
   city?: Prisma.StringWithAggregatesFilter<"Event"> | string
   available_seats?: Prisma.IntWithAggregatesFilter<"Event"> | number
   organizer_id?: Prisma.StringWithAggregatesFilter<"Event"> | string
+  image?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -381,6 +393,7 @@ export type EventCreateInput = {
   category: $Enums.Category
   city: string
   available_seats: number
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -401,6 +414,7 @@ export type EventUncheckedCreateInput = {
   city: string
   available_seats: number
   organizer_id: string
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -419,6 +433,7 @@ export type EventUpdateInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -439,6 +454,7 @@ export type EventUncheckedUpdateInput = {
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,6 +474,7 @@ export type EventCreateManyInput = {
   city: string
   available_seats: number
   organizer_id: string
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -473,6 +490,7 @@ export type EventUpdateManyMutationInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -489,6 +507,7 @@ export type EventUncheckedUpdateManyInput = {
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -515,6 +534,7 @@ export type EventCountOrderByAggregateInput = {
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -536,6 +556,7 @@ export type EventMaxOrderByAggregateInput = {
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -552,6 +573,7 @@ export type EventMinOrderByAggregateInput = {
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -631,6 +653,10 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type EventCreateNestedOneWithoutGotReviewedInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutGotReviewedInput, Prisma.EventUncheckedCreateWithoutGotReviewedInput>
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutGotReviewedInput
@@ -681,6 +707,7 @@ export type EventCreateWithoutEventOrganizerInput = {
   category: $Enums.Category
   city: string
   available_seats: number
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -699,6 +726,7 @@ export type EventUncheckedCreateWithoutEventOrganizerInput = {
   category: $Enums.Category
   city: string
   available_seats: number
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -747,6 +775,7 @@ export type EventScalarWhereInput = {
   city?: Prisma.StringFilter<"Event"> | string
   available_seats?: Prisma.IntFilter<"Event"> | number
   organizer_id?: Prisma.StringFilter<"Event"> | string
+  image?: Prisma.StringNullableFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -762,6 +791,7 @@ export type EventCreateWithoutGotReviewedInput = {
   category: $Enums.Category
   city: string
   available_seats: number
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -781,6 +811,7 @@ export type EventUncheckedCreateWithoutGotReviewedInput = {
   city: string
   available_seats: number
   organizer_id: string
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -814,6 +845,7 @@ export type EventUpdateWithoutGotReviewedInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -833,6 +865,7 @@ export type EventUncheckedUpdateWithoutGotReviewedInput = {
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -850,6 +883,7 @@ export type EventCreateWithoutTicketsInput = {
   category: $Enums.Category
   city: string
   available_seats: number
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -869,6 +903,7 @@ export type EventUncheckedCreateWithoutTicketsInput = {
   city: string
   available_seats: number
   organizer_id: string
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -902,6 +937,7 @@ export type EventUpdateWithoutTicketsInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -921,6 +957,7 @@ export type EventUncheckedUpdateWithoutTicketsInput = {
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -938,6 +975,7 @@ export type EventCreateWithoutVouchersInput = {
   category: $Enums.Category
   city: string
   available_seats: number
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -957,6 +995,7 @@ export type EventUncheckedCreateWithoutVouchersInput = {
   city: string
   available_seats: number
   organizer_id: string
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -990,6 +1029,7 @@ export type EventUpdateWithoutVouchersInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1009,6 +1049,7 @@ export type EventUncheckedUpdateWithoutVouchersInput = {
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1026,6 +1067,7 @@ export type EventCreateManyEventOrganizerInput = {
   category: $Enums.Category
   city: string
   available_seats: number
+  image?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -1041,6 +1083,7 @@ export type EventUpdateWithoutEventOrganizerInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1059,6 +1102,7 @@ export type EventUncheckedUpdateWithoutEventOrganizerInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1077,6 +1121,7 @@ export type EventUncheckedUpdateManyWithoutEventOrganizerInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1142,6 +1187,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
+  image?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1163,6 +1209,7 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
+  image?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1180,6 +1227,7 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
+  image?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1197,6 +1245,7 @@ export type EventSelectScalar = {
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
+  image?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1204,7 +1253,7 @@ export type EventSelectScalar = {
   deleted_at?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "price" | "description" | "category" | "city" | "available_seats" | "organizer_id" | "start_date" | "end_date" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "price" | "description" | "category" | "city" | "available_seats" | "organizer_id" | "image" | "start_date" | "end_date" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   eventOrganizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Tickets?: boolean | Prisma.Event$TicketsArgs<ExtArgs>
@@ -1236,6 +1285,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     city: string
     available_seats: number
     organizer_id: string
+    image: string | null
     start_date: Date
     end_date: Date | null
     created_at: Date
@@ -1676,6 +1726,7 @@ export interface EventFieldRefs {
   readonly city: Prisma.FieldRef<"Event", 'String'>
   readonly available_seats: Prisma.FieldRef<"Event", 'Int'>
   readonly organizer_id: Prisma.FieldRef<"Event", 'String'>
+  readonly image: Prisma.FieldRef<"Event", 'String'>
   readonly start_date: Prisma.FieldRef<"Event", 'DateTime'>
   readonly end_date: Prisma.FieldRef<"Event", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"Event", 'DateTime'>
