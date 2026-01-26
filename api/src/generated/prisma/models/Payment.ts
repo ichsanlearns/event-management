@@ -494,10 +494,6 @@ export type PaymentUncheckedUpdateOneWithoutOrderNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentUpdateToOneWithWhereWithoutOrderInput, Prisma.PaymentUpdateWithoutOrderInput>, Prisma.PaymentUncheckedUpdateWithoutOrderInput>
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type PaymentCreateNestedManyWithoutVoucherInput = {
   create?: Prisma.XOR<Prisma.PaymentCreateWithoutVoucherInput, Prisma.PaymentUncheckedCreateWithoutVoucherInput> | Prisma.PaymentCreateWithoutVoucherInput[] | Prisma.PaymentUncheckedCreateWithoutVoucherInput[]
   connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutVoucherInput | Prisma.PaymentCreateOrConnectWithoutVoucherInput[]

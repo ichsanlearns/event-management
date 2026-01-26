@@ -73,6 +73,7 @@ model Event {
   city String
   available_seats Int
   organizer_id String
+  image String?
 
   start_date DateTime
   end_date DateTime?

@@ -40,6 +40,21 @@ const INDONESIAN_CITIES = [
   "Kupang",
 ];
 
+const EVENT_IMAGE_MAP: Record<string, string> = {
+  Konser: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
+  Festival: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
+  Seminar: "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+  Workshop: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655",
+  Tech: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+};
+
+function getEventImageByName(name: string) {
+  for (const key in EVENT_IMAGE_MAP) {
+    if (name.includes(key)) return EVENT_IMAGE_MAP[key];
+  }
+  return "https://images.unsplash.com/photo-1492684223066-81342ee5ff30";
+}
+
 const EVENT_NAMES = [
   "Konser Musik Nusantara",
   "Festival Jazz Indonesia",
@@ -180,7 +195,8 @@ async function seed() {
         ]);
 
         const start = faker.date.between(timeline);
-        const baseName = eventNames[i];
+        const baseName = eventNames[i] ?? "Event Indonesia";
+        const image = getEventImageByName(baseName);
 
         const event = await prisma.event.create({
           data: {
@@ -193,6 +209,7 @@ async function seed() {
             organizer_id: organizer.id,
             start_date: start,
             end_date: faker.date.soon({ days: 1, refDate: start }),
+            ...(image && { image }),
           },
         });
 
