@@ -1,16 +1,5 @@
-import {
-  Category,
-  Role,
-  Types,
-  Status,
-} from "../src/generated/prisma/enums.js";
-import type {
-  User,
-  Event,
-  Ticket,
-  Voucher,
-  Order,
-} from "../src/generated/prisma/client.js";
+import { Category, Role, Types, Status } from "../src/generated/prisma/enums.js";
+import type { User, Event, Ticket, Voucher, Order } from "../src/generated/prisma/client.js";
 import { prisma } from "../src/lib/prisma.lib.js";
 import { Faker, id_ID } from "@faker-js/faker";
 
@@ -20,25 +9,7 @@ const faker = new Faker({ locale: [id_ID] });
 // =============================
 // INDONESIA DATA
 // =============================
-const INDONESIAN_CITIES = [
-  "Jakarta",
-  "Bandung",
-  "Surabaya",
-  "Yogyakarta",
-  "Semarang",
-  "Solo",
-  "Malang",
-  "Denpasar",
-  "Medan",
-  "Palembang",
-  "Pekanbaru",
-  "Balikpapan",
-  "Banjarmasin",
-  "Pontianak",
-  "Makassar",
-  "Manado",
-  "Kupang",
-];
+const INDONESIAN_CITIES = ["Jakarta", "Bandung", "Surabaya", "Yogyakarta", "Semarang", "Solo", "Malang", "Denpasar", "Medan", "Palembang", "Pekanbaru", "Balikpapan", "Banjarmasin", "Pontianak", "Makassar", "Manado", "Kupang"];
 
 const EVENT_IMAGE_MAP: Record<string, string> = {
   Konser: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
@@ -129,20 +100,12 @@ async function seed() {
     // ASSIGN EVENT NAMES PER ORGANIZER
     // =============================
     const shuffledNames = faker.helpers.shuffle(EVENT_NAMES);
-    const namesPerOrganizer = Math.ceil(
-      shuffledNames.length / organizers.length,
-    );
+    const namesPerOrganizer = Math.ceil(shuffledNames.length / organizers.length);
 
     const organizerEventNames = new Map<string, string[]>();
 
     organizers.forEach((org, index) => {
-      organizerEventNames.set(
-        org.id,
-        shuffledNames.slice(
-          index * namesPerOrganizer,
-          (index + 1) * namesPerOrganizer,
-        ),
-      );
+      organizerEventNames.set(org.id, shuffledNames.slice(index * namesPerOrganizer, (index + 1) * namesPerOrganizer));
     });
 
     // =============================
@@ -150,9 +113,7 @@ async function seed() {
     // =============================
     for (let i = 0; i < 8; i++) {
       const referrer = faker.helpers.arrayElement(customers);
-      const referred = faker.helpers.arrayElement(
-        customers.filter((c) => c.id !== referrer.id),
-      );
+      const referred = faker.helpers.arrayElement(customers.filter((c) => c.id !== referrer.id));
 
       await prisma.point.create({
         data: {
