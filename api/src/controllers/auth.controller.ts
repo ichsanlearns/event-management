@@ -5,7 +5,7 @@ import { generateReferralCode } from "../utils/referral.util.js";
 import { hashPassword, comparePassword } from "../utils/hash.util.js";
 
 export async function register(req: Request, res: Response) {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, referred_by } = req.body;
 
   if (!name || !email || !password || !role) {
     return res.status(400).json({ message: "Field tidak lengkap" });
@@ -27,7 +27,7 @@ export async function register(req: Request, res: Response) {
 
   const hashedPassword = await hashPassword(password);
 
-  const user = await createUser(name, email, hashedPassword, role, referralCode);
+  const user = await createUser(name, email, hashedPassword, role, referralCode, referred_by);
 
   res.status(201).json({
     message: "User berhasil dibuat",
