@@ -1,73 +1,67 @@
 import { type Request, type Response } from "express";
-
-import { create, getByEmail, getByReferral } from "../services/auth.service.js";
 import { Role } from "../generated/prisma/enums.js";
+import { createUser, findByEmail, findByReferral } from "../services/auth.service.js";
 import { generateReferralCode } from "../utils/referral.util.js";
+import { hashPassword, comparePassword } from "../utils/hash.util.js";
 
 export async function register(req: Request, res: Response) {
-  const { name, email, password, role } = req.body;
-  let referralCode = "referral";
+  const { name, email, password, role, referred_by } = req.body;
 
-  if (!name) {
-    return res.status(400).json({ message: "Tolong isi nama anda!" });
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ message: "Field tidak lengkap" });
   }
 
-  if (!email) {
-    return res.status(400).json({ message: "Tolong isi email anda!" });
+  if (!Object.values(Role).includes(role)) {
+    return res.status(400).json({ message: "Role tidak valid" });
   }
 
-  if (!password) {
-    return res.status(400).json({ message: "Tolong isi password anda!" });
+  const existingUser = await findByEmail(email);
+  if (existingUser) {
+    return res.status(409).json({ message: "Email sudah terdaftar" });
   }
 
-  if (!role || !Object.values(Role).includes(role)) {
-    return res
-      .status(400)
-      .json({ message: "Tolong isi role anda yang benar!" });
-  }
-
-  const userExist = await getByEmail(email, password);
-
-  if (userExist) {
-    return res.status(409).json({ message: "Email sudah terdaftar!" });
-  }
-
-  while (true) {
+  let referralCode: string;
+  do {
     referralCode = generateReferralCode();
-    const existReferral = await getByReferral(referralCode);
+  } while (await findByReferral(referralCode));
 
-    if (!existReferral) {
-      break;
-    }
-  }
+  const hashedPassword = await hashPassword(password);
 
-  const userData = await create(name, email, password, role, referralCode);
+  const user = await createUser(name, email, hashedPassword, role, referralCode, referred_by);
 
-  res.status(201).json({ message: "User created", "new user": userData });
+  res.status(201).json({
+    message: "User berhasil dibuat",
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      referral_code: user.referral_code,
+    },
+  });
 }
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
 
-  if (!email) {
-    return res.status(400).json({ message: "Tolong isi email anda!" });
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email & password wajib" });
   }
 
-  if (!password) {
-    return res.status(400).json({ message: "Tolong isi password anda!" });
-  }
-
-  const user = await getByEmail(email, password);
-
+  const user = await findByEmail(email);
   if (!user) {
-    return res
-      .status(401)
-      .json({ message: "Gagal login, check kembali email dan password anda!" });
+    return res.status(401).json({ message: "Email / password salah" });
   }
 
-  user?.password === password
-    ? res.status(200).json({ message: "Selamat, anda berhasil login!" })
-    : res.status(401).json({
-        message: "Gagal login, check kembali email dan password anda!",
-      });
+  const isValid = await comparePassword(password, user.password);
+  if (!isValid) {
+    return res.status(401).json({ message: "Email / password salah" });
+  }
+
+  res.status(200).json({
+    message: "Login berhasil",
+    user: {
+      id: user.id,
+      role: user.role,
+    },
+  });
 }
