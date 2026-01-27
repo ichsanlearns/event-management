@@ -10,6 +10,7 @@ import Organizer from "./routes/Organizer";
 import Dashboard from "./pages/organizer/Dashboard";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
+import Event from "./pages/Event";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 
