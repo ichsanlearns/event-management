@@ -4,11 +4,25 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: "#1E40AF",
-          light: "#3B82F6",
-          dark: "#1E3A8A",
+        primary: "#1152d4",
+        background: {
+          light: "#f6f6f8",
+          dark: "#101622",
         },
+        surface: {
+          light: "#ffffff",
+          dark: "#1e2736",
+        },
+      },
+      fontFamily: {
+        display: ["Plus Jakarta Sans", "sans-serif"],
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        "2xl": "1rem",
+        full: "9999px",
       },
     },
   },
