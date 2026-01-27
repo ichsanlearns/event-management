@@ -8,9 +8,9 @@ import Payment from "./pages/Payment";
 import Profile from "./pages/Profile";
 import Organizer from "./routes/Organizer";
 import Dashboard from "./pages/organizer/Dashboard";
-import Event from "./pages/organizer/Event";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
+import Event from "./pages/Event";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -19,7 +19,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<Root />}>
           <Route index element={<Home />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="event" element={<Profile />} />
+          <Route path="event/:id" element={<Event />} />
           <Route path="payment" element={<Payment />} />
         </Route>
         <Route path="organizer" element={<Organizer />}>
