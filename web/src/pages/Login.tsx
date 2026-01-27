@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Mail, Lock, Eye, EyeOff, Moon, Sun, Apple, Chrome } from "lucide-react";
+import { Link } from "react-router";
 
-const Login: React.FC = () => {
+function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Inisialisasi Tema (Dark Mode)
   useEffect(() => {
     if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
       setIsDarkMode(true);
@@ -34,7 +34,7 @@ const Login: React.FC = () => {
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdusOMQ5-y8KQm5DHpOeVbzsvnJqwKCPz10q8kEJgj9W1cmZZCoHcTVvxW-yD_ccOPgXueBvFa6mp8d1NjhIx9h6TV0HQs8IzZLS81VBZ-iTINyjHPs2yjCla0pUUclLvwVNa-5B-E35EAH-KEdqZZltMEwWDYMuAB2NjAeuEf7ajuzfG0ZzXH606NDDurFUPMqhMJQcufcg4hE_Oi5Xq20rK1XMp3BOxO9CkD_5KTGBbgiyqpcQU3koPQ1jafoNLTb6a5vbhcktIE"
         />
         {/* Overlay Gradient yang halus agar teks terbaca */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-slate-900/50 to-slate-900/90"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-slate-900/20 via-slate-900/50 to-slate-900/90"></div>
 
         <div className="relative z-10 flex flex-col justify-between h-full p-16 text-white">
           <div>
@@ -80,7 +80,7 @@ const Login: React.FC = () => {
 
       {/* SISI KANAN: Form Login (Penuh di Mobile, Setengah di Desktop) */}
       <section className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-16 bg-white dark:bg-[#0f172a] overflow-y-auto">
-        <div className="w-full max-w-[420px]">
+        <div className="w-full max-w-105">
           {/* Logo Mobile saja */}
           <div className="lg:hidden flex items-center gap-2 mb-12">
             <div className="w-10 h-10 bg-[#6366f1] rounded-xl flex items-center justify-center text-white">
@@ -163,10 +163,10 @@ const Login: React.FC = () => {
           </div>
 
           <p className="mt-12 text-center text-slate-500 dark:text-slate-400 font-medium">
-            Don't have an account?{" "}
-            <a href="#" className="font-bold text-[#6366f1] hover:underline transition-all">
-              Start for free
-            </a>
+            Don't have an account?
+            <Link to="/register">
+              <a className="font-bold text-[#6366f1] hover:underline transition-all"> Start for free</a>
+            </Link>
           </p>
         </div>
       </section>
@@ -177,6 +177,6 @@ const Login: React.FC = () => {
       </button>
     </main>
   );
-};
+}
 
 export default Login;

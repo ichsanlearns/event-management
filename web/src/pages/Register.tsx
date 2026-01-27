@@ -1,14 +1,40 @@
-import React, { useState } from "react";
-import { User, Megaphone, Mail, Lock, Eye, Chrome, Apple, Moon, Star } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { User, Megaphone, Mail, Lock, Eye, EyeOff, Chrome, Apple, Moon, Star, Gift, Sun } from "lucide-react";
 import { Link } from "react-router";
 
 function Register() {
   const [role, setRole] = useState<"attendee" | "organizer">("attendee");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    if (!isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
   return (
     <main className="w-screen h-screen flex flex-col md:flex-row overflow-hidden font-sans">
       {/* BAGIAN KIRI: Branding & Testimonial (Hanya muncul di desktop) */}
       <section className="hidden md:flex md:w-1/2 bg-[#6344d4] p-16 flex-col justify-between text-white relative">
+        <img
+          alt="Atmospheric concert"
+          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFY3GLlCxoBJjQdwnCKoaJ38UCBWVd2a6GVXoF6T2DhjhvwY1VbTR6s7rqsecPAIbNsoD5wL1yUdjiKs1R11sbQGB9WqHhs6om3XLcy5FKcwm_jUWv6dQd7bSaW4uHjIC1o9gj90KVzqZOeq3ugd72ccgDoUBVfry9qLuWSyVPPIwSfvu9ABaEI7a1JYhtjZztnWXrxqFJ_97NVqrMEZ9uvaNMAOQkMkV-BXtqyeUrDA0Mz66Y4eUX5NzEuQzpr4FI5O1PXIvw6Hyz"
+        />
         <div className="z-10">
           {/* Logo */}
           <div className="flex items-center gap-2 mb-16">
@@ -90,22 +116,26 @@ function Register() {
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-bold text-slate-700">Password</label>
+            <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input type="password" placeholder="••••••••" className="w-full pl-11 pr-11 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all" />
-                <Eye className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-slate-600" size={18} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="block w-full pl-12 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-[#6366f1] focus:border-transparent transition-all outline-none dark:text-white"
+                />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#6366f1] transition-colors">
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
-              <p className="text-[11px] text-slate-400">Must be at least 8 characters long.</p>
             </div>
 
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-slate-700">Referral Code</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input type="password" placeholder="••••••••" className="w-full pl-11 pr-11 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all" />
-                <Eye className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-slate-600" size={18} />
+                <Gift className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input type="text" placeholder="Kode Referral (Opsional)" className="w-full pl-11 pr-11 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all" />
               </div>
             </div>
 
@@ -151,11 +181,9 @@ function Register() {
         </div>
 
         {/* Dark Mode Floating Button */}
-        <div className="fixed bottom-6 right-6">
-          <button className="p-3 bg-white rounded-full border border-slate-200 shadow-xl hover:scale-110 transition-all">
-            <Moon size={20} className="text-slate-600" />
-          </button>
-        </div>
+        <button onClick={toggleDarkMode} className="fixed bottom-8 right-8 p-4 bg-white dark:bg-slate-800 shadow-2xl rounded-full border border-slate-200 dark:border-slate-700 transition-all hover:scale-110 active:scale-90 z-50 group">
+          {isDarkMode ? <Sun className="text-yellow-400 group-hover:rotate-45 transition-transform" size={24} /> : <Moon className="text-slate-700 group-hover:-rotate-12 transition-transform" size={24} />}
+        </button>
       </section>
     </main>
   );
