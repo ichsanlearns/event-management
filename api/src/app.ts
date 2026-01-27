@@ -13,7 +13,7 @@ const app: Application = express();
 const PORT: number = 8000;
 
 app.use(express.json());
-app.use(cors({origin: `${process.env.WEB_URL}`}));
+app.use(cors({ origin: `${process.env.WEB_URL}` }));
 
 app.get("/api/status", (req: Request, res: Response) => {
   res
