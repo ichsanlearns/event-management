@@ -10,14 +10,18 @@ import Organizer from "./routes/Organizer";
 import Dashboard from "./pages/organizer/Dashboard";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
-import Event from "./pages/Event";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
         <Route path="/" element={<Root />}>
           <Route index element={<Home />} />
+
           <Route path="profile" element={<Profile />} />
           <Route path="event/:id" element={<Event />} />
           <Route path="payment" element={<Payment />} />
