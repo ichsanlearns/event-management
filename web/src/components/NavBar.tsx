@@ -27,7 +27,10 @@ function Navbar() {
               </Link>
             </nav>
             <div className="flex items-center gap-3">
-              <button className="flex items-center justify-center rounded-lg h-10 px-4 text-white hover:bg-white/10 text-sm font-bold transition-colors cursor-pointer">Login</button>
+              <Link to={"/Login"}>
+                <button className="flex items-center justify-center rounded-lg h-10 px-4 text-white hover:bg-white/10 text-sm font-bold transition-colors cursor-pointer">Login</button>
+              </Link>
+
               <Link to={"/Register"}>
                 <button className="flex items-center justify-center rounded-lg h-10 px-5 bg-white text-gray-900 hover:bg-gray-100 text-sm font-bold transition-colors shadow-lg shadow-black/10 cursor-pointer">Sign Up</button>
               </Link>

@@ -12,14 +12,17 @@ import Event from "./pages/organizer/Event";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
         <Route path="/" element={<Root />}>
           <Route index element={<Home />} />
-          <Route path="register" element={<Register />} />
+
           <Route path="profile" element={<Profile />} />
           <Route path="event" element={<Profile />} />
           <Route path="payment" element={<Payment />} />

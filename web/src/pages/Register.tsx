@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { User, Megaphone, Mail, Lock, Eye, Chrome, Apple, Moon, Star } from "lucide-react";
+import { Link } from "react-router";
 
 function Register() {
   const [role, setRole] = useState<"attendee" | "organizer">("attendee");
@@ -46,7 +47,7 @@ function Register() {
 
       {/* BAGIAN KANAN: Form Pendaftaran */}
       <section className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-12 overflow-y-auto">
-        <div className="max-w-[420px] w-full">
+        <div className="max-w-105 w-full">
           <h2 className="text-3xl font-bold text-slate-900 mb-2">Create your account</h2>
           <p className="text-slate-500 mb-8">Start your journey with us today.</p>
 
@@ -141,7 +142,11 @@ function Register() {
           </div>
 
           <p className="text-center mt-10 text-sm text-slate-500 font-medium">
-            Already have an account? <span className="text-[#6344d4] font-bold cursor-pointer hover:underline">Log in</span>
+            Already have an account?{" "}
+            <Link to={"/Login"}>
+              {" "}
+              <span className="text-[#6344d4] font-bold cursor-pointer hover:underline">Log in</span>
+            </Link>
           </p>
         </div>
 
