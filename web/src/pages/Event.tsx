@@ -3,9 +3,13 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
 import type { TEvent } from "../types/event.type";
+import { formattedPrice } from "../utils/format.util";
 
 function Event() {
   const params = useParams();
+  const [quantity, setQuantity] = useState<number>(1);
+  const [currentTicket, setCurrentTicket] = useState<number>(0);
+  const currentPrice = currentTicket * quantity;
 
   const [event, setEvent] = useState<TEvent | null>(null);
 
@@ -18,13 +22,14 @@ function Event() {
         const data = await response.json();
 
         setEvent(data.data);
+        // setCurrentTicket(data.data.Tickets[0].price);
       } catch (error) {
         console.error(error);
       }
     }
 
     getEventById();
-  });
+  }, []);
 
   return (
     <div className="bg-background-dark dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
@@ -137,14 +142,156 @@ function Event() {
                   every nuance of the saxophone and double bass. Whether you are
                   a hardcore jazz aficionado or just looking for a magical night
                   out, the Midnight Jazz Festival promises memories that will
-                  last a lifetime.
+                  last a lifetime. lorem1000
                 </p>
               </div>
             </section>
           </div>
           {/* Right Column: Sticky Booking Widget */}
+          <div className="lg:col-span-4 relative">
+            <div className="sticky top-24 space-y-4">
+              {/* Main Booking Card */}
+              <div className="bg-surface-dark border border-white/5 rounded-2xl p-6 shadow-2xl ring-1 ring-white/5">
+                <h3 className="text-xl font-bold text-white mb-6">
+                  Select Tickets
+                </h3>
+                {/* Ticket Selection Form */}
+                <form className="space-y-4">
+                  {event?.Tickets!.map((ticket) => (
+                    <>
+                      <label className="relative block cursor-pointer group ">
+                        <input
+                          // defaultChecked
+                          className="peer sr-only"
+                          onClick={() => {
+                            setCurrentTicket(ticket.price);
+                          }}
+                          name="ticket_tier"
+                          type="radio"
+                        />
+
+                        <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden">
+                          {/* VIP badge */}
+                          {ticket.type === "VIP" ? (
+                            <>
+                              <div className="absolute -right-6 top-7 bg-yellow-400 text-[10px] font-bold px-8 py-1 rotate-45 text-black shadow-sm uppercase tracking-widest">
+                                Best Value
+                              </div>
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="font-bold text-lg text-slate-900">
+                              {ticket.type}
+                            </span>
+                            <div className="flex items-center justify-center size-6 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary">
+                              <div className="hidden peer-checked:block text-white">
+                                <span className="material-symbols-outlined text-[16px] font-bold">
+                                  check
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className={`text-2xl font-black ${ticket.type === "VIP" ? "text-primary" : "text-slate-900"}  mb-1`}
+                          >
+                            IDR {formattedPrice(ticket.price)}
+                          </div>
+                          <p
+                            className={`text-sm ${ticket.type === "EARLYBIRD" ? "text-red-500" : "text-slate-500"} font-medium`}
+                          >
+                            {ticket.type === "EARLYBIRD"
+                              ? "Early entry before 15:00 · Limited quota"
+                              : ticket.type === "REGULER"
+                                ? "General admission · Standard entry"
+                                : "Priority entry · Best viewing area"}
+                          </p>
+                        </div>
+                      </label>
+                    </>
+                  ))}
+
+                  {/* Quantity Selector */}
+                  <div className="pt-4 border-t border-white/10 mt-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-gray-300 font-medium">
+                        Quantity
+                      </span>
+                      <div className="flex items-center bg-[#111722] rounded-lg p-1 border border-white/10">
+                        <button
+                          className="size-8 flex items-center justify-center rounded bg-surface-dark hover:bg-gray-700 text-white transition-colors"
+                          type="button"
+                        >
+                          <span
+                            onClick={() => {
+                              quantity === 1
+                                ? setQuantity(1)
+                                : setQuantity(quantity - 1);
+                            }}
+                            className="material-symbols-outlined text-sm"
+                          >
+                            remove
+                          </span>
+                        </button>
+                        <span className="w-10 text-center font-bold text-white">
+                          {quantity}
+                        </span>
+                        <button
+                          className="size-8 flex items-center justify-center rounded bg-surface-dark hover:bg-gray-700 text-white transition-colors"
+                          type="button"
+                        >
+                          <span
+                            onClick={() => {
+                              setQuantity(quantity + 1);
+                            }}
+                            className="material-symbols-outlined text-sm"
+                          >
+                            add
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                {/* Total & Action */}
+                <div className="mt-6 space-y-4">
+                  <div className="flex justify-between items-end">
+                    <span className="text-gray-400 text-sm mb-1">
+                      Total Amount
+                    </span>
+                    <span className="text-3xl font-bold text-white">
+                      IDR {formattedPrice(currentPrice)}
+                    </span>
+                  </div>
+                  <button className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group">
+                    Buy Ticket
+                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+                      arrow_forward
+                    </span>
+                  </button>
+                  <p className="text-center text-xs text-gray-500 mt-2">
+                    Secure payment powered by Stripe.
+                  </p>
+                </div>
+              </div>
+              {/* Mini Help Card */}
+              <div className="bg-surface-dark/50 border border-white/5 rounded-xl p-4 flex gap-3 items-start backdrop-blur-sm">
+                <span className="material-symbols-outlined text-gray-400 mt-0.5">
+                  info
+                </span>
+                <div>
+                  <p className="text-sm text-gray-300 leading-snug">
+                    <strong>Need help?</strong> Contact our support team for
+                    group bookings or accessibility requirements.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
+
       {/* Footer  */}
       <footer className="bg-[#0b0f17] border-t border-[#232f48] py-12 mt-12">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-6">
