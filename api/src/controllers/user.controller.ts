@@ -3,17 +3,28 @@ import { prisma } from "../lib/prisma.lib.js";
 
 export const getUserPointAndCoupon = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId as string;
+    const userId = req.user!.id;
 
     const points = await prisma.point.findMany({
-      where: { user_id: userId },
+      where: {
+        user_id: userId,
+        expired_at: {
+          gt: new Date(),
+        },
+      },
     });
 
     const coupons = await prisma.coupon.findMany({
-      where: { user_id: userId },
+      where: {
+        user_id: userId,
+        expired_at: {
+          gt: new Date(),
+        },
+      },
     });
 
     return res.json({
+      total_point: points.reduce((sum, p) => sum + p.amount, 0),
       points,
       coupons,
     });
