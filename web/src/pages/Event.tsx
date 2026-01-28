@@ -7,7 +7,9 @@ import { formattedPrice } from "../utils/format.util";
 
 function Event() {
   const params = useParams();
-  const [selected, setSelected] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [currentTicket, setCurrentTicket] = useState<number>(0);
+  const currentPrice = currentTicket * quantity;
 
   const [event, setEvent] = useState<TEvent | null>(null);
 
@@ -20,13 +22,14 @@ function Event() {
         const data = await response.json();
 
         setEvent(data.data);
+        // setCurrentTicket(data.data.Tickets[0].price);
       } catch (error) {
         console.error(error);
       }
     }
 
     getEventById();
-  });
+  }, []);
 
   return (
     <div className="bg-background-dark dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
@@ -156,16 +159,18 @@ function Event() {
                 <form className="space-y-4">
                   {event?.Tickets!.map((ticket) => (
                     <>
-                      <label className="relative block cursor-pointer group">
+                      <label className="relative block cursor-pointer group ">
                         <input
-                          checked={selected === ticket.id}
-                          onChange={() => setSelected(ticket.id)}
+                          // defaultChecked
                           className="peer sr-only"
+                          onClick={() => {
+                            setCurrentTicket(ticket.price);
+                          }}
                           name="ticket_tier"
                           type="radio"
                         />
 
-                        <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden ">
+                        <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden">
                           {/* VIP badge */}
                           {ticket.type === "VIP" ? (
                             <>
@@ -218,18 +223,30 @@ function Event() {
                           className="size-8 flex items-center justify-center rounded bg-surface-dark hover:bg-gray-700 text-white transition-colors"
                           type="button"
                         >
-                          <span className="material-symbols-outlined text-sm">
+                          <span
+                            onClick={() => {
+                              quantity === 1
+                                ? setQuantity(1)
+                                : setQuantity(quantity - 1);
+                            }}
+                            className="material-symbols-outlined text-sm"
+                          >
                             remove
                           </span>
                         </button>
                         <span className="w-10 text-center font-bold text-white">
-                          2
+                          {quantity}
                         </span>
                         <button
                           className="size-8 flex items-center justify-center rounded bg-surface-dark hover:bg-gray-700 text-white transition-colors"
                           type="button"
                         >
-                          <span className="material-symbols-outlined text-sm">
+                          <span
+                            onClick={() => {
+                              setQuantity(quantity + 1);
+                            }}
+                            className="material-symbols-outlined text-sm"
+                          >
                             add
                           </span>
                         </button>
@@ -244,7 +261,7 @@ function Event() {
                       Total Amount
                     </span>
                     <span className="text-3xl font-bold text-white">
-                      IDR 300,000
+                      IDR {formattedPrice(currentPrice)}
                     </span>
                   </div>
                   <button className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group">
