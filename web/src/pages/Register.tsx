@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { User, Megaphone, Mail, Lock, Eye, EyeOff, Chrome, Apple, Moon, Star, Gift, Sun } from "lucide-react";
 import { Link } from "react-router";
 
+import { register as registerApi } from "../services/auth.service";
+import { useNavigate } from "react-router";
+
 function Register() {
   const [role, setRole] = useState<"attendee" | "organizer">("attendee");
 
@@ -23,6 +26,47 @@ function Register() {
     } else {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
+    }
+  };
+
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    referred_by: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await registerApi({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: role === "attendee" ? "CUSTOMER" : "EVENT_ORGANIZER",
+        referred_by: form.referred_by || undefined,
+      });
+
+      navigate("/login");
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Register gagal");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,31 +143,53 @@ function Register() {
             </button>
           </div>
 
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-5" onSubmit={handleRegister}>
+            {/* Full Name Input */}
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-slate-700">Full Name</label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input type="text" placeholder="John Doe" className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all" />
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="John Doe"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all"
+                  required
+                />
               </div>
             </div>
 
+            {/* Email Input */}
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-slate-700">Email address</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input type="email" placeholder="john@example.com" className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all" />
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="john@example.com"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all"
+                  required
+                />
               </div>
             </div>
 
+            {/* Password Input */}
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                 <input
+                  name="password"
                   type={showPassword ? "text" : "password"}
+                  value={form.password}
+                  onChange={handleChange}
                   placeholder="••••••••"
                   className="block w-full pl-12 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-[#6366f1] focus:border-transparent transition-all outline-none dark:text-white"
+                  required
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#6366f1] transition-colors">
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -135,7 +201,13 @@ function Register() {
               <label className="text-sm font-bold text-slate-700">Referral Code</label>
               <div className="relative">
                 <Gift className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input type="text" placeholder="Kode Referral (Opsional)" className="w-full pl-11 pr-11 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all" />
+                <input
+                  name="referred_by"
+                  value={form.referred_by}
+                  onChange={handleChange}
+                  placeholder="Kode Referral (Opsional)"
+                  className="w-full pl-11 pr-11 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-purple-200 focus:border-[#6344d4] outline-none transition-all"
+                />
               </div>
             </div>
 
@@ -146,7 +218,10 @@ function Register() {
               </label>
             </div>
 
+            {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+
             <button className="w-full bg-[#6344d4] text-white font-bold py-3.5 rounded-xl hover:bg-[#5236b8] shadow-lg shadow-purple-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+              {loading ? "Creating..." : "Create Account"}
               Create Account <span className="text-lg">→</span>
             </button>
           </form>

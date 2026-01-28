@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Mail, Lock, Eye, EyeOff, Moon, Sun, Apple, Chrome } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+
+import { login as loginApi } from "../services/auth.service";
 
 function Login() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
@@ -24,9 +28,37 @@ function Login() {
     }
   };
 
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await loginApi(form);
+
+      // simpan token
+      localStorage.setItem("token", res.token);
+
+      // redirect berdasarkan role
+      if (res.user.role === "CUSTOMER") {
+        navigate("/");
+      } else if (res.user.role === "EVENT_ORGANIZER") {
+        navigate("/organizer");
+      }
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Login gagal");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="w-full h-screen flex font-sans bg-white dark:bg-[#0f172a] transition-colors duration-300 overflow-hidden">
-      {/* SISI KIRI: Visual Branding (Hanya muncul di Desktop) */}
+      {/* SISI KIRI*/}
       <section className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900">
         <img
           alt="Atmospheric concert"
@@ -62,7 +94,7 @@ function Login() {
             </h1>
             <p className="text-xl text-slate-300 leading-relaxed mb-10 opacity-90">Join thousands of fans discovering the most exclusive concerts and workshops worldwide.</p>
 
-            {/* Glass Effect Testimonial */}
+            {/* Testimonial */}
             <div className="bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-3xl flex items-start gap-5 shadow-2xl">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white/30 shrink-0">
                 <img alt="Alex Rivera" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100" className="object-cover w-full h-full" />
@@ -78,7 +110,7 @@ function Login() {
         </div>
       </section>
 
-      {/* SISI KANAN: Form Login (Penuh di Mobile, Setengah di Desktop) */}
+      {/* SISI KANAN: Form Login) */}
       <section className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-16 bg-white dark:bg-[#0f172a] overflow-y-auto">
         <div className="w-full max-w-105">
           {/* Logo Mobile saja */}
@@ -97,13 +129,15 @@ function Login() {
             <p className="text-slate-500 dark:text-slate-400 text-lg">Enter your credentials to access your account.</p>
           </div>
 
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                 <input
                   type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="name@example.com"
                   className="block w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-[#6366f1] focus:border-transparent transition-all outline-none dark:text-white"
                 />
@@ -116,6 +150,8 @@ function Login() {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                 <input
                   type={showPassword ? "text" : "password"}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
                   placeholder="••••••••"
                   className="block w-full pl-12 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-[#6366f1] focus:border-transparent transition-all outline-none dark:text-white"
                 />
@@ -137,7 +173,9 @@ function Login() {
               </a>
             </div>
 
-            <button className="w-full flex justify-center py-4 px-4 rounded-2xl shadow-xl shadow-indigo-500/20 text-base font-bold text-white bg-[#6366f1] hover:bg-indigo-700 transition-all active:scale-[0.98]">Sign in</button>
+            <button disabled={loading} className="w-full flex justify-center py-4 px-4 rounded-2xl shadow-xl shadow-indigo-500/20 text-base font-bold text-white bg-[#6366f1] hover:bg-indigo-700 transition-all active:scale-[0.98]">
+              {loading ? "Loading..." : "Sign in"}
+            </button>
           </form>
 
           {/* Divider */}

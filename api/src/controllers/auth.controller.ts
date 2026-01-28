@@ -3,6 +3,8 @@ import { Role } from "../generated/prisma/enums.js";
 import { createUser, findByEmail, findByReferral } from "../services/auth.service.js";
 import { generateReferralCode } from "../utils/referral.util.js";
 import { hashPassword, comparePassword } from "../utils/hash.util.js";
+import { generateToken } from "../utils/jwt.util.js";
+import { access } from "node:fs";
 
 export async function register(req: Request, res: Response) {
   const { name, email, password, role, referred_by } = req.body;
@@ -57,8 +59,11 @@ export async function login(req: Request, res: Response) {
     return res.status(401).json({ message: "Email / password salah" });
   }
 
+  const token = generateToken({ id: user.id, role: user.role });
+
   res.status(200).json({
     message: "Login berhasil",
+    access_token: token,
     user: {
       id: user.id,
       role: user.role,
