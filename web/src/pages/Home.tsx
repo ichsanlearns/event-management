@@ -38,6 +38,7 @@ function Home() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // search with query
   useEffect(() => {
     if (!query) return;
 
@@ -45,7 +46,7 @@ function Home() {
       async function fetchSearchResults() {
         try {
           const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/events`,
+            `${import.meta.env.VITE_API_URL}/events?search=${query}`,
           );
           const data = await response.json();
           setEvents(data.data);
@@ -55,13 +56,13 @@ function Home() {
       }
       fetchSearchResults();
       console.log("test");
-    }, 1500);
+    }, 300);
     return () => clearTimeout(id);
   }, [query]);
 
   return (
     <main className="w-screen h-screen">
-      <div className="relative w-full h-[700px] lg:h-[800px] flex items-center justify-center ">
+      <div className="relative w-full h-175 lg:h-200 flex items-center justify-center ">
         <div className="absolute inset-0 z-0">
           <img
             alt="High energy music festival"
@@ -70,7 +71,7 @@ function Home() {
           />
           <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/40 to-black/80"></div>
         </div>
-        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-20">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-20">
           <span className="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-white text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-md">
             Unforgettable Moments Await
           </span>
@@ -88,7 +89,7 @@ function Home() {
           </button>
         </div>
         <div className="absolute bottom-0 w-full z-20 translate-y-1/2 px-4">
-          <div className="max-w-[1000px] mx-auto bg-white dark:bg-[#1E1B2E] rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 p-3 md:p-4">
+          <div className="max-w-250 mx-auto bg-white dark:bg-[#1E1B2E] rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 p-3 md:p-4">
             <form className="flex flex-col lg:flex-row gap-3">
               <div ref={containerRef} className="relative grow group ">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
