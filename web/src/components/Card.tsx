@@ -69,7 +69,7 @@ function Card() {
               : "/placeholder-event.jpg";
 
             const formattedPrice = new Intl.NumberFormat("id-ID").format(
-              event.price,
+              event.Tickets![0].price,
             );
 
             return (
@@ -90,7 +90,7 @@ function Card() {
                       </span>
                     </button>
                   </div>
-                  <div className="p-5 flex flex-col flex-grow">
+                  <div className="p-5 flex flex-col grow">
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-primary font-bold text-sm tracking-wide">
                         {/* Sun, 01 Sep • 13:00  */}
