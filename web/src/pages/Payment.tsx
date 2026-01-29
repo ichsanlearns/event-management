@@ -1,4 +1,21 @@
+import { useLocation, useParams } from "react-router-dom";
+import { formattedPrice } from "../utils/format.util";
+import { useState } from "react";
+
 function Payment() {
+  const { eventId } = useParams();
+  const { ticketId, ticketType, ticketPrice, quantity, event } =
+    useLocation().state;
+  const [copied, setCopied] = useState(false);
+  const totalAmount = ticketPrice * quantity - 300_000 - 50_000;
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText("8800 1234 5678 900");
+    setCopied(true);
+
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
     <main className="max-w-full bg-background-dark p-30">
       <div className="grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
@@ -101,11 +118,14 @@ function Payment() {
                       8800 1234 5678 900
                     </p>
                   </div>
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors">
+                  <button
+                    onClick={handleCopy}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${copied ? "text-primary bg-primary/10" : "bg-blue-100 text-blue-700"} hover:bg-primary/20 rounded-lg transition-colors`}
+                  >
                     <span className="material-symbols-outlined text-[18px]">
                       content_copy
                     </span>
-                    Copy Number
+                    {copied ? "Copied ✓" : "Copy Number"}
                   </button>
                 </div>
               </div>
@@ -159,13 +179,13 @@ function Payment() {
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
                   <div className="absolute bottom-3 left-4 right-4">
                     <h4 className="text-white font-bold text-lg leading-tight">
-                      Neon Nights Music Festival 2024
+                      {event.name}
                     </h4>
                     <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px]">
                         location_on
                       </span>
-                      Jakarta International Expo
+                      {event.city}
                     </p>
                   </div>
                 </div>
@@ -190,10 +210,10 @@ function Payment() {
                     {/* Items */}
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-600 dark:text-slate-300">
-                        VIP Access (x2)
+                        {ticketType} Access ({quantity}x)
                       </span>
                       <span className="font-medium text-slate-900 dark:text-white">
-                        Rp 3.000.000
+                        Rp {formattedPrice(ticketPrice * quantity)}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
@@ -229,7 +249,7 @@ function Payment() {
                           Total Amount
                         </span>
                         <span className="text-2xl font-black text-primary">
-                          Rp 2.700.000
+                          Rp {formattedPrice(totalAmount)}
                         </span>
                       </div>
                     </div>
