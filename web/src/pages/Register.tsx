@@ -222,7 +222,7 @@ function Register() {
 
             <button className="w-full bg-[#6344d4] text-white font-bold py-3.5 rounded-xl hover:bg-[#5236b8] shadow-lg shadow-purple-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
               {loading ? "Creating..." : "Create Account"}
-              Create Account <span className="text-lg">→</span>
+              <span className="text-lg">→</span>
             </button>
           </form>
 
