@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 
 import type { TEvent } from "../types/event.type";
 import { formattedPrice } from "../utils/format.util";
@@ -264,12 +264,15 @@ function Event() {
                       IDR {formattedPrice(currentPrice)}
                     </span>
                   </div>
-                  <button className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group">
+                  <Link
+                    to={`/payment`}
+                    className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group"
+                  >
                     Buy Ticket
                     <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
                       arrow_forward
                     </span>
-                  </button>
+                  </Link>
                   <p className="text-center text-xs text-gray-500 mt-2">
                     Secure payment powered by Stripe.
                   </p>
