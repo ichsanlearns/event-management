@@ -1,6 +1,6 @@
 import { prisma } from "../lib/prisma.lib.js";
 
-export async function getAll(query?: string) {
+export async function getAll(limit: number, query?: string) {
   if (query) {
     return await prisma.event.findMany({
       where: {
@@ -15,6 +15,7 @@ export async function getAll(query?: string) {
 
   return await prisma.event.findMany({
     include: { Tickets: true },
+    take: limit,
   });
 }
 

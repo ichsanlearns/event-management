@@ -5,13 +5,17 @@ import { Link } from "react-router";
 
 function Card() {
   const [events, setEvents] = useState<TEvent[] | null>(null);
+  const [limit, setLimit] = useState(4);
 
   useEffect(() => {
     async function getEvents() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
-          method: "GET",
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/events?limit=${limit}`,
+          {
+            method: "GET",
+          },
+        );
         const data = await response.json();
 
         setEvents(data.data);
@@ -20,7 +24,7 @@ function Card() {
       }
     }
     getEvents();
-  }, []);
+  }, [limit]);
 
   const formatEventDate = (iso: Date) =>
     new Intl.DateTimeFormat("en-GB", {
@@ -125,7 +129,10 @@ function Card() {
 
         {/*  */}
         <div className="mt-16 flex justify-center">
-          <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 font-bold py-3.5 px-10 rounded-2xl transition-colors shadow-sm text-lg">
+          <button
+            onClick={() => setLimit(limit + 4)}
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 font-bold py-3.5 px-10 rounded-2xl transition-colors shadow-sm text-lg cursor-pointer"
+          >
             Load More Events
           </button>
         </div>
