@@ -168,9 +168,9 @@ function Login() {
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-sm font-bold text-[#6366f1] hover:text-indigo-400 transition-colors">
-                Forgot password?
-              </a>
+              <Link to="/forgot-password">
+                <a className="text-sm font-bold text-[#6366f1] hover:text-indigo-400 transition-colors">Forgot password?</a>
+              </Link>
             </div>
 
             <button disabled={loading} className="w-full flex justify-center py-4 px-4 rounded-2xl shadow-xl shadow-indigo-500/20 text-base font-bold text-white bg-[#6366f1] hover:bg-indigo-700 transition-all active:scale-[0.98]">
