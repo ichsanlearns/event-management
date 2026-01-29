@@ -6,7 +6,9 @@ export async function getAll(req: Request, res: Response) {
   const query =
     typeof req.query.search === "string" ? req.query.search : undefined;
 
-  const events = await eventService.getAll(query);
+  const limit = req.query.limit ? Number(req.query.limit) : 4;
+
+  const events = await eventService.getAll(limit, query);
   res.status(200).json({ message: "Event berhasil diambil", data: events });
 }
 

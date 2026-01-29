@@ -151,7 +151,7 @@ function Home() {
                   </div>
                 </div>
                 <button
-                  className="shrink-0 bg-primary hover:bg-primary-dark text-white font-bold py-3.5 px-8 rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95 flex items-center justify-center gap-2 text-lg"
+                  className="shrink-0 bg-primary hover:bg-primary-dark text-white font-bold py-3.5 px-8 rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95 flex items-center justify-center gap-2 text-lg r"
                   type="button"
                 >
                   Search
