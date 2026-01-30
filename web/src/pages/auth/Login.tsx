@@ -40,10 +40,9 @@ function Login() {
     try {
       const res = await loginApi(form);
 
-      // simpan token
       localStorage.setItem("token", res.token);
+      localStorage.setItem("user", JSON.stringify(res.user));
 
-      // redirect berdasarkan role
       if (res.user.role === "CUSTOMER") {
         navigate("/");
       } else if (res.user.role === "EVENT_ORGANIZER") {
