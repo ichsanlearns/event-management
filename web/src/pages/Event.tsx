@@ -37,6 +37,33 @@ function Event() {
     getEventById();
   }, []);
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    const payload = {};
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify("data"),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create order");
+      }
+
+      const data = await response.json();
+
+      navigate(`/payment/${data.orderId}`);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    }
+  }
+
   return (
     <div className="bg-background-dark dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
       {/* Hero Section  */}
