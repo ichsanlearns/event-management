@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { User, Megaphone, Mail, Lock, Eye, EyeOff, Chrome, Apple, Moon, Star, Gift, Sun } from "lucide-react";
 import { Link } from "react-router";
 
-import { register as registerApi } from "../services/auth.service";
+import { register as registerApi } from "../../services/auth.service";
 import { useNavigate } from "react-router";
 
 function Register() {

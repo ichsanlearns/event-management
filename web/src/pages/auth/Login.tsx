@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Mail, Lock, Eye, EyeOff, Moon, Sun, Apple, Chrome } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 
-import { login as loginApi } from "../services/auth.service";
+import { login as loginApi } from "../../services/auth.service";
 
 function Login() {
   const navigate = useNavigate();
