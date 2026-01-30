@@ -114,48 +114,35 @@ model Ticket {
   type Types
   price Decimal
   Quota Int
+  bought Int @default(0)
 
   created_at DateTime @default(now()) 
   updated_at DateTime @updatedAt
   deleted_at DateTime?
 
   EventName Event @relation(fields: [event_id], references: [id])
-  OrderedList OrderItem[]
+  Events Order[]
 
   @@map("tickets")
 }
 
-model OrderItem {
-  id String @id @default(uuid())
-  ticket_id String
-  order_id String
-  quantity Int
-  price Decimal
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  TicketType Ticket @relation(fields: [ticket_id], references: [id])
-  ListOrder Order @relation(fields: [order_id], references: [id])
-
-  @@map("order_items")
-}
 
 model Order {
   id String @id @default(uuid())
   customer_id String
+  ticket_id String
   status Status
   using_point Boolean
   total Decimal
+  
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   deleted_at DateTime?
 
-  OrderList OrderItem[]
   Payment Payment?
 
+  TicketsType Ticket @relation(fields: [ticket_id], references: [id])
   Customer User @relation(fields: [customer_id], references: [id])
 
   @@map("orders")

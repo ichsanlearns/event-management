@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-import { Link, useParams } from "react-router";
+import { useNavigate } from "react-router";
+import { useParams } from "react-router";
 
 import type { TEvent } from "../types/event.type";
 import { formattedPrice } from "../utils/format.util";
@@ -8,8 +9,13 @@ import { formattedPrice } from "../utils/format.util";
 function Event() {
   const params = useParams();
   const [quantity, setQuantity] = useState<number>(1);
-  const [currentTicket, setCurrentTicket] = useState<number>(0);
-  const currentPrice = currentTicket * quantity;
+  const [selectedTicket, setSelectedTicket] = useState<{
+    id: string;
+    type: string;
+    price: number;
+  } | null>(null);
+  const currentPrice = selectedTicket?.price! * quantity;
+  const navigate = useNavigate();
 
   const [event, setEvent] = useState<TEvent | null>(null);
 
@@ -31,6 +37,33 @@ function Event() {
     getEventById();
   }, []);
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    const payload = {};
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify("data"),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create order");
+      }
+
+      const data = await response.json();
+
+      navigate(`/payment/${data.orderId}`);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    }
+  }
+
   return (
     <div className="bg-background-dark dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
       {/* Hero Section  */}
@@ -44,7 +77,7 @@ function Event() {
           }}
         ></div>
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#101622] via-[#101622]/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-[#101622] via-[#101622]/80 to-transparent"></div>
         {/* Hero Content */}
         <div className="relative h-full flex items-end pb-12 mx-auto max-w-[1280px] px-6 lg:px-10">
           <div className="w-full">
@@ -53,7 +86,7 @@ function Event() {
               <div className="hidden md:block w-48 lg:w-56 shrink-0 rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 relative -mb-20 z-10">
                 <img
                   alt="Vintage style jazz poster"
-                  className="w-full h-auto object-cover aspect-[2/3]"
+                  className="w-full h-auto object-cover aspect-2/3"
                   data-alt="Vintage style poster for the Midnight Jazz Festival featuring a saxophone silhouette"
                   src={event?.image}
                 />
@@ -82,7 +115,7 @@ function Event() {
           </div>
         </div>
       </div>
-      <main className="flex-grow w-full mx-auto max-w-[1280px] px-6 lg:px-10 py-12 ">
+      <main className="grow w-full mx-auto max-w-[1280px] px-6 lg:px-10 py-12 ">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column: Content */}
           <div className="lg:col-span-8 flex flex-col gap-10">
@@ -156,18 +189,37 @@ function Event() {
                   Select Tickets
                 </h3>
                 {/* Ticket Selection Form */}
-                <form className="space-y-4">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    navigate(`/payment/${event?.id}`, {
+                      state: {
+                        ticketId: selectedTicket?.id,
+                        ticketType: selectedTicket?.type,
+                        ticketPrice: selectedTicket?.price,
+                        quantity,
+                        event: event,
+                      },
+                    });
+                  }}
+                  id="ticketForm"
+                  className="space-y-4"
+                >
                   {event?.Tickets!.map((ticket) => (
                     <>
-                      <label className="relative block cursor-pointer group ">
+                      <label
+                        key={ticket.id}
+                        className="relative block cursor-pointer group "
+                      >
                         <input
                           // defaultChecked
                           className="peer sr-only"
                           onClick={() => {
-                            setCurrentTicket(ticket.price);
+                            setSelectedTicket(ticket);
                           }}
                           name="ticket_tier"
                           type="radio"
+                          value={ticket.price}
                         />
 
                         <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden">
@@ -220,33 +272,30 @@ function Event() {
                       </span>
                       <div className="flex items-center bg-[#111722] rounded-lg p-1 border border-white/10">
                         <button
+                          onClick={() => {
+                            quantity === 1
+                              ? setQuantity(1)
+                              : setQuantity(quantity - 1);
+                          }}
                           className="size-8 flex items-center justify-center rounded bg-surface-dark hover:bg-gray-700 text-white transition-colors"
                           type="button"
                         >
-                          <span
-                            onClick={() => {
-                              quantity === 1
-                                ? setQuantity(1)
-                                : setQuantity(quantity - 1);
-                            }}
-                            className="material-symbols-outlined text-sm"
-                          >
+                          <span className="material-symbols-outlined text-sm">
                             remove
                           </span>
                         </button>
                         <span className="w-10 text-center font-bold text-white">
                           {quantity}
                         </span>
+                        <input type="hidden" name="quantity" value={quantity} />
                         <button
+                          onClick={() => {
+                            setQuantity(quantity + 1);
+                          }}
                           className="size-8 flex items-center justify-center rounded bg-surface-dark hover:bg-gray-700 text-white transition-colors"
                           type="button"
                         >
-                          <span
-                            onClick={() => {
-                              setQuantity(quantity + 1);
-                            }}
-                            className="material-symbols-outlined text-sm"
-                          >
+                          <span className="material-symbols-outlined text-sm">
                             add
                           </span>
                         </button>
@@ -264,15 +313,15 @@ function Event() {
                       IDR {formattedPrice(currentPrice)}
                     </span>
                   </div>
-                  <Link
-                    to={`/payment`}
+                  <button
+                    form="ticketForm"
                     className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group"
                   >
                     Buy Ticket
                     <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
                       arrow_forward
                     </span>
-                  </Link>
+                  </button>
                   <p className="text-center text-xs text-gray-500 mt-2">
                     Secure payment powered by Stripe.
                   </p>

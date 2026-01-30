@@ -60,11 +60,6 @@ export type Review = Prisma.ReviewModel
  */
 export type Ticket = Prisma.TicketModel
 /**
- * Model OrderItem
- * 
- */
-export type OrderItem = Prisma.OrderItemModel
-/**
  * Model Order
  * 
  */

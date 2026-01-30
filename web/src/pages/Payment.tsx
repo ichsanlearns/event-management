@@ -1,4 +1,28 @@
+import { useLocation } from "react-router-dom";
+import { formattedPrice, formatTime } from "../utils/format.util";
+import { useRef, useState } from "react";
+import { useCountdown } from "../utils/countdown.util";
+
 function Payment() {
+  const { ticketType, ticketPrice, quantity, event } = useLocation().state;
+
+  const [withPromo, setWithPromo] = useState(false);
+  const [open, setOpen] = useState<"atm" | "banking" | null>(null);
+  const [copied, setCopied] = useState(false);
+  const expiredAtRef = useRef(Date.now() + 2 * 60 * 60 * 1000);
+
+  const totalAmount = ticketPrice * quantity - 300_000 - 50_000;
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText("8800 1234 5678 900");
+    setCopied(true);
+
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  const timeLeft = useCountdown(expiredAtRef.current);
+  const { hours, minutes, seconds } = formatTime(timeLeft);
+
   return (
     <main className="max-w-full bg-background-dark p-30">
       <div className="grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
@@ -43,21 +67,27 @@ function Payment() {
                   </p>
                 </div>
                 {/* High Contrast Timer */}
-                <div className="flex flex-col items-center p-4 bg-slate-900 dark:bg-black rounded-xl text-white min-w-[280px]">
+                <div className="flex flex-col items-center p-4 bg-slate-900 dark:bg-black rounded-xl text-white min-w-70">
                   <span className="text-xs uppercase tracking-widest text-slate-400 mb-2 font-semibold">
                     Time Remaining
                   </span>
                   <div className="flex items-center gap-2">
                     <div className="bg-slate-800 rounded px-2 py-1">
-                      <span className="text-2xl font-bold font-mono">01</span>
+                      <span className="text-2xl font-bold font-mono">
+                        {hours}
+                      </span>
                     </div>
                     <span className="text-xl">:</span>
                     <div className="bg-slate-800 rounded px-2 py-1">
-                      <span className="text-2xl font-bold font-mono">59</span>
+                      <span className="text-2xl font-bold font-mono">
+                        {minutes}
+                      </span>
                     </div>
                     <span className="text-xl">:</span>
                     <div className="bg-slate-800 rounded px-2 py-1 text-red-400 animate-pulse">
-                      <span className="text-2xl font-bold font-mono">59</span>
+                      <span className="text-2xl font-bold font-mono">
+                        {seconds}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -101,27 +131,100 @@ function Payment() {
                       8800 1234 5678 900
                     </p>
                   </div>
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors">
+                  <button
+                    onClick={handleCopy}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${copied ? "text-primary bg-primary/10" : "bg-blue-100 text-blue-700"} hover:bg-primary/20 rounded-lg transition-colors`}
+                  >
                     <span className="material-symbols-outlined text-[18px]">
                       content_copy
                     </span>
-                    Copy Number
+                    {copied ? "Copied ✓" : "Copy Number"}
                   </button>
                 </div>
               </div>
               <div className="mt-4 flex gap-4 text-sm text-slate-500">
-                <button className="flex items-center gap-1 hover:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-[18px]">
+                <button
+                  onClick={() => setOpen(open === "atm" ? null : "atm")}
+                  className="flex items-center gap-1 hover:text-primary transition-colors"
+                >
+                  <span
+                    className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${
+                      open === "atm" ? "rotate-180" : ""
+                    }`}
+                  >
                     expand_more
                   </span>
                   How to pay via ATM
                 </button>
-                <button className="flex items-center gap-1 hover:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-[18px]">
+                <button
+                  onClick={() => setOpen(open === "banking" ? null : "banking")}
+                  className="flex items-center gap-1 hover:text-primary transition-colors"
+                >
+                  <span
+                    className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${
+                      open === "banking" ? "rotate-180" : ""
+                    }`}
+                  >
                     expand_more
                   </span>
                   How to pay via M-Banking
                 </button>
+              </div>
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  open === "atm"
+                    ? "max-h-[500px] opacity-100 mt-2"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <ol className="list-decimal pl-5 text-sm text-slate-600 space-y-2">
+                  <li> Insert your BCA ATM card and enter your PIN</li>
+                  <li>
+                    Select <strong>Transaksi Lainnya</strong>
+                  </li>
+                  <li>
+                    Choose <strong>Transfer</strong>
+                  </li>
+                  <li>
+                    Select <strong>Ke Rek BCA Virtual Account</strong>
+                  </li>
+                  <li>
+                    Enter your <strong>Virtual Account Number</strong>
+                  </li>
+                  <li> Check the payment details shown on the screen</li>
+                  <li> Confirm the transaction</li>
+                  <li> Payment completed successfully</li>
+                </ol>
+              </div>
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  open === "banking"
+                    ? "max-h-[500px] opacity-100 mt-2"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <ol className="list-decimal pl-5 text-sm text-slate-600 space-y-2">
+                  <li>
+                    Open the <strong>BCA Mobile</strong> app
+                  </li>
+                  <li>
+                    Select <strong>m-BCA</strong> and enter your PIN
+                  </li>
+                  <li>
+                    Choose <strong>m-Transfer</strong>
+                  </li>
+                  <li>
+                    Select <strong>BCA Virtual Account</strong>
+                  </li>
+                  <li>
+                    Enter your <strong>Virtual Account Number</strong>
+                  </li>
+                  <li> Verify the payment details</li>
+                  <li>
+                    Enter your <strong>m-BCA PIN</strong> to confirm
+                  </li>
+                  <li> Payment completed successfully</li>
+                </ol>
               </div>
             </section>
             {/* Upload Proof */}
@@ -159,13 +262,13 @@ function Payment() {
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
                   <div className="absolute bottom-3 left-4 right-4">
                     <h4 className="text-white font-bold text-lg leading-tight">
-                      Neon Nights Music Festival 2024
+                      {event.name}
                     </h4>
                     <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px]">
                         location_on
                       </span>
-                      Jakarta International Expo
+                      {event.city}
                     </p>
                   </div>
                 </div>
@@ -190,10 +293,10 @@ function Payment() {
                     {/* Items */}
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-600 dark:text-slate-300">
-                        VIP Access (x2)
+                        {ticketType} Access ({quantity}x)
                       </span>
                       <span className="font-medium text-slate-900 dark:text-white">
-                        Rp 3.000.000
+                        Rp {formattedPrice(ticketPrice * quantity)}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
@@ -204,16 +307,6 @@ function Payment() {
                         Rp 50.000
                       </span>
                     </div>
-                    {/* Discounts */}
-                    <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
-                      <span className="flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[14px]">
-                          local_offer
-                        </span>
-                        Promo (PROMOCODE)
-                      </span>
-                      <span className="font-medium">- Rp 300.000</span>
-                    </div>
                     <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
                       <span className="flex items-center gap-1">
                         <span className="material-symbols-outlined text-[14px]">
@@ -223,13 +316,52 @@ function Payment() {
                       </span>
                       <span className="font-medium">- Rp 50.000</span>
                     </div>
+                    {withPromo ? (
+                      <>
+                        {/* Discounts */}
+                        <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                          <span className="flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[14px]">
+                              local_offer
+                            </span>
+                            Promo (PROMOCODE)
+                          </span>
+                          <span className="font-medium">- Rp 300.000</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Promo Code Input */}
+                        <div className="flex items-center gap-2">
+                          <div className="relative flex-1">
+                            <input
+                              type="text"
+                              placeholder="Enter promo code..."
+                              className="w-full pl-4 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700
+                 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200
+                 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                            />
+                          </div>
+
+                          <button
+                            onClick={() => setWithPromo(true)}
+                            className="px-4 py-2 text-sm font-semibold rounded-xl
+               bg-primary text-white hover:bg-primary/90
+               transition-colors disabled:opacity-50"
+                          >
+                            Apply
+                          </button>
+                        </div>
+                      </>
+                    )}
+
                     <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
                       <div className="flex justify-between items-end">
                         <span className="text-slate-500 dark:text-slate-400 font-medium">
                           Total Amount
                         </span>
                         <span className="text-2xl font-black text-primary">
-                          Rp 2.700.000
+                          Rp {formattedPrice(totalAmount)}
                         </span>
                       </div>
                     </div>

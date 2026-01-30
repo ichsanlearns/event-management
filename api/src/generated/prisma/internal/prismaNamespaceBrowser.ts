@@ -55,7 +55,6 @@ export const ModelName = {
   Event: 'Event',
   Review: 'Review',
   Ticket: 'Ticket',
-  OrderItem: 'OrderItem',
   Order: 'Order',
   Payment: 'Payment',
   Voucher: 'Voucher',
@@ -134,6 +133,7 @@ export const TicketScalarFieldEnum = {
   type: 'type',
   price: 'price',
   Quota: 'Quota',
+  bought: 'bought',
   created_at: 'created_at',
   updated_at: 'updated_at',
   deleted_at: 'deleted_at'
@@ -142,23 +142,10 @@ export const TicketScalarFieldEnum = {
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
 
 
-export const OrderItemScalarFieldEnum = {
-  id: 'id',
-  ticket_id: 'ticket_id',
-  order_id: 'order_id',
-  quantity: 'quantity',
-  price: 'price',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  deleted_at: 'deleted_at'
-} as const
-
-export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
-
-
 export const OrderScalarFieldEnum = {
   id: 'id',
   customer_id: 'customer_id',
+  ticket_id: 'ticket_id',
   status: 'status',
   using_point: 'using_point',
   total: 'total',
