@@ -11,10 +11,10 @@ import Dashboard from "./pages/organizer/Dashboard";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
 import Event from "./pages/Event";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
+import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
