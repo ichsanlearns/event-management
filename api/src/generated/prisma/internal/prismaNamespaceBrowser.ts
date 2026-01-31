@@ -144,6 +144,7 @@ export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof 
 
 export const OrderScalarFieldEnum = {
   id: 'id',
+  order_code: 'order_code',
   customer_id: 'customer_id',
   ticket_id: 'ticket_id',
   status: 'status',
@@ -177,6 +178,7 @@ export const VoucherScalarFieldEnum = {
   event_id: 'event_id',
   code: 'code',
   discount_amount: 'discount_amount',
+  quota: 'quota',
   start_date: 'start_date',
   end_date: 'end_date',
   created_at: 'created_at',

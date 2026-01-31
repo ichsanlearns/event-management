@@ -36,6 +36,7 @@ export type OrderSumAggregateOutputType = {
 
 export type OrderMinAggregateOutputType = {
   id: string | null
+  order_code: string | null
   customer_id: string | null
   ticket_id: string | null
   status: $Enums.Status | null
@@ -48,6 +49,7 @@ export type OrderMinAggregateOutputType = {
 
 export type OrderMaxAggregateOutputType = {
   id: string | null
+  order_code: string | null
   customer_id: string | null
   ticket_id: string | null
   status: $Enums.Status | null
@@ -60,6 +62,7 @@ export type OrderMaxAggregateOutputType = {
 
 export type OrderCountAggregateOutputType = {
   id: number
+  order_code: number
   customer_id: number
   ticket_id: number
   status: number
@@ -82,6 +85,7 @@ export type OrderSumAggregateInputType = {
 
 export type OrderMinAggregateInputType = {
   id?: true
+  order_code?: true
   customer_id?: true
   ticket_id?: true
   status?: true
@@ -94,6 +98,7 @@ export type OrderMinAggregateInputType = {
 
 export type OrderMaxAggregateInputType = {
   id?: true
+  order_code?: true
   customer_id?: true
   ticket_id?: true
   status?: true
@@ -106,6 +111,7 @@ export type OrderMaxAggregateInputType = {
 
 export type OrderCountAggregateInputType = {
   id?: true
+  order_code?: true
   customer_id?: true
   ticket_id?: true
   status?: true
@@ -205,6 +211,7 @@ export type OrderGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type OrderGroupByOutputType = {
   id: string
+  order_code: string
   customer_id: string
   ticket_id: string
   status: $Enums.Status
@@ -240,6 +247,7 @@ export type OrderWhereInput = {
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
+  order_code?: Prisma.StringFilter<"Order"> | string
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
@@ -255,6 +263,7 @@ export type OrderWhereInput = {
 
 export type OrderOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -270,6 +279,7 @@ export type OrderOrderByWithRelationInput = {
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  order_code?: string
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
@@ -284,10 +294,11 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   Payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   TicketsType?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
   Customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "order_code">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -308,6 +319,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   OR?: Prisma.OrderScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OrderScalarWhereWithAggregatesInput | Prisma.OrderScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  order_code?: Prisma.StringWithAggregatesFilter<"Order"> | string
   customer_id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   ticket_id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   status?: Prisma.EnumStatusWithAggregatesFilter<"Order"> | $Enums.Status
@@ -320,6 +332,7 @@ export type OrderScalarWhereWithAggregatesInput = {
 
 export type OrderCreateInput = {
   id?: string
+  order_code: string
   status: $Enums.Status
   using_point: boolean
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -333,6 +346,7 @@ export type OrderCreateInput = {
 
 export type OrderUncheckedCreateInput = {
   id?: string
+  order_code: string
   customer_id: string
   ticket_id: string
   status: $Enums.Status
@@ -346,6 +360,7 @@ export type OrderUncheckedCreateInput = {
 
 export type OrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -359,6 +374,7 @@ export type OrderUpdateInput = {
 
 export type OrderUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -372,6 +388,7 @@ export type OrderUncheckedUpdateInput = {
 
 export type OrderCreateManyInput = {
   id?: string
+  order_code: string
   customer_id: string
   ticket_id: string
   status: $Enums.Status
@@ -384,6 +401,7 @@ export type OrderCreateManyInput = {
 
 export type OrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -394,6 +412,7 @@ export type OrderUpdateManyMutationInput = {
 
 export type OrderUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -416,6 +435,7 @@ export type OrderOrderByRelationAggregateInput = {
 
 export type OrderCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -432,6 +452,7 @@ export type OrderAvgOrderByAggregateInput = {
 
 export type OrderMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -444,6 +465,7 @@ export type OrderMaxOrderByAggregateInput = {
 
 export type OrderMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -571,6 +593,7 @@ export type OrderUpdateOneRequiredWithoutPaymentNestedInput = {
 
 export type OrderCreateWithoutCustomerInput = {
   id?: string
+  order_code: string
   status: $Enums.Status
   using_point: boolean
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -583,6 +606,7 @@ export type OrderCreateWithoutCustomerInput = {
 
 export type OrderUncheckedCreateWithoutCustomerInput = {
   id?: string
+  order_code: string
   ticket_id: string
   status: $Enums.Status
   using_point: boolean
@@ -624,6 +648,7 @@ export type OrderScalarWhereInput = {
   OR?: Prisma.OrderScalarWhereInput[]
   NOT?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
+  order_code?: Prisma.StringFilter<"Order"> | string
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
@@ -636,6 +661,7 @@ export type OrderScalarWhereInput = {
 
 export type OrderCreateWithoutTicketsTypeInput = {
   id?: string
+  order_code: string
   status: $Enums.Status
   using_point: boolean
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -648,6 +674,7 @@ export type OrderCreateWithoutTicketsTypeInput = {
 
 export type OrderUncheckedCreateWithoutTicketsTypeInput = {
   id?: string
+  order_code: string
   customer_id: string
   status: $Enums.Status
   using_point: boolean
@@ -686,6 +713,7 @@ export type OrderUpdateManyWithWhereWithoutTicketsTypeInput = {
 
 export type OrderCreateWithoutPaymentInput = {
   id?: string
+  order_code: string
   status: $Enums.Status
   using_point: boolean
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -698,6 +726,7 @@ export type OrderCreateWithoutPaymentInput = {
 
 export type OrderUncheckedCreateWithoutPaymentInput = {
   id?: string
+  order_code: string
   customer_id: string
   ticket_id: string
   status: $Enums.Status
@@ -726,6 +755,7 @@ export type OrderUpdateToOneWithWhereWithoutPaymentInput = {
 
 export type OrderUpdateWithoutPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -738,6 +768,7 @@ export type OrderUpdateWithoutPaymentInput = {
 
 export type OrderUncheckedUpdateWithoutPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -750,6 +781,7 @@ export type OrderUncheckedUpdateWithoutPaymentInput = {
 
 export type OrderCreateManyCustomerInput = {
   id?: string
+  order_code: string
   ticket_id: string
   status: $Enums.Status
   using_point: boolean
@@ -761,6 +793,7 @@ export type OrderCreateManyCustomerInput = {
 
 export type OrderUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -773,6 +806,7 @@ export type OrderUpdateWithoutCustomerInput = {
 
 export type OrderUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -785,6 +819,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
 
 export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -796,6 +831,7 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
 
 export type OrderCreateManyTicketsTypeInput = {
   id?: string
+  order_code: string
   customer_id: string
   status: $Enums.Status
   using_point: boolean
@@ -807,6 +843,7 @@ export type OrderCreateManyTicketsTypeInput = {
 
 export type OrderUpdateWithoutTicketsTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -819,6 +856,7 @@ export type OrderUpdateWithoutTicketsTypeInput = {
 
 export type OrderUncheckedUpdateWithoutTicketsTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -831,6 +869,7 @@ export type OrderUncheckedUpdateWithoutTicketsTypeInput = {
 
 export type OrderUncheckedUpdateManyWithoutTicketsTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -844,6 +883,7 @@ export type OrderUncheckedUpdateManyWithoutTicketsTypeInput = {
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
@@ -859,6 +899,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
@@ -873,6 +914,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
@@ -887,6 +929,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type OrderSelectScalar = {
   id?: boolean
+  order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
@@ -897,7 +940,7 @@ export type OrderSelectScalar = {
   deleted_at?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customer_id" | "ticket_id" | "status" | "using_point" | "total" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order_code" | "customer_id" | "ticket_id" | "status" | "using_point" | "total" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Payment?: boolean | Prisma.Order$PaymentArgs<ExtArgs>
   TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
@@ -921,6 +964,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    order_code: string
     customer_id: string
     ticket_id: string
     status: $Enums.Status
@@ -1356,6 +1400,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface OrderFieldRefs {
   readonly id: Prisma.FieldRef<"Order", 'String'>
+  readonly order_code: Prisma.FieldRef<"Order", 'String'>
   readonly customer_id: Prisma.FieldRef<"Order", 'String'>
   readonly ticket_id: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'Status'>

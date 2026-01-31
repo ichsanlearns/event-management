@@ -28,10 +28,12 @@ export type AggregateVoucher = {
 
 export type VoucherAvgAggregateOutputType = {
   discount_amount: number | null
+  quota: number | null
 }
 
 export type VoucherSumAggregateOutputType = {
   discount_amount: number | null
+  quota: number | null
 }
 
 export type VoucherMinAggregateOutputType = {
@@ -39,6 +41,7 @@ export type VoucherMinAggregateOutputType = {
   event_id: string | null
   code: string | null
   discount_amount: number | null
+  quota: number | null
   start_date: Date | null
   end_date: Date | null
   created_at: Date | null
@@ -51,6 +54,7 @@ export type VoucherMaxAggregateOutputType = {
   event_id: string | null
   code: string | null
   discount_amount: number | null
+  quota: number | null
   start_date: Date | null
   end_date: Date | null
   created_at: Date | null
@@ -63,6 +67,7 @@ export type VoucherCountAggregateOutputType = {
   event_id: number
   code: number
   discount_amount: number
+  quota: number
   start_date: number
   end_date: number
   created_at: number
@@ -74,10 +79,12 @@ export type VoucherCountAggregateOutputType = {
 
 export type VoucherAvgAggregateInputType = {
   discount_amount?: true
+  quota?: true
 }
 
 export type VoucherSumAggregateInputType = {
   discount_amount?: true
+  quota?: true
 }
 
 export type VoucherMinAggregateInputType = {
@@ -85,6 +92,7 @@ export type VoucherMinAggregateInputType = {
   event_id?: true
   code?: true
   discount_amount?: true
+  quota?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -97,6 +105,7 @@ export type VoucherMaxAggregateInputType = {
   event_id?: true
   code?: true
   discount_amount?: true
+  quota?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -109,6 +118,7 @@ export type VoucherCountAggregateInputType = {
   event_id?: true
   code?: true
   discount_amount?: true
+  quota?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -208,6 +218,7 @@ export type VoucherGroupByOutputType = {
   event_id: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date
   end_date: Date
   created_at: Date
@@ -243,6 +254,7 @@ export type VoucherWhereInput = {
   event_id?: Prisma.StringFilter<"Voucher"> | string
   code?: Prisma.StringFilter<"Voucher"> | string
   discount_amount?: Prisma.IntFilter<"Voucher"> | number
+  quota?: Prisma.IntFilter<"Voucher"> | number
   start_date?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   end_date?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   created_at?: Prisma.DateTimeFilter<"Voucher"> | Date | string
@@ -257,6 +269,7 @@ export type VoucherOrderByWithRelationInput = {
   event_id?: Prisma.SortOrder
   code?: Prisma.SortOrder
   discount_amount?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -274,6 +287,7 @@ export type VoucherWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.VoucherWhereInput | Prisma.VoucherWhereInput[]
   event_id?: Prisma.StringFilter<"Voucher"> | string
   discount_amount?: Prisma.IntFilter<"Voucher"> | number
+  quota?: Prisma.IntFilter<"Voucher"> | number
   start_date?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   end_date?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   created_at?: Prisma.DateTimeFilter<"Voucher"> | Date | string
@@ -288,6 +302,7 @@ export type VoucherOrderByWithAggregationInput = {
   event_id?: Prisma.SortOrder
   code?: Prisma.SortOrder
   discount_amount?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -308,6 +323,7 @@ export type VoucherScalarWhereWithAggregatesInput = {
   event_id?: Prisma.StringWithAggregatesFilter<"Voucher"> | string
   code?: Prisma.StringWithAggregatesFilter<"Voucher"> | string
   discount_amount?: Prisma.IntWithAggregatesFilter<"Voucher"> | number
+  quota?: Prisma.IntWithAggregatesFilter<"Voucher"> | number
   start_date?: Prisma.DateTimeWithAggregatesFilter<"Voucher"> | Date | string
   end_date?: Prisma.DateTimeWithAggregatesFilter<"Voucher"> | Date | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Voucher"> | Date | string
@@ -319,6 +335,7 @@ export type VoucherCreateInput = {
   id?: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -333,6 +350,7 @@ export type VoucherUncheckedCreateInput = {
   event_id: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -345,6 +363,7 @@ export type VoucherUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,6 +378,7 @@ export type VoucherUncheckedUpdateInput = {
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -372,6 +392,7 @@ export type VoucherCreateManyInput = {
   event_id: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -383,6 +404,7 @@ export type VoucherUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -395,6 +417,7 @@ export type VoucherUncheckedUpdateManyInput = {
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -422,6 +445,7 @@ export type VoucherCountOrderByAggregateInput = {
   event_id?: Prisma.SortOrder
   code?: Prisma.SortOrder
   discount_amount?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -431,6 +455,7 @@ export type VoucherCountOrderByAggregateInput = {
 
 export type VoucherAvgOrderByAggregateInput = {
   discount_amount?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
 }
 
 export type VoucherMaxOrderByAggregateInput = {
@@ -438,6 +463,7 @@ export type VoucherMaxOrderByAggregateInput = {
   event_id?: Prisma.SortOrder
   code?: Prisma.SortOrder
   discount_amount?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -450,6 +476,7 @@ export type VoucherMinOrderByAggregateInput = {
   event_id?: Prisma.SortOrder
   code?: Prisma.SortOrder
   discount_amount?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -459,6 +486,7 @@ export type VoucherMinOrderByAggregateInput = {
 
 export type VoucherSumOrderByAggregateInput = {
   discount_amount?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
 }
 
 export type VoucherCreateNestedManyWithoutEventsInput = {
@@ -523,6 +551,7 @@ export type VoucherCreateWithoutEventsInput = {
   id?: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -535,6 +564,7 @@ export type VoucherUncheckedCreateWithoutEventsInput = {
   id?: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -577,6 +607,7 @@ export type VoucherScalarWhereInput = {
   event_id?: Prisma.StringFilter<"Voucher"> | string
   code?: Prisma.StringFilter<"Voucher"> | string
   discount_amount?: Prisma.IntFilter<"Voucher"> | number
+  quota?: Prisma.IntFilter<"Voucher"> | number
   start_date?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   end_date?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   created_at?: Prisma.DateTimeFilter<"Voucher"> | Date | string
@@ -588,6 +619,7 @@ export type VoucherCreateWithoutPaymentsInput = {
   id?: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -601,6 +633,7 @@ export type VoucherUncheckedCreateWithoutPaymentsInput = {
   event_id: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -628,6 +661,7 @@ export type VoucherUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -641,6 +675,7 @@ export type VoucherUncheckedUpdateWithoutPaymentsInput = {
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -652,6 +687,7 @@ export type VoucherCreateManyEventsInput = {
   id?: string
   code: string
   discount_amount: number
+  quota: number
   start_date: Date | string
   end_date: Date | string
   created_at?: Date | string
@@ -663,6 +699,7 @@ export type VoucherUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -675,6 +712,7 @@ export type VoucherUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -687,6 +725,7 @@ export type VoucherUncheckedUpdateManyWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
+  quota?: Prisma.IntFieldUpdateOperationsInput | number
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -730,6 +769,7 @@ export type VoucherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   event_id?: boolean
   code?: boolean
   discount_amount?: boolean
+  quota?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -745,6 +785,7 @@ export type VoucherSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   event_id?: boolean
   code?: boolean
   discount_amount?: boolean
+  quota?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -758,6 +799,7 @@ export type VoucherSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   event_id?: boolean
   code?: boolean
   discount_amount?: boolean
+  quota?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -771,6 +813,7 @@ export type VoucherSelectScalar = {
   event_id?: boolean
   code?: boolean
   discount_amount?: boolean
+  quota?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -778,7 +821,7 @@ export type VoucherSelectScalar = {
   deleted_at?: boolean
 }
 
-export type VoucherOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "event_id" | "code" | "discount_amount" | "start_date" | "end_date" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["voucher"]>
+export type VoucherOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "event_id" | "code" | "discount_amount" | "quota" | "start_date" | "end_date" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["voucher"]>
 export type VoucherInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Payments?: boolean | Prisma.Voucher$PaymentsArgs<ExtArgs>
   Events?: boolean | Prisma.EventDefaultArgs<ExtArgs>
@@ -802,6 +845,7 @@ export type $VoucherPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     event_id: string
     code: string
     discount_amount: number
+    quota: number
     start_date: Date
     end_date: Date
     created_at: Date
@@ -1236,6 +1280,7 @@ export interface VoucherFieldRefs {
   readonly event_id: Prisma.FieldRef<"Voucher", 'String'>
   readonly code: Prisma.FieldRef<"Voucher", 'String'>
   readonly discount_amount: Prisma.FieldRef<"Voucher", 'Int'>
+  readonly quota: Prisma.FieldRef<"Voucher", 'Int'>
   readonly start_date: Prisma.FieldRef<"Voucher", 'DateTime'>
   readonly end_date: Prisma.FieldRef<"Voucher", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"Voucher", 'DateTime'>

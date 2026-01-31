@@ -129,6 +129,7 @@ model Ticket {
 
 model Order {
   id String @id @default(uuid())
+  order_code String @unique
   customer_id String
   ticket_id String
   status Status
@@ -171,6 +172,7 @@ model Voucher {
   event_id String
   code String @unique
   discount_amount Int
+  quota Int
 
   start_date DateTime
   end_date DateTime
