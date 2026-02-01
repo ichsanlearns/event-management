@@ -24,9 +24,9 @@ createRoot(document.getElementById("root")!).render(
         <Route path="login" element={<Login />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
+
         <Route path="/" element={<Root />}>
           <Route index element={<Home />} />
-
           <Route path="profile" element={<Profile />} />
           <Route path="event/:id" element={<Event />} />
           <Route path="payment/:id" element={<Payment />} />

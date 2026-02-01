@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 
 import type { TEvent } from "../types/event.type";
 import { formattedPrice } from "../utils/format.util";
+import { generateOrderId } from "../utils/order.util";
 
 function Event() {
   const params = useParams();
@@ -14,10 +15,15 @@ function Event() {
     type: string;
     price: number;
   } | null>(null);
+
   const currentPrice = selectedTicket?.price! * quantity;
   const navigate = useNavigate();
 
   const [event, setEvent] = useState<TEvent | null>(null);
+  const orderNumber = event?.Tickets?.reduce(
+    (total, ticket) => total + ticket.bought,
+    0,
+  );
 
   useEffect(() => {
     async function getEventById() {
@@ -40,15 +46,38 @@ function Event() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const payload = {};
+    const payload = {
+      orderCode: "",
+      customerId: "",
+      ticketId: "",
+      quantity: 1,
+      status: "",
+      usingPoint: 0,
+      total: 0,
+    };
+
+    payload.orderCode = generateOrderId(
+      event!.name,
+      event?.start_date!,
+      orderNumber! + 1,
+    );
+
+    payload.customerId = "033b2c73-d294-4bac-bf78-2b88b61557c1";
+    payload.ticketId = selectedTicket!.id;
+    payload.quantity = quantity;
+    payload.status = "WAITING_PAYMENT";
+    payload.usingPoint = 0;
+    payload.total = currentPrice;
+
+    console.log(payload);
 
     try {
-      const response = await fetch("/api/orders", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify("data"),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -57,7 +86,7 @@ function Event() {
 
       const data = await response.json();
 
-      navigate(`/payment/${data.orderId}`);
+      navigate(`/payment/${data.id}`);
     } catch (error) {
       console.error(error);
       alert("Something went wrong. Please try again.");
@@ -190,18 +219,7 @@ function Event() {
                 </h3>
                 {/* Ticket Selection Form */}
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    navigate(`/payment/${event?.id}`, {
-                      state: {
-                        ticketId: selectedTicket?.id,
-                        ticketType: selectedTicket?.type,
-                        ticketPrice: selectedTicket?.price,
-                        quantity,
-                        event: event,
-                      },
-                    });
-                  }}
+                  onSubmit={(e) => handleSubmit(e)}
                   id="ticketForm"
                   className="space-y-4"
                 >

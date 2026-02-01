@@ -133,7 +133,8 @@ model Order {
   customer_id String
   ticket_id String
   status Status
-  using_point Boolean
+  quantity Int
+  using_point Int
   total Decimal
   
 
@@ -153,6 +154,7 @@ model Payment {
   id String @id @default(uuid())
   order_id String @unique
   voucher_id String?
+  quantity Int
   total_before Decimal
   total Decimal
   deadline DateTime

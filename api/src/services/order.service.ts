@@ -5,8 +5,9 @@ export async function create(
   orderCode: string,
   customerId: string,
   ticketId: string,
+  quantity: number,
   status: Status,
-  usingPoint: boolean,
+  usingPoint: number,
   total: number,
 ) {
   return prisma.order.create({
@@ -14,6 +15,7 @@ export async function create(
       order_code: orderCode,
       customer_id: customerId,
       ticket_id: ticketId,
+      quantity,
       status,
       using_point: usingPoint,
       total,
@@ -22,5 +24,14 @@ export async function create(
 }
 
 export async function getById(id: string) {
-  return prisma.order.findUnique({ where: { id } });
+  return prisma.order.findUnique({
+    where: { id },
+    include: {
+      TicketsType: { include: { EventName: true } },
+    },
+  });
+}
+
+export async function getAll() {
+  return prisma.order.findMany();
 }

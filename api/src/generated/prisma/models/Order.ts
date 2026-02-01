@@ -27,10 +27,14 @@ export type AggregateOrder = {
 }
 
 export type OrderAvgAggregateOutputType = {
+  quantity: number | null
+  using_point: number | null
   total: runtime.Decimal | null
 }
 
 export type OrderSumAggregateOutputType = {
+  quantity: number | null
+  using_point: number | null
   total: runtime.Decimal | null
 }
 
@@ -40,7 +44,8 @@ export type OrderMinAggregateOutputType = {
   customer_id: string | null
   ticket_id: string | null
   status: $Enums.Status | null
-  using_point: boolean | null
+  quantity: number | null
+  using_point: number | null
   total: runtime.Decimal | null
   created_at: Date | null
   updated_at: Date | null
@@ -53,7 +58,8 @@ export type OrderMaxAggregateOutputType = {
   customer_id: string | null
   ticket_id: string | null
   status: $Enums.Status | null
-  using_point: boolean | null
+  quantity: number | null
+  using_point: number | null
   total: runtime.Decimal | null
   created_at: Date | null
   updated_at: Date | null
@@ -66,6 +72,7 @@ export type OrderCountAggregateOutputType = {
   customer_id: number
   ticket_id: number
   status: number
+  quantity: number
   using_point: number
   total: number
   created_at: number
@@ -76,10 +83,14 @@ export type OrderCountAggregateOutputType = {
 
 
 export type OrderAvgAggregateInputType = {
+  quantity?: true
+  using_point?: true
   total?: true
 }
 
 export type OrderSumAggregateInputType = {
+  quantity?: true
+  using_point?: true
   total?: true
 }
 
@@ -89,6 +100,7 @@ export type OrderMinAggregateInputType = {
   customer_id?: true
   ticket_id?: true
   status?: true
+  quantity?: true
   using_point?: true
   total?: true
   created_at?: true
@@ -102,6 +114,7 @@ export type OrderMaxAggregateInputType = {
   customer_id?: true
   ticket_id?: true
   status?: true
+  quantity?: true
   using_point?: true
   total?: true
   created_at?: true
@@ -115,6 +128,7 @@ export type OrderCountAggregateInputType = {
   customer_id?: true
   ticket_id?: true
   status?: true
+  quantity?: true
   using_point?: true
   total?: true
   created_at?: true
@@ -215,7 +229,8 @@ export type OrderGroupByOutputType = {
   customer_id: string
   ticket_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal
   created_at: Date
   updated_at: Date
@@ -251,7 +266,8 @@ export type OrderWhereInput = {
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
-  using_point?: Prisma.BoolFilter<"Order"> | boolean
+  quantity?: Prisma.IntFilter<"Order"> | number
+  using_point?: Prisma.IntFilter<"Order"> | number
   total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -267,6 +283,7 @@ export type OrderOrderByWithRelationInput = {
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
   total?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -286,7 +303,8 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
-  using_point?: Prisma.BoolFilter<"Order"> | boolean
+  quantity?: Prisma.IntFilter<"Order"> | number
+  using_point?: Prisma.IntFilter<"Order"> | number
   total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -302,6 +320,7 @@ export type OrderOrderByWithAggregationInput = {
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
   total?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -323,7 +342,8 @@ export type OrderScalarWhereWithAggregatesInput = {
   customer_id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   ticket_id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   status?: Prisma.EnumStatusWithAggregatesFilter<"Order"> | $Enums.Status
-  using_point?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  quantity?: Prisma.IntWithAggregatesFilter<"Order"> | number
+  using_point?: Prisma.IntWithAggregatesFilter<"Order"> | number
   total?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -334,7 +354,8 @@ export type OrderCreateInput = {
   id?: string
   order_code: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -350,7 +371,8 @@ export type OrderUncheckedCreateInput = {
   customer_id: string
   ticket_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -362,7 +384,8 @@ export type OrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -378,7 +401,8 @@ export type OrderUncheckedUpdateInput = {
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -392,7 +416,8 @@ export type OrderCreateManyInput = {
   customer_id: string
   ticket_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -403,7 +428,8 @@ export type OrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -416,7 +442,8 @@ export type OrderUncheckedUpdateManyInput = {
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -439,6 +466,7 @@ export type OrderCountOrderByAggregateInput = {
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
   total?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -447,6 +475,8 @@ export type OrderCountOrderByAggregateInput = {
 }
 
 export type OrderAvgOrderByAggregateInput = {
+  quantity?: Prisma.SortOrder
+  using_point?: Prisma.SortOrder
   total?: Prisma.SortOrder
 }
 
@@ -456,6 +486,7 @@ export type OrderMaxOrderByAggregateInput = {
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
   total?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -469,6 +500,7 @@ export type OrderMinOrderByAggregateInput = {
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
   total?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -477,6 +509,8 @@ export type OrderMinOrderByAggregateInput = {
 }
 
 export type OrderSumOrderByAggregateInput = {
+  quantity?: Prisma.SortOrder
+  using_point?: Prisma.SortOrder
   total?: Prisma.SortOrder
 }
 
@@ -573,10 +607,6 @@ export type EnumStatusFieldUpdateOperationsInput = {
   set?: $Enums.Status
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type OrderCreateNestedOneWithoutPaymentInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutPaymentInput, Prisma.OrderUncheckedCreateWithoutPaymentInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPaymentInput
@@ -595,7 +625,8 @@ export type OrderCreateWithoutCustomerInput = {
   id?: string
   order_code: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -609,7 +640,8 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   order_code: string
   ticket_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -652,7 +684,8 @@ export type OrderScalarWhereInput = {
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
-  using_point?: Prisma.BoolFilter<"Order"> | boolean
+  quantity?: Prisma.IntFilter<"Order"> | number
+  using_point?: Prisma.IntFilter<"Order"> | number
   total?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -663,7 +696,8 @@ export type OrderCreateWithoutTicketsTypeInput = {
   id?: string
   order_code: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -677,7 +711,8 @@ export type OrderUncheckedCreateWithoutTicketsTypeInput = {
   order_code: string
   customer_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -715,7 +750,8 @@ export type OrderCreateWithoutPaymentInput = {
   id?: string
   order_code: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -730,7 +766,8 @@ export type OrderUncheckedCreateWithoutPaymentInput = {
   customer_id: string
   ticket_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -757,7 +794,8 @@ export type OrderUpdateWithoutPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -772,7 +810,8 @@ export type OrderUncheckedUpdateWithoutPaymentInput = {
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -784,7 +823,8 @@ export type OrderCreateManyCustomerInput = {
   order_code: string
   ticket_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -795,7 +835,8 @@ export type OrderUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -809,7 +850,8 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -822,7 +864,8 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -834,7 +877,8 @@ export type OrderCreateManyTicketsTypeInput = {
   order_code: string
   customer_id: string
   status: $Enums.Status
-  using_point: boolean
+  quantity: number
+  using_point: number
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -845,7 +889,8 @@ export type OrderUpdateWithoutTicketsTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -859,7 +904,8 @@ export type OrderUncheckedUpdateWithoutTicketsTypeInput = {
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -872,7 +918,8 @@ export type OrderUncheckedUpdateManyWithoutTicketsTypeInput = {
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  using_point?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -887,6 +934,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
+  quantity?: boolean
   using_point?: boolean
   total?: boolean
   created_at?: boolean
@@ -903,6 +951,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
+  quantity?: boolean
   using_point?: boolean
   total?: boolean
   created_at?: boolean
@@ -918,6 +967,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
+  quantity?: boolean
   using_point?: boolean
   total?: boolean
   created_at?: boolean
@@ -933,6 +983,7 @@ export type OrderSelectScalar = {
   customer_id?: boolean
   ticket_id?: boolean
   status?: boolean
+  quantity?: boolean
   using_point?: boolean
   total?: boolean
   created_at?: boolean
@@ -940,7 +991,7 @@ export type OrderSelectScalar = {
   deleted_at?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order_code" | "customer_id" | "ticket_id" | "status" | "using_point" | "total" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order_code" | "customer_id" | "ticket_id" | "status" | "quantity" | "using_point" | "total" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Payment?: boolean | Prisma.Order$PaymentArgs<ExtArgs>
   TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
@@ -968,7 +1019,8 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     customer_id: string
     ticket_id: string
     status: $Enums.Status
-    using_point: boolean
+    quantity: number
+    using_point: number
     total: runtime.Decimal
     created_at: Date
     updated_at: Date
@@ -1404,7 +1456,8 @@ export interface OrderFieldRefs {
   readonly customer_id: Prisma.FieldRef<"Order", 'String'>
   readonly ticket_id: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'Status'>
-  readonly using_point: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly quantity: Prisma.FieldRef<"Order", 'Int'>
+  readonly using_point: Prisma.FieldRef<"Order", 'Int'>
   readonly total: Prisma.FieldRef<"Order", 'Decimal'>
   readonly created_at: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"Order", 'DateTime'>

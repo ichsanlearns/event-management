@@ -1187,6 +1187,7 @@ export const OrderScalarFieldEnum = {
   customer_id: 'customer_id',
   ticket_id: 'ticket_id',
   status: 'status',
+  quantity: 'quantity',
   using_point: 'using_point',
   total: 'total',
   created_at: 'created_at',
@@ -1201,6 +1202,7 @@ export const PaymentScalarFieldEnum = {
   id: 'id',
   order_id: 'order_id',
   voucher_id: 'voucher_id',
+  quantity: 'quantity',
   total_before: 'total_before',
   total: 'total',
   deadline: 'deadline',
@@ -1394,13 +1396,6 @@ export type EnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
  * Reference to a field of type 'Status[]'
  */
 export type ListEnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
