@@ -10,17 +10,23 @@ export async function create(
   usingPoint: number,
   total: number,
 ) {
-  return prisma.order.create({
-    data: {
-      order_code: orderCode,
-      customer_id: customerId,
-      ticket_id: ticketId,
-      quantity,
-      status,
-      using_point: usingPoint,
-      total,
-    },
-  });
+  return prisma.$transaction([
+    prisma.order.create({
+      data: {
+        order_code: orderCode,
+        customer_id: customerId,
+        ticket_id: ticketId,
+        quantity,
+        status,
+        using_point: usingPoint,
+        total,
+      },
+    }),
+    prisma.ticket.update({
+      where: { id: ticketId },
+      data: { bought: { increment: quantity } },
+    }),
+  ]);
 }
 
 export async function getById(id: string) {

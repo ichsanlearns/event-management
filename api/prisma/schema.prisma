@@ -69,7 +69,9 @@ model Event {
   name String
   price Decimal
   description String
+  about String?
   category Category
+  venue String?
   city String
   available_seats Int
   organizer_id String
@@ -137,6 +139,7 @@ model Order {
   using_point Int
   total Decimal
   
+  expired_at DateTime?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
