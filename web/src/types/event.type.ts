@@ -10,10 +10,14 @@ export interface ITicket {
   event_id: string;
   type: "EARLYBIRD" | "REGULER" | "VIP";
   price: number;
-  Quota: number;
+  quota: number;
+  bought: number;
+
   created_at: Date;
   updated_at: Date;
   deleted_at: string | null;
+
+  EventName: TEvent;
 }
 
 export type TEvent = {
@@ -30,3 +34,26 @@ export type TEvent = {
   image?: string;
   Tickets?: ITicket[];
 };
+
+type OrderStatus =
+  | "WAITING_PAYMENT"
+  | "WAITING_CONFIRMATION"
+  | "DONE"
+  | "REJECTED"
+  | "EXPIRED"
+  | "CANCELLED";
+
+export interface IOrder {
+  id: string;
+  order_code: string;
+  customer_id: string;
+  ticket_id: string;
+  status: OrderStatus;
+  quantity: number;
+  using_point: number;
+  total: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  TicketsType: ITicket;
+}

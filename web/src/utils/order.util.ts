@@ -9,7 +9,9 @@ export function generateOrderId(
     .map((word) => word[0].toUpperCase())
     .join("");
 
-  const year = eventDate.getFullYear().toString().slice(-2);
+  const date = eventDate instanceof Date ? eventDate : new Date(eventDate);
+
+  const year = date.getFullYear().toString().slice(-2);
 
   const shortYear = year.toString().slice(-2);
 

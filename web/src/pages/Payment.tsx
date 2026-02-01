@@ -1,17 +1,18 @@
-import { useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router";
+
 import { formattedPrice, formatTime } from "../utils/format.util";
-import { useRef, useState } from "react";
 import { useCountdown } from "../utils/countdown.util";
+import type { IOrder } from "../types/event.type";
 
 function Payment() {
-  const { ticketType, ticketPrice, quantity, event } = useLocation().state;
-
   const [withPromo, setWithPromo] = useState(false);
   const [open, setOpen] = useState<"atm" | "banking" | null>(null);
   const [copied, setCopied] = useState(false);
-  const expiredAtRef = useRef(Date.now() + 2 * 60 * 60 * 1000);
+  const { id } = useParams();
+  const [order, setOrder] = useState<IOrder | null>(null);
 
-  const totalAmount = ticketPrice * quantity - 300_000 - 50_000;
+  const expiredAtRef = useRef(Date.now() + 2 * 60 * 60 * 1000);
 
   async function handleCopy() {
     await navigator.clipboard.writeText("8800 1234 5678 900");
@@ -22,6 +23,23 @@ function Payment() {
 
   const timeLeft = useCountdown(expiredAtRef.current);
   const { hours, minutes, seconds } = formatTime(timeLeft);
+
+  useEffect(() => {
+    try {
+      async function getOrder() {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/orders/${id}`,
+        );
+        const data = await response.json();
+
+        setOrder(data);
+      }
+
+      getOrder();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
     <main className="max-w-full bg-background-dark p-30">
@@ -255,20 +273,19 @@ function Payment() {
                   className="h-32 w-full bg-cover bg-center relative"
                   data-alt="Neon festival crowd with lasers and stage lights"
                   style={{
-                    backgroundImage: `url(
-                    https://lh3.googleusercontent.com/aida-public/AB6AXuBnlxosSuwQI4mtswi8W-JcfaoKztCw4rjzOURf4QYUjlIq9BNpKttzPYqoiVRx2xxtt4ZpyGtiqYp9nT4wDro0fG88NL7wd4SPVmigGAzibAEo_F28n4Eg9q9vpzGEs8jtC2GdSYwNGC3IrQHdjZ--nOJJZ81P1IFtiJEVVoC2ZLA4a6MbV35UJu5BeO8CiqHataKoI6WnQx0K9HGpJmbMtnWkHF3CfOPkraVrH9Ap7sDI6HdGXkBuyd45cZRvjUmXXQxUD7U5ILg)`,
+                    backgroundImage: `url(${order?.TicketsType.EventName.image})`,
                   }}
                 >
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
                   <div className="absolute bottom-3 left-4 right-4">
                     <h4 className="text-white font-bold text-lg leading-tight">
-                      {event.name}
+                      {order?.TicketsType.EventName.name}
                     </h4>
                     <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px]">
                         location_on
                       </span>
-                      {event.city}
+                      {order?.TicketsType.EventName.city}
                     </p>
                   </div>
                 </div>
@@ -276,10 +293,10 @@ function Payment() {
                   <div className="flex justify-between items-start mb-6">
                     <div>
                       <p className="text-sm text-slate-500 font-medium">
-                        Order ID: #NEON-8839
+                        Order ID: {order?.order_code}
                       </p>
                       <p className="text-xs text-slate-400 mt-1">
-                        Oct 24, 2024
+                        {order?.created_at}
                       </p>
                     </div>
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800">
@@ -293,10 +310,10 @@ function Payment() {
                     {/* Items */}
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-600 dark:text-slate-300">
-                        {ticketType} Access ({quantity}x)
+                        {order?.TicketsType.type} Access ({order?.quantity}x)
                       </span>
                       <span className="font-medium text-slate-900 dark:text-white">
-                        Rp {formattedPrice(ticketPrice * quantity)}
+                        Rp {order?.TicketsType.price}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
@@ -361,7 +378,7 @@ function Payment() {
                           Total Amount
                         </span>
                         <span className="text-2xl font-black text-primary">
-                          Rp {formattedPrice(totalAmount)}
+                          Rp {order ? formattedPrice(order?.total) : ""}
                         </span>
                       </div>
                     </div>

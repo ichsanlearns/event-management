@@ -27,11 +27,13 @@ export type AggregatePayment = {
 }
 
 export type PaymentAvgAggregateOutputType = {
+  quantity: number | null
   total_before: runtime.Decimal | null
   total: runtime.Decimal | null
 }
 
 export type PaymentSumAggregateOutputType = {
+  quantity: number | null
   total_before: runtime.Decimal | null
   total: runtime.Decimal | null
 }
@@ -40,6 +42,7 @@ export type PaymentMinAggregateOutputType = {
   id: string | null
   order_id: string | null
   voucher_id: string | null
+  quantity: number | null
   total_before: runtime.Decimal | null
   total: runtime.Decimal | null
   deadline: Date | null
@@ -52,6 +55,7 @@ export type PaymentMaxAggregateOutputType = {
   id: string | null
   order_id: string | null
   voucher_id: string | null
+  quantity: number | null
   total_before: runtime.Decimal | null
   total: runtime.Decimal | null
   deadline: Date | null
@@ -64,6 +68,7 @@ export type PaymentCountAggregateOutputType = {
   id: number
   order_id: number
   voucher_id: number
+  quantity: number
   total_before: number
   total: number
   deadline: number
@@ -75,11 +80,13 @@ export type PaymentCountAggregateOutputType = {
 
 
 export type PaymentAvgAggregateInputType = {
+  quantity?: true
   total_before?: true
   total?: true
 }
 
 export type PaymentSumAggregateInputType = {
+  quantity?: true
   total_before?: true
   total?: true
 }
@@ -88,6 +95,7 @@ export type PaymentMinAggregateInputType = {
   id?: true
   order_id?: true
   voucher_id?: true
+  quantity?: true
   total_before?: true
   total?: true
   deadline?: true
@@ -100,6 +108,7 @@ export type PaymentMaxAggregateInputType = {
   id?: true
   order_id?: true
   voucher_id?: true
+  quantity?: true
   total_before?: true
   total?: true
   deadline?: true
@@ -112,6 +121,7 @@ export type PaymentCountAggregateInputType = {
   id?: true
   order_id?: true
   voucher_id?: true
+  quantity?: true
   total_before?: true
   total?: true
   deadline?: true
@@ -211,6 +221,7 @@ export type PaymentGroupByOutputType = {
   id: string
   order_id: string
   voucher_id: string | null
+  quantity: number
   total_before: runtime.Decimal
   total: runtime.Decimal
   deadline: Date
@@ -246,6 +257,7 @@ export type PaymentWhereInput = {
   id?: Prisma.StringFilter<"Payment"> | string
   order_id?: Prisma.StringFilter<"Payment"> | string
   voucher_id?: Prisma.StringNullableFilter<"Payment"> | string | null
+  quantity?: Prisma.IntFilter<"Payment"> | number
   total_before?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -260,6 +272,7 @@ export type PaymentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   order_id?: Prisma.SortOrder
   voucher_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   total_before?: Prisma.SortOrder
   total?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
@@ -277,6 +290,7 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PaymentWhereInput[]
   NOT?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   voucher_id?: Prisma.StringNullableFilter<"Payment"> | string | null
+  quantity?: Prisma.IntFilter<"Payment"> | number
   total_before?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -291,6 +305,7 @@ export type PaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   order_id?: Prisma.SortOrder
   voucher_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   total_before?: Prisma.SortOrder
   total?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
@@ -311,6 +326,7 @@ export type PaymentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   order_id?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   voucher_id?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  quantity?: Prisma.IntWithAggregatesFilter<"Payment"> | number
   total_before?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
@@ -321,6 +337,7 @@ export type PaymentScalarWhereWithAggregatesInput = {
 
 export type PaymentCreateInput = {
   id?: string
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -335,6 +352,7 @@ export type PaymentUncheckedCreateInput = {
   id?: string
   order_id: string
   voucher_id?: string | null
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -345,6 +363,7 @@ export type PaymentUncheckedCreateInput = {
 
 export type PaymentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,6 +378,7 @@ export type PaymentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_id?: Prisma.StringFieldUpdateOperationsInput | string
   voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -371,6 +391,7 @@ export type PaymentCreateManyInput = {
   id?: string
   order_id: string
   voucher_id?: string | null
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -381,6 +402,7 @@ export type PaymentCreateManyInput = {
 
 export type PaymentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -393,6 +415,7 @@ export type PaymentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_id?: Prisma.StringFieldUpdateOperationsInput | string
   voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -410,6 +433,7 @@ export type PaymentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   order_id?: Prisma.SortOrder
   voucher_id?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   total_before?: Prisma.SortOrder
   total?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
@@ -419,6 +443,7 @@ export type PaymentCountOrderByAggregateInput = {
 }
 
 export type PaymentAvgOrderByAggregateInput = {
+  quantity?: Prisma.SortOrder
   total_before?: Prisma.SortOrder
   total?: Prisma.SortOrder
 }
@@ -427,6 +452,7 @@ export type PaymentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   order_id?: Prisma.SortOrder
   voucher_id?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   total_before?: Prisma.SortOrder
   total?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
@@ -439,6 +465,7 @@ export type PaymentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   order_id?: Prisma.SortOrder
   voucher_id?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   total_before?: Prisma.SortOrder
   total?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
@@ -448,6 +475,7 @@ export type PaymentMinOrderByAggregateInput = {
 }
 
 export type PaymentSumOrderByAggregateInput = {
+  quantity?: Prisma.SortOrder
   total_before?: Prisma.SortOrder
   total?: Prisma.SortOrder
 }
@@ -538,6 +566,7 @@ export type PaymentUncheckedUpdateManyWithoutVoucherNestedInput = {
 
 export type PaymentCreateWithoutOrderInput = {
   id?: string
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -550,6 +579,7 @@ export type PaymentCreateWithoutOrderInput = {
 export type PaymentUncheckedCreateWithoutOrderInput = {
   id?: string
   voucher_id?: string | null
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -576,6 +606,7 @@ export type PaymentUpdateToOneWithWhereWithoutOrderInput = {
 
 export type PaymentUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -588,6 +619,7 @@ export type PaymentUpdateWithoutOrderInput = {
 export type PaymentUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -598,6 +630,7 @@ export type PaymentUncheckedUpdateWithoutOrderInput = {
 
 export type PaymentCreateWithoutVoucherInput = {
   id?: string
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -610,6 +643,7 @@ export type PaymentCreateWithoutVoucherInput = {
 export type PaymentUncheckedCreateWithoutVoucherInput = {
   id?: string
   order_id: string
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -651,6 +685,7 @@ export type PaymentScalarWhereInput = {
   id?: Prisma.StringFilter<"Payment"> | string
   order_id?: Prisma.StringFilter<"Payment"> | string
   voucher_id?: Prisma.StringNullableFilter<"Payment"> | string | null
+  quantity?: Prisma.IntFilter<"Payment"> | number
   total_before?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -662,6 +697,7 @@ export type PaymentScalarWhereInput = {
 export type PaymentCreateManyVoucherInput = {
   id?: string
   order_id: string
+  quantity: number
   total_before: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline: Date | string
@@ -672,6 +708,7 @@ export type PaymentCreateManyVoucherInput = {
 
 export type PaymentUpdateWithoutVoucherInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -684,6 +721,7 @@ export type PaymentUpdateWithoutVoucherInput = {
 export type PaymentUncheckedUpdateWithoutVoucherInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -695,6 +733,7 @@ export type PaymentUncheckedUpdateWithoutVoucherInput = {
 export type PaymentUncheckedUpdateManyWithoutVoucherInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   total_before?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -709,6 +748,7 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   order_id?: boolean
   voucher_id?: boolean
+  quantity?: boolean
   total_before?: boolean
   total?: boolean
   deadline?: boolean
@@ -723,6 +763,7 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   order_id?: boolean
   voucher_id?: boolean
+  quantity?: boolean
   total_before?: boolean
   total?: boolean
   deadline?: boolean
@@ -737,6 +778,7 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   order_id?: boolean
   voucher_id?: boolean
+  quantity?: boolean
   total_before?: boolean
   total?: boolean
   deadline?: boolean
@@ -751,6 +793,7 @@ export type PaymentSelectScalar = {
   id?: boolean
   order_id?: boolean
   voucher_id?: boolean
+  quantity?: boolean
   total_before?: boolean
   total?: boolean
   deadline?: boolean
@@ -759,7 +802,7 @@ export type PaymentSelectScalar = {
   deleted_at?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order_id" | "voucher_id" | "total_before" | "total" | "deadline" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order_id" | "voucher_id" | "quantity" | "total_before" | "total" | "deadline" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Voucher?: boolean | Prisma.Payment$VoucherArgs<ExtArgs>
   Order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -783,6 +826,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     order_id: string
     voucher_id: string | null
+    quantity: number
     total_before: runtime.Decimal
     total: runtime.Decimal
     deadline: Date
@@ -1217,6 +1261,7 @@ export interface PaymentFieldRefs {
   readonly id: Prisma.FieldRef<"Payment", 'String'>
   readonly order_id: Prisma.FieldRef<"Payment", 'String'>
   readonly voucher_id: Prisma.FieldRef<"Payment", 'String'>
+  readonly quantity: Prisma.FieldRef<"Payment", 'Int'>
   readonly total_before: Prisma.FieldRef<"Payment", 'Decimal'>
   readonly total: Prisma.FieldRef<"Payment", 'Decimal'>
   readonly deadline: Prisma.FieldRef<"Payment", 'DateTime'>
