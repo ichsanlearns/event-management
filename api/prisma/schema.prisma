@@ -110,7 +110,7 @@ model Review {
   @@map("reviews")
 }
 
-model Ticket {
+  model Ticket {
   id String @id @default(uuid())
   event_id String
   type Types

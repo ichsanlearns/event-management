@@ -1,7 +1,7 @@
 import type { Status } from "../generated/prisma/enums.js";
 import { prisma } from "../lib/prisma.lib.js";
 
-export async function create(
+export function create(
   orderCode: string,
   customerId: string,
   ticketId: string,
@@ -10,8 +10,8 @@ export async function create(
   usingPoint: number,
   total: number,
 ) {
-  return prisma.$transaction([
-    prisma.order.create({
+  return prisma.$transaction(async (tx) => {
+    const newOrder = await tx.order.create({
       data: {
         order_code: orderCode,
         customer_id: customerId,
@@ -21,12 +21,15 @@ export async function create(
         using_point: usingPoint,
         total,
       },
-    }),
-    prisma.ticket.update({
+    });
+
+    await tx.ticket.update({
       where: { id: ticketId },
       data: { bought: { increment: quantity } },
-    }),
-  ]);
+    });
+
+    return newOrder;
+  });
 }
 
 export async function getById(id: string) {

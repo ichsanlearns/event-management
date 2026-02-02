@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.route.js";
 import eventRoutes from "./routes/event.route.js";
 import userRoutes from "./routes/user.route.js";
 import orderRoutes from "./routes/order.route.js";
+import voucherRoutes from "./routes/voucher.route.js";
 
 const app: Application = express();
 const PORT: number = 8000;
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/voucher", voucherRoutes);
 
 app.listen(PORT, () => console.info(`Server is listening on port: ${PORT}`));
 
