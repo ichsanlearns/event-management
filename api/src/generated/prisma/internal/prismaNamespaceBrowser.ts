@@ -98,7 +98,9 @@ export const EventScalarFieldEnum = {
   name: 'name',
   price: 'price',
   description: 'description',
+  about: 'about',
   category: 'category',
+  venue: 'venue',
   city: 'city',
   available_seats: 'available_seats',
   organizer_id: 'organizer_id',
@@ -151,6 +153,7 @@ export const OrderScalarFieldEnum = {
   quantity: 'quantity',
   using_point: 'using_point',
   total: 'total',
+  expired_at: 'expired_at',
   created_at: 'created_at',
   updated_at: 'updated_at',
   deleted_at: 'deleted_at'

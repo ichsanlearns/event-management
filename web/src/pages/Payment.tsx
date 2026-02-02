@@ -11,6 +11,7 @@ function Payment() {
   const [copied, setCopied] = useState(false);
   const { id } = useParams();
   const [order, setOrder] = useState<IOrder | null>(null);
+  const [promoCode, setPromoCode] = useState<string | null>(null);
 
   const expiredAtRef = useRef(Date.now() + 2 * 60 * 60 * 1000);
 
@@ -19,6 +20,12 @@ function Payment() {
     setCopied(true);
 
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function submitPromo() {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_URL_API}/orders`);
+    } catch (error) {}
   }
 
   const timeLeft = useCountdown(expiredAtRef.current);
@@ -191,7 +198,7 @@ function Payment() {
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
                   open === "atm"
-                    ? "max-h-[500px] opacity-100 mt-2"
+                    ? "max-h-125 opacity-100 mt-2"
                     : "max-h-0 opacity-0"
                 }`}
               >
@@ -217,7 +224,7 @@ function Payment() {
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
                   open === "banking"
-                    ? "max-h-[500px] opacity-100 mt-2"
+                    ? "max-h-125 opacity-100 mt-2"
                     : "max-h-0 opacity-0"
                 }`}
               >
@@ -352,6 +359,8 @@ function Payment() {
                         <div className="flex items-center gap-2">
                           <div className="relative flex-1">
                             <input
+                              value={promoCode ? promoCode : ""}
+                              onChange={(e) => setPromoCode(e.target.value)}
                               type="text"
                               placeholder="Enter promo code..."
                               className="w-full pl-4 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700
@@ -361,7 +370,7 @@ function Payment() {
                           </div>
 
                           <button
-                            onClick={() => setWithPromo(true)}
+                            onClick={() => submitPromo()}
                             className="px-4 py-2 text-sm font-semibold rounded-xl
                bg-primary text-white hover:bg-primary/90
                transition-colors disabled:opacity-50"
