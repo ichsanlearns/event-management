@@ -15,6 +15,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import EditProfile from "./pages/EditProfile";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<Home />} />
 
           <Route path="profile" element={<Profile />} />
+          <Route path="profile/edit" element={<EditProfile />} />
           <Route path="event/:id" element={<Event />} />
           <Route path="payment" element={<Payment />} />
         </Route>

@@ -87,8 +87,7 @@ function Profile() {
 
         {/* Actions */}
         <div className="mt-10 space-y-4">
-          <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold">
-            <Edit size={18} />
+          <button onClick={() => navigate("/profile/edit")} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white font-bold">
             Edit Profile
           </button>
 
