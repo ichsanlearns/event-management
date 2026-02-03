@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { User, Mail, Shield, Gift, LogOut, Edit } from "lucide-react";
 import { useNavigate } from "react-router";
 import api from "../lib/api";
