@@ -48,6 +48,7 @@ export interface IOrder {
   order_code: string;
   customer_id: string;
   ticket_id: string;
+  voucher_id: string;
   status: OrderStatus;
   quantity: number;
   using_point: number;

@@ -260,8 +260,8 @@ export type VoucherWhereInput = {
   created_at?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"Voucher"> | Date | string | null
-  Payments?: Prisma.PaymentListRelationFilter
   Events?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
+  Orders?: Prisma.OrderListRelationFilter
 }
 
 export type VoucherOrderByWithRelationInput = {
@@ -275,8 +275,8 @@ export type VoucherOrderByWithRelationInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  Payments?: Prisma.PaymentOrderByRelationAggregateInput
   Events?: Prisma.EventOrderByWithRelationInput
+  Orders?: Prisma.OrderOrderByRelationAggregateInput
 }
 
 export type VoucherWhereUniqueInput = Prisma.AtLeast<{
@@ -293,8 +293,8 @@ export type VoucherWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Voucher"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"Voucher"> | Date | string | null
-  Payments?: Prisma.PaymentListRelationFilter
   Events?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
+  Orders?: Prisma.OrderListRelationFilter
 }, "id" | "code">
 
 export type VoucherOrderByWithAggregationInput = {
@@ -341,8 +341,8 @@ export type VoucherCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payments?: Prisma.PaymentCreateNestedManyWithoutVoucherInput
   Events: Prisma.EventCreateNestedOneWithoutVouchersInput
+  Orders?: Prisma.OrderCreateNestedManyWithoutVoucherInput
 }
 
 export type VoucherUncheckedCreateInput = {
@@ -356,7 +356,7 @@ export type VoucherUncheckedCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutVoucherInput
+  Orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVoucherInput
 }
 
 export type VoucherUpdateInput = {
@@ -369,8 +369,8 @@ export type VoucherUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payments?: Prisma.PaymentUpdateManyWithoutVoucherNestedInput
   Events?: Prisma.EventUpdateOneRequiredWithoutVouchersNestedInput
+  Orders?: Prisma.OrderUpdateManyWithoutVoucherNestedInput
 }
 
 export type VoucherUncheckedUpdateInput = {
@@ -384,7 +384,7 @@ export type VoucherUncheckedUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payments?: Prisma.PaymentUncheckedUpdateManyWithoutVoucherNestedInput
+  Orders?: Prisma.OrderUncheckedUpdateManyWithoutVoucherNestedInput
 }
 
 export type VoucherCreateManyInput = {
@@ -531,20 +531,20 @@ export type VoucherUncheckedUpdateManyWithoutEventsNestedInput = {
   deleteMany?: Prisma.VoucherScalarWhereInput | Prisma.VoucherScalarWhereInput[]
 }
 
-export type VoucherCreateNestedOneWithoutPaymentsInput = {
-  create?: Prisma.XOR<Prisma.VoucherCreateWithoutPaymentsInput, Prisma.VoucherUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.VoucherCreateOrConnectWithoutPaymentsInput
+export type VoucherCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.VoucherCreateWithoutOrdersInput, Prisma.VoucherUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.VoucherCreateOrConnectWithoutOrdersInput
   connect?: Prisma.VoucherWhereUniqueInput
 }
 
-export type VoucherUpdateOneWithoutPaymentsNestedInput = {
-  create?: Prisma.XOR<Prisma.VoucherCreateWithoutPaymentsInput, Prisma.VoucherUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.VoucherCreateOrConnectWithoutPaymentsInput
-  upsert?: Prisma.VoucherUpsertWithoutPaymentsInput
+export type VoucherUpdateOneWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.VoucherCreateWithoutOrdersInput, Prisma.VoucherUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.VoucherCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.VoucherUpsertWithoutOrdersInput
   disconnect?: Prisma.VoucherWhereInput | boolean
   delete?: Prisma.VoucherWhereInput | boolean
   connect?: Prisma.VoucherWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.VoucherUpdateToOneWithWhereWithoutPaymentsInput, Prisma.VoucherUpdateWithoutPaymentsInput>, Prisma.VoucherUncheckedUpdateWithoutPaymentsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VoucherUpdateToOneWithWhereWithoutOrdersInput, Prisma.VoucherUpdateWithoutOrdersInput>, Prisma.VoucherUncheckedUpdateWithoutOrdersInput>
 }
 
 export type VoucherCreateWithoutEventsInput = {
@@ -557,7 +557,7 @@ export type VoucherCreateWithoutEventsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payments?: Prisma.PaymentCreateNestedManyWithoutVoucherInput
+  Orders?: Prisma.OrderCreateNestedManyWithoutVoucherInput
 }
 
 export type VoucherUncheckedCreateWithoutEventsInput = {
@@ -570,7 +570,7 @@ export type VoucherUncheckedCreateWithoutEventsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutVoucherInput
+  Orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVoucherInput
 }
 
 export type VoucherCreateOrConnectWithoutEventsInput = {
@@ -615,7 +615,7 @@ export type VoucherScalarWhereInput = {
   deleted_at?: Prisma.DateTimeNullableFilter<"Voucher"> | Date | string | null
 }
 
-export type VoucherCreateWithoutPaymentsInput = {
+export type VoucherCreateWithoutOrdersInput = {
   id?: string
   code: string
   discount_amount: number
@@ -628,7 +628,7 @@ export type VoucherCreateWithoutPaymentsInput = {
   Events: Prisma.EventCreateNestedOneWithoutVouchersInput
 }
 
-export type VoucherUncheckedCreateWithoutPaymentsInput = {
+export type VoucherUncheckedCreateWithoutOrdersInput = {
   id?: string
   event_id: string
   code: string
@@ -641,23 +641,23 @@ export type VoucherUncheckedCreateWithoutPaymentsInput = {
   deleted_at?: Date | string | null
 }
 
-export type VoucherCreateOrConnectWithoutPaymentsInput = {
+export type VoucherCreateOrConnectWithoutOrdersInput = {
   where: Prisma.VoucherWhereUniqueInput
-  create: Prisma.XOR<Prisma.VoucherCreateWithoutPaymentsInput, Prisma.VoucherUncheckedCreateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.VoucherCreateWithoutOrdersInput, Prisma.VoucherUncheckedCreateWithoutOrdersInput>
 }
 
-export type VoucherUpsertWithoutPaymentsInput = {
-  update: Prisma.XOR<Prisma.VoucherUpdateWithoutPaymentsInput, Prisma.VoucherUncheckedUpdateWithoutPaymentsInput>
-  create: Prisma.XOR<Prisma.VoucherCreateWithoutPaymentsInput, Prisma.VoucherUncheckedCreateWithoutPaymentsInput>
+export type VoucherUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.VoucherUpdateWithoutOrdersInput, Prisma.VoucherUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.VoucherCreateWithoutOrdersInput, Prisma.VoucherUncheckedCreateWithoutOrdersInput>
   where?: Prisma.VoucherWhereInput
 }
 
-export type VoucherUpdateToOneWithWhereWithoutPaymentsInput = {
+export type VoucherUpdateToOneWithWhereWithoutOrdersInput = {
   where?: Prisma.VoucherWhereInput
-  data: Prisma.XOR<Prisma.VoucherUpdateWithoutPaymentsInput, Prisma.VoucherUncheckedUpdateWithoutPaymentsInput>
+  data: Prisma.XOR<Prisma.VoucherUpdateWithoutOrdersInput, Prisma.VoucherUncheckedUpdateWithoutOrdersInput>
 }
 
-export type VoucherUpdateWithoutPaymentsInput = {
+export type VoucherUpdateWithoutOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discount_amount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -670,7 +670,7 @@ export type VoucherUpdateWithoutPaymentsInput = {
   Events?: Prisma.EventUpdateOneRequiredWithoutVouchersNestedInput
 }
 
-export type VoucherUncheckedUpdateWithoutPaymentsInput = {
+export type VoucherUncheckedUpdateWithoutOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
@@ -705,7 +705,7 @@ export type VoucherUpdateWithoutEventsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payments?: Prisma.PaymentUpdateManyWithoutVoucherNestedInput
+  Orders?: Prisma.OrderUpdateManyWithoutVoucherNestedInput
 }
 
 export type VoucherUncheckedUpdateWithoutEventsInput = {
@@ -718,7 +718,7 @@ export type VoucherUncheckedUpdateWithoutEventsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payments?: Prisma.PaymentUncheckedUpdateManyWithoutVoucherNestedInput
+  Orders?: Prisma.OrderUncheckedUpdateManyWithoutVoucherNestedInput
 }
 
 export type VoucherUncheckedUpdateManyWithoutEventsInput = {
@@ -739,11 +739,11 @@ export type VoucherUncheckedUpdateManyWithoutEventsInput = {
  */
 
 export type VoucherCountOutputType = {
-  Payments: number
+  Orders: number
 }
 
 export type VoucherCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Payments?: boolean | VoucherCountOutputTypeCountPaymentsArgs
+  Orders?: boolean | VoucherCountOutputTypeCountOrdersArgs
 }
 
 /**
@@ -759,8 +759,8 @@ export type VoucherCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * VoucherCountOutputType without action
  */
-export type VoucherCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PaymentWhereInput
+export type VoucherCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
 }
 
 
@@ -775,8 +775,8 @@ export type VoucherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
-  Payments?: boolean | Prisma.Voucher$PaymentsArgs<ExtArgs>
   Events?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Orders?: boolean | Prisma.Voucher$OrdersArgs<ExtArgs>
   _count?: boolean | Prisma.VoucherCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["voucher"]>
 
@@ -823,8 +823,8 @@ export type VoucherSelectScalar = {
 
 export type VoucherOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "event_id" | "code" | "discount_amount" | "quota" | "start_date" | "end_date" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["voucher"]>
 export type VoucherInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Payments?: boolean | Prisma.Voucher$PaymentsArgs<ExtArgs>
   Events?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Orders?: boolean | Prisma.Voucher$OrdersArgs<ExtArgs>
   _count?: boolean | Prisma.VoucherCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type VoucherIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -837,8 +837,8 @@ export type VoucherIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $VoucherPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Voucher"
   objects: {
-    Payments: Prisma.$PaymentPayload<ExtArgs>[]
     Events: Prisma.$EventPayload<ExtArgs>
+    Orders: Prisma.$OrderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1245,8 +1245,8 @@ readonly fields: VoucherFieldRefs;
  */
 export interface Prisma__VoucherClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Payments<T extends Prisma.Voucher$PaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Voucher$PaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Events<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Orders<T extends Prisma.Voucher$OrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Voucher$OrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1682,27 +1682,27 @@ export type VoucherDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Voucher.Payments
+ * Voucher.Orders
  */
-export type Voucher$PaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Voucher$OrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Payment
+   * Select specific fields to fetch from the Order
    */
-  select?: Prisma.PaymentSelect<ExtArgs> | null
+  select?: Prisma.OrderSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Payment
+   * Omit specific fields from the Order
    */
-  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  omit?: Prisma.OrderOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.PaymentInclude<ExtArgs> | null
-  where?: Prisma.PaymentWhereInput
-  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
-  cursor?: Prisma.PaymentWhereUniqueInput
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
 }
 
 /**

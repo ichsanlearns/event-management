@@ -13,6 +13,20 @@ datasource db {
   provider = "postgresql"
 }
 
+enum PaymentMethod {
+  MANUAL_TRANSFER
+  E_WALLET
+  CREDIT_CARD
+}
+
+enum PaymentStatus {
+  PENDING  
+  WAITING_CONFIRMATION  
+  APPROVED  
+  REJECTED  
+  FAILED  
+}
+
 enum Category {
   MUSIC
   SPORT
@@ -134,6 +148,7 @@ model Order {
   order_code String @unique
   customer_id String
   ticket_id String
+  voucher_id String?
   status Status
   quantity Int
   using_point Int
@@ -145,28 +160,29 @@ model Order {
   updated_at DateTime @updatedAt
   deleted_at DateTime?
 
-  Payment Payment?
-
-  TicketsType Ticket @relation(fields: [ticket_id], references: [id])
+  Voucher Voucher? @relation(fields: [voucher_id], references: [id])
+  Ticket Ticket @relation(fields: [ticket_id], references: [id])
   Customer User @relation(fields: [customer_id], references: [id])
+
+  Payments Payment[]
 
   @@map("orders")
 }
 
 model Payment {
-  id String @id @default(uuid())
-  order_id String @unique
-  voucher_id String?
-  quantity Int
-  total_before Decimal
-  total Decimal
-  deadline DateTime
+  id String @id @default(uuid()) 
+  order_id String 
+  amount Decimal 
+  method PaymentMethod 
+  status PaymentStatus 
+  proof_image String? 
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
+  paid_at DateTime? 
+  confirmed_at DateTime? 
 
-  Voucher Voucher? @relation(fields: [voucher_id], references: [id])
+  created_at DateTime @default(now()) 
+  updated_at DateTime @updatedAt 
+  
   Order Order @relation(fields: [order_id], references: [id])
 
   @@map("payments")
@@ -186,8 +202,8 @@ model Voucher {
   updated_at DateTime @updatedAt
   deleted_at DateTime?
 
-  Payments Payment[]
   Events Event @relation(fields: [event_id], references: [id])
+  Orders Order[]
 
   @@map("vouchers")
 }

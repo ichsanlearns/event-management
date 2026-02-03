@@ -43,6 +43,7 @@ export type OrderMinAggregateOutputType = {
   order_code: string | null
   customer_id: string | null
   ticket_id: string | null
+  voucher_id: string | null
   status: $Enums.Status | null
   quantity: number | null
   using_point: number | null
@@ -58,6 +59,7 @@ export type OrderMaxAggregateOutputType = {
   order_code: string | null
   customer_id: string | null
   ticket_id: string | null
+  voucher_id: string | null
   status: $Enums.Status | null
   quantity: number | null
   using_point: number | null
@@ -73,6 +75,7 @@ export type OrderCountAggregateOutputType = {
   order_code: number
   customer_id: number
   ticket_id: number
+  voucher_id: number
   status: number
   quantity: number
   using_point: number
@@ -102,6 +105,7 @@ export type OrderMinAggregateInputType = {
   order_code?: true
   customer_id?: true
   ticket_id?: true
+  voucher_id?: true
   status?: true
   quantity?: true
   using_point?: true
@@ -117,6 +121,7 @@ export type OrderMaxAggregateInputType = {
   order_code?: true
   customer_id?: true
   ticket_id?: true
+  voucher_id?: true
   status?: true
   quantity?: true
   using_point?: true
@@ -132,6 +137,7 @@ export type OrderCountAggregateInputType = {
   order_code?: true
   customer_id?: true
   ticket_id?: true
+  voucher_id?: true
   status?: true
   quantity?: true
   using_point?: true
@@ -234,6 +240,7 @@ export type OrderGroupByOutputType = {
   order_code: string
   customer_id: string
   ticket_id: string
+  voucher_id: string | null
   status: $Enums.Status
   quantity: number
   using_point: number
@@ -272,6 +279,7 @@ export type OrderWhereInput = {
   order_code?: Prisma.StringFilter<"Order"> | string
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
+  voucher_id?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
   quantity?: Prisma.IntFilter<"Order"> | number
   using_point?: Prisma.IntFilter<"Order"> | number
@@ -280,9 +288,10 @@ export type OrderWhereInput = {
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
-  Payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  TicketsType?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
+  Voucher?: Prisma.XOR<Prisma.VoucherNullableScalarRelationFilter, Prisma.VoucherWhereInput> | null
+  Ticket?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
   Customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  Payments?: Prisma.PaymentListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -290,6 +299,7 @@ export type OrderOrderByWithRelationInput = {
   order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
+  voucher_id?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
@@ -298,9 +308,10 @@ export type OrderOrderByWithRelationInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  Payment?: Prisma.PaymentOrderByWithRelationInput
-  TicketsType?: Prisma.TicketOrderByWithRelationInput
+  Voucher?: Prisma.VoucherOrderByWithRelationInput
+  Ticket?: Prisma.TicketOrderByWithRelationInput
   Customer?: Prisma.UserOrderByWithRelationInput
+  Payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -311,6 +322,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
+  voucher_id?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
   quantity?: Prisma.IntFilter<"Order"> | number
   using_point?: Prisma.IntFilter<"Order"> | number
@@ -319,9 +331,10 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
-  Payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  TicketsType?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
+  Voucher?: Prisma.XOR<Prisma.VoucherNullableScalarRelationFilter, Prisma.VoucherWhereInput> | null
+  Ticket?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
   Customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  Payments?: Prisma.PaymentListRelationFilter
 }, "id" | "order_code">
 
 export type OrderOrderByWithAggregationInput = {
@@ -329,6 +342,7 @@ export type OrderOrderByWithAggregationInput = {
   order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
+  voucher_id?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
@@ -352,6 +366,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   order_code?: Prisma.StringWithAggregatesFilter<"Order"> | string
   customer_id?: Prisma.StringWithAggregatesFilter<"Order"> | string
   ticket_id?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  voucher_id?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   status?: Prisma.EnumStatusWithAggregatesFilter<"Order"> | $Enums.Status
   quantity?: Prisma.IntWithAggregatesFilter<"Order"> | number
   using_point?: Prisma.IntWithAggregatesFilter<"Order"> | number
@@ -373,9 +388,10 @@ export type OrderCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payment?: Prisma.PaymentCreateNestedOneWithoutOrderInput
-  TicketsType: Prisma.TicketCreateNestedOneWithoutEventsInput
+  Voucher?: Prisma.VoucherCreateNestedOneWithoutOrdersInput
+  Ticket: Prisma.TicketCreateNestedOneWithoutEventsInput
   Customer: Prisma.UserCreateNestedOneWithoutOrderedInput
+  Payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -383,6 +399,7 @@ export type OrderUncheckedCreateInput = {
   order_code: string
   customer_id: string
   ticket_id: string
+  voucher_id?: string | null
   status: $Enums.Status
   quantity: number
   using_point: number
@@ -391,7 +408,7 @@ export type OrderUncheckedCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
+  Payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -405,9 +422,10 @@ export type OrderUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payment?: Prisma.PaymentUpdateOneWithoutOrderNestedInput
-  TicketsType?: Prisma.TicketUpdateOneRequiredWithoutEventsNestedInput
+  Voucher?: Prisma.VoucherUpdateOneWithoutOrdersNestedInput
+  Ticket?: Prisma.TicketUpdateOneRequiredWithoutEventsNestedInput
   Customer?: Prisma.UserUpdateOneRequiredWithoutOrderedNestedInput
+  Payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -415,6 +433,7 @@ export type OrderUncheckedUpdateInput = {
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
+  voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   using_point?: Prisma.IntFieldUpdateOperationsInput | number
@@ -423,7 +442,7 @@ export type OrderUncheckedUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
+  Payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -431,6 +450,7 @@ export type OrderCreateManyInput = {
   order_code: string
   customer_id: string
   ticket_id: string
+  voucher_id?: string | null
   status: $Enums.Status
   quantity: number
   using_point: number
@@ -459,6 +479,7 @@ export type OrderUncheckedUpdateManyInput = {
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
+  voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   using_point?: Prisma.IntFieldUpdateOperationsInput | number
@@ -484,6 +505,7 @@ export type OrderCountOrderByAggregateInput = {
   order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
+  voucher_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
@@ -505,6 +527,7 @@ export type OrderMaxOrderByAggregateInput = {
   order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
+  voucher_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
@@ -520,6 +543,7 @@ export type OrderMinOrderByAggregateInput = {
   order_code?: Prisma.SortOrder
   customer_id?: Prisma.SortOrder
   ticket_id?: Prisma.SortOrder
+  voucher_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   using_point?: Prisma.SortOrder
@@ -583,45 +607,45 @@ export type OrderUncheckedUpdateManyWithoutCustomerNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
-export type OrderCreateNestedManyWithoutTicketsTypeInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketsTypeInput, Prisma.OrderUncheckedCreateWithoutTicketsTypeInput> | Prisma.OrderCreateWithoutTicketsTypeInput[] | Prisma.OrderUncheckedCreateWithoutTicketsTypeInput[]
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketsTypeInput | Prisma.OrderCreateOrConnectWithoutTicketsTypeInput[]
-  createMany?: Prisma.OrderCreateManyTicketsTypeInputEnvelope
+export type OrderCreateNestedManyWithoutTicketInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketInput, Prisma.OrderUncheckedCreateWithoutTicketInput> | Prisma.OrderCreateWithoutTicketInput[] | Prisma.OrderUncheckedCreateWithoutTicketInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketInput | Prisma.OrderCreateOrConnectWithoutTicketInput[]
+  createMany?: Prisma.OrderCreateManyTicketInputEnvelope
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
-export type OrderUncheckedCreateNestedManyWithoutTicketsTypeInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketsTypeInput, Prisma.OrderUncheckedCreateWithoutTicketsTypeInput> | Prisma.OrderCreateWithoutTicketsTypeInput[] | Prisma.OrderUncheckedCreateWithoutTicketsTypeInput[]
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketsTypeInput | Prisma.OrderCreateOrConnectWithoutTicketsTypeInput[]
-  createMany?: Prisma.OrderCreateManyTicketsTypeInputEnvelope
+export type OrderUncheckedCreateNestedManyWithoutTicketInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketInput, Prisma.OrderUncheckedCreateWithoutTicketInput> | Prisma.OrderCreateWithoutTicketInput[] | Prisma.OrderUncheckedCreateWithoutTicketInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketInput | Prisma.OrderCreateOrConnectWithoutTicketInput[]
+  createMany?: Prisma.OrderCreateManyTicketInputEnvelope
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
-export type OrderUpdateManyWithoutTicketsTypeNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketsTypeInput, Prisma.OrderUncheckedCreateWithoutTicketsTypeInput> | Prisma.OrderCreateWithoutTicketsTypeInput[] | Prisma.OrderUncheckedCreateWithoutTicketsTypeInput[]
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketsTypeInput | Prisma.OrderCreateOrConnectWithoutTicketsTypeInput[]
-  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutTicketsTypeInput | Prisma.OrderUpsertWithWhereUniqueWithoutTicketsTypeInput[]
-  createMany?: Prisma.OrderCreateManyTicketsTypeInputEnvelope
+export type OrderUpdateManyWithoutTicketNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketInput, Prisma.OrderUncheckedCreateWithoutTicketInput> | Prisma.OrderCreateWithoutTicketInput[] | Prisma.OrderUncheckedCreateWithoutTicketInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketInput | Prisma.OrderCreateOrConnectWithoutTicketInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutTicketInput | Prisma.OrderUpsertWithWhereUniqueWithoutTicketInput[]
+  createMany?: Prisma.OrderCreateManyTicketInputEnvelope
   set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
-  update?: Prisma.OrderUpdateWithWhereUniqueWithoutTicketsTypeInput | Prisma.OrderUpdateWithWhereUniqueWithoutTicketsTypeInput[]
-  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutTicketsTypeInput | Prisma.OrderUpdateManyWithWhereWithoutTicketsTypeInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutTicketInput | Prisma.OrderUpdateWithWhereUniqueWithoutTicketInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutTicketInput | Prisma.OrderUpdateManyWithWhereWithoutTicketInput[]
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
-export type OrderUncheckedUpdateManyWithoutTicketsTypeNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketsTypeInput, Prisma.OrderUncheckedCreateWithoutTicketsTypeInput> | Prisma.OrderCreateWithoutTicketsTypeInput[] | Prisma.OrderUncheckedCreateWithoutTicketsTypeInput[]
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketsTypeInput | Prisma.OrderCreateOrConnectWithoutTicketsTypeInput[]
-  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutTicketsTypeInput | Prisma.OrderUpsertWithWhereUniqueWithoutTicketsTypeInput[]
-  createMany?: Prisma.OrderCreateManyTicketsTypeInputEnvelope
+export type OrderUncheckedUpdateManyWithoutTicketNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketInput, Prisma.OrderUncheckedCreateWithoutTicketInput> | Prisma.OrderCreateWithoutTicketInput[] | Prisma.OrderUncheckedCreateWithoutTicketInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketInput | Prisma.OrderCreateOrConnectWithoutTicketInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutTicketInput | Prisma.OrderUpsertWithWhereUniqueWithoutTicketInput[]
+  createMany?: Prisma.OrderCreateManyTicketInputEnvelope
   set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
-  update?: Prisma.OrderUpdateWithWhereUniqueWithoutTicketsTypeInput | Prisma.OrderUpdateWithWhereUniqueWithoutTicketsTypeInput[]
-  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutTicketsTypeInput | Prisma.OrderUpdateManyWithWhereWithoutTicketsTypeInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutTicketInput | Prisma.OrderUpdateWithWhereUniqueWithoutTicketInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutTicketInput | Prisma.OrderUpdateManyWithWhereWithoutTicketInput[]
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
@@ -629,18 +653,60 @@ export type EnumStatusFieldUpdateOperationsInput = {
   set?: $Enums.Status
 }
 
-export type OrderCreateNestedOneWithoutPaymentInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutPaymentInput, Prisma.OrderUncheckedCreateWithoutPaymentInput>
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPaymentInput
+export type OrderCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPaymentsInput, Prisma.OrderUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPaymentsInput
   connect?: Prisma.OrderWhereUniqueInput
 }
 
-export type OrderUpdateOneRequiredWithoutPaymentNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutPaymentInput, Prisma.OrderUncheckedCreateWithoutPaymentInput>
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPaymentInput
-  upsert?: Prisma.OrderUpsertWithoutPaymentInput
+export type OrderUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPaymentsInput, Prisma.OrderUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.OrderUpsertWithoutPaymentsInput
   connect?: Prisma.OrderWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPaymentInput, Prisma.OrderUpdateWithoutPaymentInput>, Prisma.OrderUncheckedUpdateWithoutPaymentInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPaymentsInput, Prisma.OrderUpdateWithoutPaymentsInput>, Prisma.OrderUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type OrderCreateNestedManyWithoutVoucherInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutVoucherInput, Prisma.OrderUncheckedCreateWithoutVoucherInput> | Prisma.OrderCreateWithoutVoucherInput[] | Prisma.OrderUncheckedCreateWithoutVoucherInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutVoucherInput | Prisma.OrderCreateOrConnectWithoutVoucherInput[]
+  createMany?: Prisma.OrderCreateManyVoucherInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutVoucherInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutVoucherInput, Prisma.OrderUncheckedCreateWithoutVoucherInput> | Prisma.OrderCreateWithoutVoucherInput[] | Prisma.OrderUncheckedCreateWithoutVoucherInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutVoucherInput | Prisma.OrderCreateOrConnectWithoutVoucherInput[]
+  createMany?: Prisma.OrderCreateManyVoucherInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUpdateManyWithoutVoucherNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutVoucherInput, Prisma.OrderUncheckedCreateWithoutVoucherInput> | Prisma.OrderCreateWithoutVoucherInput[] | Prisma.OrderUncheckedCreateWithoutVoucherInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutVoucherInput | Prisma.OrderCreateOrConnectWithoutVoucherInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutVoucherInput | Prisma.OrderUpsertWithWhereUniqueWithoutVoucherInput[]
+  createMany?: Prisma.OrderCreateManyVoucherInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutVoucherInput | Prisma.OrderUpdateWithWhereUniqueWithoutVoucherInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutVoucherInput | Prisma.OrderUpdateManyWithWhereWithoutVoucherInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutVoucherNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutVoucherInput, Prisma.OrderUncheckedCreateWithoutVoucherInput> | Prisma.OrderCreateWithoutVoucherInput[] | Prisma.OrderUncheckedCreateWithoutVoucherInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutVoucherInput | Prisma.OrderCreateOrConnectWithoutVoucherInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutVoucherInput | Prisma.OrderUpsertWithWhereUniqueWithoutVoucherInput[]
+  createMany?: Prisma.OrderCreateManyVoucherInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutVoucherInput | Prisma.OrderUpdateWithWhereUniqueWithoutVoucherInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutVoucherInput | Prisma.OrderUpdateManyWithWhereWithoutVoucherInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
 export type OrderCreateWithoutCustomerInput = {
@@ -654,14 +720,16 @@ export type OrderCreateWithoutCustomerInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payment?: Prisma.PaymentCreateNestedOneWithoutOrderInput
-  TicketsType: Prisma.TicketCreateNestedOneWithoutEventsInput
+  Voucher?: Prisma.VoucherCreateNestedOneWithoutOrdersInput
+  Ticket: Prisma.TicketCreateNestedOneWithoutEventsInput
+  Payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCustomerInput = {
   id?: string
   order_code: string
   ticket_id: string
+  voucher_id?: string | null
   status: $Enums.Status
   quantity: number
   using_point: number
@@ -670,7 +738,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
+  Payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -707,6 +775,7 @@ export type OrderScalarWhereInput = {
   order_code?: Prisma.StringFilter<"Order"> | string
   customer_id?: Prisma.StringFilter<"Order"> | string
   ticket_id?: Prisma.StringFilter<"Order"> | string
+  voucher_id?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
   quantity?: Prisma.IntFilter<"Order"> | number
   using_point?: Prisma.IntFilter<"Order"> | number
@@ -717,7 +786,7 @@ export type OrderScalarWhereInput = {
   deleted_at?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
 }
 
-export type OrderCreateWithoutTicketsTypeInput = {
+export type OrderCreateWithoutTicketInput = {
   id?: string
   order_code: string
   status: $Enums.Status
@@ -728,14 +797,16 @@ export type OrderCreateWithoutTicketsTypeInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payment?: Prisma.PaymentCreateNestedOneWithoutOrderInput
+  Voucher?: Prisma.VoucherCreateNestedOneWithoutOrdersInput
   Customer: Prisma.UserCreateNestedOneWithoutOrderedInput
+  Payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
 }
 
-export type OrderUncheckedCreateWithoutTicketsTypeInput = {
+export type OrderUncheckedCreateWithoutTicketInput = {
   id?: string
   order_code: string
   customer_id: string
+  voucher_id?: string | null
   status: $Enums.Status
   quantity: number
   using_point: number
@@ -744,36 +815,36 @@ export type OrderUncheckedCreateWithoutTicketsTypeInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
+  Payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
 }
 
-export type OrderCreateOrConnectWithoutTicketsTypeInput = {
+export type OrderCreateOrConnectWithoutTicketInput = {
   where: Prisma.OrderWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrderCreateWithoutTicketsTypeInput, Prisma.OrderUncheckedCreateWithoutTicketsTypeInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutTicketInput, Prisma.OrderUncheckedCreateWithoutTicketInput>
 }
 
-export type OrderCreateManyTicketsTypeInputEnvelope = {
-  data: Prisma.OrderCreateManyTicketsTypeInput | Prisma.OrderCreateManyTicketsTypeInput[]
+export type OrderCreateManyTicketInputEnvelope = {
+  data: Prisma.OrderCreateManyTicketInput | Prisma.OrderCreateManyTicketInput[]
   skipDuplicates?: boolean
 }
 
-export type OrderUpsertWithWhereUniqueWithoutTicketsTypeInput = {
+export type OrderUpsertWithWhereUniqueWithoutTicketInput = {
   where: Prisma.OrderWhereUniqueInput
-  update: Prisma.XOR<Prisma.OrderUpdateWithoutTicketsTypeInput, Prisma.OrderUncheckedUpdateWithoutTicketsTypeInput>
-  create: Prisma.XOR<Prisma.OrderCreateWithoutTicketsTypeInput, Prisma.OrderUncheckedCreateWithoutTicketsTypeInput>
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutTicketInput, Prisma.OrderUncheckedUpdateWithoutTicketInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutTicketInput, Prisma.OrderUncheckedCreateWithoutTicketInput>
 }
 
-export type OrderUpdateWithWhereUniqueWithoutTicketsTypeInput = {
+export type OrderUpdateWithWhereUniqueWithoutTicketInput = {
   where: Prisma.OrderWhereUniqueInput
-  data: Prisma.XOR<Prisma.OrderUpdateWithoutTicketsTypeInput, Prisma.OrderUncheckedUpdateWithoutTicketsTypeInput>
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutTicketInput, Prisma.OrderUncheckedUpdateWithoutTicketInput>
 }
 
-export type OrderUpdateManyWithWhereWithoutTicketsTypeInput = {
+export type OrderUpdateManyWithWhereWithoutTicketInput = {
   where: Prisma.OrderScalarWhereInput
-  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutTicketsTypeInput>
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutTicketInput>
 }
 
-export type OrderCreateWithoutPaymentInput = {
+export type OrderCreateWithoutPaymentsInput = {
   id?: string
   order_code: string
   status: $Enums.Status
@@ -784,11 +855,92 @@ export type OrderCreateWithoutPaymentInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  TicketsType: Prisma.TicketCreateNestedOneWithoutEventsInput
+  Voucher?: Prisma.VoucherCreateNestedOneWithoutOrdersInput
+  Ticket: Prisma.TicketCreateNestedOneWithoutEventsInput
   Customer: Prisma.UserCreateNestedOneWithoutOrderedInput
 }
 
-export type OrderUncheckedCreateWithoutPaymentInput = {
+export type OrderUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  order_code: string
+  customer_id: string
+  ticket_id: string
+  voucher_id?: string | null
+  status: $Enums.Status
+  quantity: number
+  using_point: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+}
+
+export type OrderCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutPaymentsInput, Prisma.OrderUncheckedCreateWithoutPaymentsInput>
+}
+
+export type OrderUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutPaymentsInput, Prisma.OrderUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutPaymentsInput, Prisma.OrderUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutPaymentsInput, Prisma.OrderUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type OrderUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  Voucher?: Prisma.VoucherUpdateOneWithoutOrdersNestedInput
+  Ticket?: Prisma.TicketUpdateOneRequiredWithoutEventsNestedInput
+  Customer?: Prisma.UserUpdateOneRequiredWithoutOrderedNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
+  customer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
+  voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type OrderCreateWithoutVoucherInput = {
+  id?: string
+  order_code: string
+  status: $Enums.Status
+  quantity: number
+  using_point: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+  Ticket: Prisma.TicketCreateNestedOneWithoutEventsInput
+  Customer: Prisma.UserCreateNestedOneWithoutOrderedInput
+  Payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutVoucherInput = {
   id?: string
   order_code: string
   customer_id: string
@@ -801,58 +953,40 @@ export type OrderUncheckedCreateWithoutPaymentInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
+  Payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
 }
 
-export type OrderCreateOrConnectWithoutPaymentInput = {
+export type OrderCreateOrConnectWithoutVoucherInput = {
   where: Prisma.OrderWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrderCreateWithoutPaymentInput, Prisma.OrderUncheckedCreateWithoutPaymentInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutVoucherInput, Prisma.OrderUncheckedCreateWithoutVoucherInput>
 }
 
-export type OrderUpsertWithoutPaymentInput = {
-  update: Prisma.XOR<Prisma.OrderUpdateWithoutPaymentInput, Prisma.OrderUncheckedUpdateWithoutPaymentInput>
-  create: Prisma.XOR<Prisma.OrderCreateWithoutPaymentInput, Prisma.OrderUncheckedCreateWithoutPaymentInput>
-  where?: Prisma.OrderWhereInput
+export type OrderCreateManyVoucherInputEnvelope = {
+  data: Prisma.OrderCreateManyVoucherInput | Prisma.OrderCreateManyVoucherInput[]
+  skipDuplicates?: boolean
 }
 
-export type OrderUpdateToOneWithWhereWithoutPaymentInput = {
-  where?: Prisma.OrderWhereInput
-  data: Prisma.XOR<Prisma.OrderUpdateWithoutPaymentInput, Prisma.OrderUncheckedUpdateWithoutPaymentInput>
+export type OrderUpsertWithWhereUniqueWithoutVoucherInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutVoucherInput, Prisma.OrderUncheckedUpdateWithoutVoucherInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutVoucherInput, Prisma.OrderUncheckedCreateWithoutVoucherInput>
 }
 
-export type OrderUpdateWithoutPaymentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  order_code?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  using_point?: Prisma.IntFieldUpdateOperationsInput | number
-  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expired_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  TicketsType?: Prisma.TicketUpdateOneRequiredWithoutEventsNestedInput
-  Customer?: Prisma.UserUpdateOneRequiredWithoutOrderedNestedInput
+export type OrderUpdateWithWhereUniqueWithoutVoucherInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutVoucherInput, Prisma.OrderUncheckedUpdateWithoutVoucherInput>
 }
 
-export type OrderUncheckedUpdateWithoutPaymentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  order_code?: Prisma.StringFieldUpdateOperationsInput | string
-  customer_id?: Prisma.StringFieldUpdateOperationsInput | string
-  ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  using_point?: Prisma.IntFieldUpdateOperationsInput | number
-  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expired_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type OrderUpdateManyWithWhereWithoutVoucherInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutVoucherInput>
 }
 
 export type OrderCreateManyCustomerInput = {
   id?: string
   order_code: string
   ticket_id: string
+  voucher_id?: string | null
   status: $Enums.Status
   quantity: number
   using_point: number
@@ -874,14 +1008,16 @@ export type OrderUpdateWithoutCustomerInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payment?: Prisma.PaymentUpdateOneWithoutOrderNestedInput
-  TicketsType?: Prisma.TicketUpdateOneRequiredWithoutEventsNestedInput
+  Voucher?: Prisma.VoucherUpdateOneWithoutOrdersNestedInput
+  Ticket?: Prisma.TicketUpdateOneRequiredWithoutEventsNestedInput
+  Payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
+  voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   using_point?: Prisma.IntFieldUpdateOperationsInput | number
@@ -890,13 +1026,14 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
+  Payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
+  voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   using_point?: Prisma.IntFieldUpdateOperationsInput | number
@@ -907,10 +1044,11 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type OrderCreateManyTicketsTypeInput = {
+export type OrderCreateManyTicketInput = {
   id?: string
   order_code: string
   customer_id: string
+  voucher_id?: string | null
   status: $Enums.Status
   quantity: number
   using_point: number
@@ -921,7 +1059,7 @@ export type OrderCreateManyTicketsTypeInput = {
   deleted_at?: Date | string | null
 }
 
-export type OrderUpdateWithoutTicketsTypeInput = {
+export type OrderUpdateWithoutTicketInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -932,14 +1070,16 @@ export type OrderUpdateWithoutTicketsTypeInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payment?: Prisma.PaymentUpdateOneWithoutOrderNestedInput
+  Voucher?: Prisma.VoucherUpdateOneWithoutOrdersNestedInput
   Customer?: Prisma.UserUpdateOneRequiredWithoutOrderedNestedInput
+  Payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
 }
 
-export type OrderUncheckedUpdateWithoutTicketsTypeInput = {
+export type OrderUncheckedUpdateWithoutTicketInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   using_point?: Prisma.IntFieldUpdateOperationsInput | number
@@ -948,13 +1088,14 @@ export type OrderUncheckedUpdateWithoutTicketsTypeInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
+  Payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
 }
 
-export type OrderUncheckedUpdateManyWithoutTicketsTypeInput = {
+export type OrderUncheckedUpdateManyWithoutTicketInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   order_code?: Prisma.StringFieldUpdateOperationsInput | string
   customer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  voucher_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   using_point?: Prisma.IntFieldUpdateOperationsInput | number
@@ -965,6 +1106,97 @@ export type OrderUncheckedUpdateManyWithoutTicketsTypeInput = {
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
+export type OrderCreateManyVoucherInput = {
+  id?: string
+  order_code: string
+  customer_id: string
+  ticket_id: string
+  status: $Enums.Status
+  quantity: number
+  using_point: number
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+}
+
+export type OrderUpdateWithoutVoucherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  Ticket?: Prisma.TicketUpdateOneRequiredWithoutEventsNestedInput
+  Customer?: Prisma.UserUpdateOneRequiredWithoutOrderedNestedInput
+  Payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutVoucherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
+  customer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  Payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutVoucherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_code?: Prisma.StringFieldUpdateOperationsInput | string
+  customer_id?: Prisma.StringFieldUpdateOperationsInput | string
+  ticket_id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  using_point?: Prisma.IntFieldUpdateOperationsInput | number
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  expired_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+
+/**
+ * Count Type OrderCountOutputType
+ */
+
+export type OrderCountOutputType = {
+  Payments: number
+}
+
+export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  Payments?: boolean | OrderCountOutputTypeCountPaymentsArgs
+}
+
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderCountOutputType
+   */
+  select?: Prisma.OrderCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
 
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -972,6 +1204,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
+  voucher_id?: boolean
   status?: boolean
   quantity?: boolean
   using_point?: boolean
@@ -980,9 +1213,11 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
-  Payment?: boolean | Prisma.Order$PaymentArgs<ExtArgs>
-  TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
+  Voucher?: boolean | Prisma.Order$VoucherArgs<ExtArgs>
+  Ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Payments?: boolean | Prisma.Order$PaymentsArgs<ExtArgs>
+  _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -990,6 +1225,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
+  voucher_id?: boolean
   status?: boolean
   quantity?: boolean
   using_point?: boolean
@@ -998,7 +1234,8 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
-  TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
+  Voucher?: boolean | Prisma.Order$VoucherArgs<ExtArgs>
+  Ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -1007,6 +1244,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
+  voucher_id?: boolean
   status?: boolean
   quantity?: boolean
   using_point?: boolean
@@ -1015,7 +1253,8 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
-  TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
+  Voucher?: boolean | Prisma.Order$VoucherArgs<ExtArgs>
+  Ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -1024,6 +1263,7 @@ export type OrderSelectScalar = {
   order_code?: boolean
   customer_id?: boolean
   ticket_id?: boolean
+  voucher_id?: boolean
   status?: boolean
   quantity?: boolean
   using_point?: boolean
@@ -1034,33 +1274,39 @@ export type OrderSelectScalar = {
   deleted_at?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order_code" | "customer_id" | "ticket_id" | "status" | "quantity" | "using_point" | "total" | "expired_at" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order_code" | "customer_id" | "ticket_id" | "voucher_id" | "status" | "quantity" | "using_point" | "total" | "expired_at" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Payment?: boolean | Prisma.Order$PaymentArgs<ExtArgs>
-  TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
+  Voucher?: boolean | Prisma.Order$VoucherArgs<ExtArgs>
+  Ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Payments?: boolean | Prisma.Order$PaymentsArgs<ExtArgs>
+  _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
+  Voucher?: boolean | Prisma.Order$VoucherArgs<ExtArgs>
+  Ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  TicketsType?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
+  Voucher?: boolean | Prisma.Order$VoucherArgs<ExtArgs>
+  Ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Order"
   objects: {
-    Payment: Prisma.$PaymentPayload<ExtArgs> | null
-    TicketsType: Prisma.$TicketPayload<ExtArgs>
+    Voucher: Prisma.$VoucherPayload<ExtArgs> | null
+    Ticket: Prisma.$TicketPayload<ExtArgs>
     Customer: Prisma.$UserPayload<ExtArgs>
+    Payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     order_code: string
     customer_id: string
     ticket_id: string
+    voucher_id: string | null
     status: $Enums.Status
     quantity: number
     using_point: number
@@ -1463,9 +1709,10 @@ readonly fields: OrderFieldRefs;
  */
 export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Payment<T extends Prisma.Order$PaymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$PaymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  TicketsType<T extends Prisma.TicketDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketDefaultArgs<ExtArgs>>): Prisma.Prisma__TicketClient<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Voucher<T extends Prisma.Order$VoucherArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$VoucherArgs<ExtArgs>>): Prisma.Prisma__VoucherClient<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  Ticket<T extends Prisma.TicketDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketDefaultArgs<ExtArgs>>): Prisma.Prisma__TicketClient<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   Customer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Payments<T extends Prisma.Order$PaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$PaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1499,6 +1746,7 @@ export interface OrderFieldRefs {
   readonly order_code: Prisma.FieldRef<"Order", 'String'>
   readonly customer_id: Prisma.FieldRef<"Order", 'String'>
   readonly ticket_id: Prisma.FieldRef<"Order", 'String'>
+  readonly voucher_id: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'Status'>
   readonly quantity: Prisma.FieldRef<"Order", 'Int'>
   readonly using_point: Prisma.FieldRef<"Order", 'Int'>
@@ -1903,9 +2151,28 @@ export type OrderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Order.Payment
+ * Order.Voucher
  */
-export type Order$PaymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Order$VoucherArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Voucher
+   */
+  select?: Prisma.VoucherSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Voucher
+   */
+  omit?: Prisma.VoucherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VoucherInclude<ExtArgs> | null
+  where?: Prisma.VoucherWhereInput
+}
+
+/**
+ * Order.Payments
+ */
+export type Order$PaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Payment
    */
@@ -1919,6 +2186,11 @@ export type Order$PaymentArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   include?: Prisma.PaymentInclude<ExtArgs> | null
   where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
 }
 
 /**

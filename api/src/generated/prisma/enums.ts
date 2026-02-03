@@ -9,6 +9,26 @@
 * 🟢 You can import this file directly.
 */
 
+export const PaymentMethod = {
+  MANUAL_TRANSFER: 'MANUAL_TRANSFER',
+  E_WALLET: 'E_WALLET',
+  CREDIT_CARD: 'CREDIT_CARD'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  WAITING_CONFIRMATION: 'WAITING_CONFIRMATION',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  FAILED: 'FAILED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
 export const Category = {
   MUSIC: 'MUSIC',
   SPORT: 'SPORT',
