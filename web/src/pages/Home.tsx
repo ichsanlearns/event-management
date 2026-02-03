@@ -2,13 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import Card from "../components/Card";
 import type { TEvent } from "../types/event.type";
 import { Link } from "react-router";
+import { cityArray } from "../constants/city.constant";
 
 function Home() {
   const [events, setEvents] = useState<TEvent[] | null>(null);
   const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<
+    "search" | "category" | "location" | null
+  >(null);
+  const [city, setCity] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const locationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchEvents() {
@@ -28,9 +33,11 @@ function Home() {
     function handleClickOutside(e: MouseEvent) {
       if (
         containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
+        !containerRef.current.contains(e.target as Node) &&
+        locationRef.current &&
+        !locationRef.current.contains(e.target as Node)
       ) {
-        setIsOpen(false);
+        setIsOpen(null);
       }
     }
 
@@ -49,6 +56,7 @@ function Home() {
             `${import.meta.env.VITE_API_URL}/events?search=${query}`,
           );
           const data = await response.json();
+
           setEvents(data.data);
         } catch (error) {
           console.log(error);
@@ -100,12 +108,12 @@ function Home() {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  onFocus={() => setIsOpen(true)}
+                  onFocus={() => setIsOpen("search")}
                   className="block w-full pl-12 pr-4 py-4 border-none rounded-t-2xl bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-0 focus:bg-white dark:focus:bg-gray-800 transition-all text-lg font-medium"
                   placeholder="Search events, artists, or venues..."
                   type="text"
                 />
-                {isOpen && query && (
+                {isOpen === "search" && query && (
                   <>
                     {/* dropdown */}
                     <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  rounded-b-xl shadow-xl z-50">
@@ -126,7 +134,7 @@ function Home() {
                 )}
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex gap-2 overflow-x-auto no-scrollbar py-1 sm:py-0">
+                <div className="flex gap-2 no-scrollbar py-1 sm:py-0">
                   <div className="relative h-full">
                     <button
                       className="h-full flex items-center justify-between gap-2 px-5 py-3 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors whitespace-nowrap border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
@@ -138,16 +146,42 @@ function Home() {
                       </span>
                     </button>
                   </div>
-                  <div className="relative h-full">
+                  <div ref={locationRef} className="relative">
                     <button
+                      onClick={() => {
+                        console.log(city);
+                        setIsOpen("location");
+                      }}
                       className="h-full flex items-center justify-between gap-2 px-5 py-3 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors whitespace-nowrap border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
                       type="button"
                     >
-                      <span>Location</span>
+                      <span>{city || "location"}</span>
                       <span className="material-symbols-outlined text-lg text-gray-400">
                         keyboard_arrow_down
                       </span>
                     </button>
+                    {isOpen === "location" && (
+                      <>
+                        {/* dropdown */}
+                        <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  rounded-b-xl shadow-xl z-50">
+                          {/* scroll area */}
+                          <div className="max-h-72 overflow-y-auto overscroll-contain">
+                            {cityArray.map((c, indx) => (
+                              <div
+                                onMouseDown={() => {
+                                  setCity(c);
+                                  console.log(city);
+                                }}
+                                key={indx}
+                                className="block px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                              >
+                                {c}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
                 <button

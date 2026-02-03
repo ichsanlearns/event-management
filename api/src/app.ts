@@ -30,7 +30,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
-app.use("/api/voucher", voucherRoutes);
+app.use("/api/vouchers", voucherRoutes);
 
 app.listen(PORT, () => console.info(`Server is listening on port: ${PORT}`));
 

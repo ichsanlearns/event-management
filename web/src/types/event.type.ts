@@ -56,5 +56,5 @@ export interface IOrder {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  TicketsType: ITicket;
+  Ticket: ITicket;
 }

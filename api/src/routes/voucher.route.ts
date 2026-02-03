@@ -1,8 +1,14 @@
 import { Router } from "express";
-import { getVoucherById } from "../controllers/voucher.controller.js";
+import {
+  createVoucher,
+  getVoucher,
+  getVoucherById,
+} from "../controllers/voucher.controller.js";
 
 const router = Router();
 
-router.get("/", getVoucherById);
+router.get("/", getVoucher);
+router.post("/", createVoucher);
+router.post("/check", getVoucherById);
 
 export default router;
