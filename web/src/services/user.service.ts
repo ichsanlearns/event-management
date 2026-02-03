@@ -1,6 +1,5 @@
 import api from "../lib/api";
 
-export async function getProfile() {
-  const res = await api.get("/auth/me");
-  return res.data;
+export function getProfile() {
+  return api.get("/auth/me").then((res) => res.data);
 }
