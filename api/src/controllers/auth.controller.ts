@@ -4,6 +4,7 @@ import { createUser, findByEmail, findByReferral } from "../services/auth.servic
 import { generateReferralCode } from "../utils/referral.util.js";
 import { hashPassword, comparePassword } from "../utils/hash.util.js";
 import { generateToken } from "../utils/jwt.util.js";
+import { prisma } from "../lib/prisma.lib.js";
 import { access } from "node:fs";
 
 export async function register(req: Request, res: Response) {
@@ -63,10 +64,34 @@ export async function login(req: Request, res: Response) {
 
   res.status(200).json({
     message: "Login berhasil",
-    access_token: token,
+    token: token,
     user: {
       id: user.id,
+      name: user.name,
+      email: user.email,
       role: user.role,
+      referral_code: user.referral_code,
     },
   });
+}
+
+export async function me(req: Request, res: Response) {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      referral_code: true,
+    },
+  });
+
+  res.json(user);
 }
