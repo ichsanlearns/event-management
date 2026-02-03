@@ -34,3 +34,50 @@ export const getUserPointAndCoupon = async (req: Request, res: Response) => {
     });
   }
 };
+
+export async function getMe(req: Request, res: Response) {
+  const userId = req.user!.id;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      referral_code: true,
+      Points: true,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User tidak ditemukan" });
+  }
+
+  res.json(user);
+}
+
+export async function updateProfile(req: Request, res: Response) {
+  const userId = req.user!.id;
+  const { name, email } = req.body;
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      name,
+      email,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      referral_code: true,
+    },
+  });
+
+  res.json({
+    message: "Profile berhasil diperbarui",
+    user: updatedUser,
+  });
+}
