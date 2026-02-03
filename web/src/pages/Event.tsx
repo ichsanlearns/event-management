@@ -203,7 +203,7 @@ function Event() {
                   artisanal food stalls, and a sound system designed to capture
                   every nuance of the saxophone and double bass. Whether you are
                   a hardcore jazz aficionado or just looking for a magical night
-                  out, the Midnight Jazz Festival promises memories that will
+                  ou t, the Midnight Jazz Festival promises memories that will
                   last a lifetime. lorem1000
                 </p>
               </div>
@@ -266,7 +266,7 @@ function Event() {
                           <div
                             className={`text-2xl font-black ${ticket.type === "VIP" ? "text-primary" : "text-slate-900"}  mb-1`}
                           >
-                            IDR {formattedPrice(ticket.price)}
+                            Rp. {formattedPrice(ticket.price)}
                           </div>
                           <p
                             className={`text-sm ${ticket.type === "EARLYBIRD" ? "text-red-500" : "text-slate-500"} font-medium`}
@@ -328,7 +328,7 @@ function Event() {
                       Total Amount
                     </span>
                     <span className="text-3xl font-bold text-white">
-                      IDR {formattedPrice(currentPrice)}
+                      Rp. {currentPrice ? formattedPrice(currentPrice) : 0}
                     </span>
                   </div>
                   <button
