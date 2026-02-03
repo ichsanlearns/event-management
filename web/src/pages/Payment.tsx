@@ -22,9 +22,28 @@ function Payment() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  async function submitPromo() {
+  async function submitPromo(code: string) {
     try {
-      const response = await fetch(`${import.meta.env.VITE_URL_API}/orders`);
+      const payload = { id: code };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/vouchers/check`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!data.id) {
+        return console.log("voucher not found");
+      }
+
+      setWithPromo(true);
     } catch (error) {}
   }
 
@@ -280,19 +299,19 @@ function Payment() {
                   className="h-32 w-full bg-cover bg-center relative"
                   data-alt="Neon festival crowd with lasers and stage lights"
                   style={{
-                    backgroundImage: `url(${order?.TicketsType.EventName.image})`,
+                    backgroundImage: `url(${order?.Ticket.EventName.image})`,
                   }}
                 >
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
                   <div className="absolute bottom-3 left-4 right-4">
                     <h4 className="text-white font-bold text-lg leading-tight">
-                      {order?.TicketsType.EventName.name}
+                      {order?.Ticket.EventName.name}
                     </h4>
                     <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px]">
                         location_on
                       </span>
-                      {order?.TicketsType.EventName.city}
+                      {order?.Ticket.EventName.city}
                     </p>
                   </div>
                 </div>
@@ -317,10 +336,10 @@ function Payment() {
                     {/* Items */}
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-600 dark:text-slate-300">
-                        {order?.TicketsType.type} Access ({order?.quantity}x)
+                        {order?.Ticket.type} Access ({order?.quantity}x)
                       </span>
                       <span className="font-medium text-slate-900 dark:text-white">
-                        Rp {order?.TicketsType.price}
+                        Rp {order?.Ticket.price}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
@@ -370,7 +389,7 @@ function Payment() {
                           </div>
 
                           <button
-                            onClick={() => submitPromo()}
+                            onClick={() => submitPromo(promoCode!)}
                             className="px-4 py-2 text-sm font-semibold rounded-xl
                bg-primary text-white hover:bg-primary/90
                transition-colors disabled:opacity-50"

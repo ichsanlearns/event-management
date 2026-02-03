@@ -333,7 +333,7 @@ export type TicketCreateInput = {
   updated_at?: Date | string
   deleted_at?: Date | string | null
   EventName: Prisma.EventCreateNestedOneWithoutTicketsInput
-  Events?: Prisma.OrderCreateNestedManyWithoutTicketsTypeInput
+  Events?: Prisma.OrderCreateNestedManyWithoutTicketInput
 }
 
 export type TicketUncheckedCreateInput = {
@@ -346,7 +346,7 @@ export type TicketUncheckedCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Events?: Prisma.OrderUncheckedCreateNestedManyWithoutTicketsTypeInput
+  Events?: Prisma.OrderUncheckedCreateNestedManyWithoutTicketInput
 }
 
 export type TicketUpdateInput = {
@@ -359,7 +359,7 @@ export type TicketUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   EventName?: Prisma.EventUpdateOneRequiredWithoutTicketsNestedInput
-  Events?: Prisma.OrderUpdateManyWithoutTicketsTypeNestedInput
+  Events?: Prisma.OrderUpdateManyWithoutTicketNestedInput
 }
 
 export type TicketUncheckedUpdateInput = {
@@ -372,7 +372,7 @@ export type TicketUncheckedUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Events?: Prisma.OrderUncheckedUpdateManyWithoutTicketsTypeNestedInput
+  Events?: Prisma.OrderUncheckedUpdateManyWithoutTicketNestedInput
 }
 
 export type TicketCreateManyInput = {
@@ -542,7 +542,7 @@ export type TicketCreateWithoutEventNameInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Events?: Prisma.OrderCreateNestedManyWithoutTicketsTypeInput
+  Events?: Prisma.OrderCreateNestedManyWithoutTicketInput
 }
 
 export type TicketUncheckedCreateWithoutEventNameInput = {
@@ -554,7 +554,7 @@ export type TicketUncheckedCreateWithoutEventNameInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
-  Events?: Prisma.OrderUncheckedCreateNestedManyWithoutTicketsTypeInput
+  Events?: Prisma.OrderUncheckedCreateNestedManyWithoutTicketInput
 }
 
 export type TicketCreateOrConnectWithoutEventNameInput = {
@@ -682,7 +682,7 @@ export type TicketUpdateWithoutEventNameInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Events?: Prisma.OrderUpdateManyWithoutTicketsTypeNestedInput
+  Events?: Prisma.OrderUpdateManyWithoutTicketNestedInput
 }
 
 export type TicketUncheckedUpdateWithoutEventNameInput = {
@@ -694,7 +694,7 @@ export type TicketUncheckedUpdateWithoutEventNameInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Events?: Prisma.OrderUncheckedUpdateManyWithoutTicketsTypeNestedInput
+  Events?: Prisma.OrderUncheckedUpdateManyWithoutTicketNestedInput
 }
 
 export type TicketUncheckedUpdateManyWithoutEventNameInput = {

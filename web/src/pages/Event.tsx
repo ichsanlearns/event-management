@@ -69,8 +69,6 @@ function Event() {
     payload.usingPoint = 0;
     payload.total = currentPrice;
 
-    console.log(payload);
-
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
         method: "POST",

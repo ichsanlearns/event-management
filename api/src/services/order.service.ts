@@ -36,7 +36,7 @@ export async function getById(id: string) {
   return prisma.order.findUnique({
     where: { id },
     include: {
-      TicketsType: { include: { EventName: true } },
+      Ticket: { include: { EventName: true } },
     },
   });
 }

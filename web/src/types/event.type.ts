@@ -48,6 +48,7 @@ export interface IOrder {
   order_code: string;
   customer_id: string;
   ticket_id: string;
+  voucher_id: string;
   status: OrderStatus;
   quantity: number;
   using_point: number;
@@ -55,5 +56,5 @@ export interface IOrder {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  TicketsType: ITicket;
+  Ticket: ITicket;
 }
