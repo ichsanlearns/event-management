@@ -17,6 +17,7 @@ export function create(
         customer_id: customerId,
         ticket_id: ticketId,
         quantity,
+        expired_at: new Date(Date.now() + 48 * 60 * 60 * 1000),
         status,
         using_point: usingPoint,
         total,

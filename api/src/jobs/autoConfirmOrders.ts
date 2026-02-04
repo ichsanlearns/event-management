@@ -1,15 +1,15 @@
 import { prisma } from "../lib/prisma.lib.js";
 
-export async function expiredOrders() {
+export async function autoConfirmOrders() {
   await prisma.order.updateMany({
     where: {
       expired_at: {
         lt: new Date(),
       },
-      status: "WAITING_PAYMENT",
+      status: "WAITING_CONFIRMATION",
     },
     data: {
-      status: "EXPIRED",
+      status: "DONE",
     },
   });
 }
