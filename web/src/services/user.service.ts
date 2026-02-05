@@ -5,3 +5,7 @@ export function getProfile() {
 }
 
 export const updateProfile = (data: { name: string; email: string }) => api.put("/user/me", data);
+
+export function changePassword(payload: { oldPassword: string; newPassword: string; confirmPassword: string }) {
+  return api.put("/user/change-password", payload);
+}

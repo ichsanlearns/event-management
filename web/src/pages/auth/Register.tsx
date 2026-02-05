@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User, Megaphone, Mail, Lock, Eye, EyeOff, Chrome, Apple, Moon, Star, Gift, Sun } from "lucide-react";
 import { Link } from "react-router";
+import toast from "react-hot-toast";
 
 import { register as registerApi } from "../../services/auth.service";
 import { useNavigate } from "react-router";
@@ -53,6 +54,8 @@ function Register() {
     setError("");
     setLoading(true);
 
+    const loadingToast = toast.loading("membuat akun...");
+
     try {
       await registerApi({
         name: form.name,
@@ -62,9 +65,12 @@ function Register() {
         referred_by: form.referred_by || undefined,
       });
 
+      toast.success("Registrasi berhasil 🎉", {
+        id: loadingToast,
+      });
       navigate("/login");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Register gagal");
+      toast.error(err.response?.data?.message || "Register gagal", { id: loadingToast });
     } finally {
       setLoading(false);
     }
