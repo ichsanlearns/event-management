@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.lib.js";
+import { comparePassword, hashPassword } from "../utils/hash.util.js";
 
 export const getUserPointAndCoupon = async (req: Request, res: Response) => {
   try {
@@ -58,26 +59,102 @@ export async function getMe(req: Request, res: Response) {
 }
 
 export async function updateProfile(req: Request, res: Response) {
-  const userId = req.user!.id;
-  const { name, email } = req.body;
+  try {
+    const userId = req.user!.id;
+    const { name, email, oldPassword, newPassword, confirmPassword } = req.body;
 
-  const updatedUser = await prisma.user.update({
-    where: { id: userId },
-    data: {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User tidak ditemukan" });
+    }
+
+    const dataToUpdate: any = {
       name,
       email,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      referral_code: true,
-    },
+    };
+
+    // =====================
+    // OPTIONAL CHANGE PASSWORD
+    // =====================
+    if (oldPassword || newPassword || confirmPassword) {
+      if (!oldPassword || !newPassword || !confirmPassword) {
+        return res.status(400).json({
+          message: "Semua field password wajib diisi",
+        });
+      }
+
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({
+          message: "Konfirmasi password tidak sama",
+        });
+      }
+
+      const isMatch = await comparePassword(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({
+          message: "Password lama salah",
+        });
+      }
+
+      dataToUpdate.password = await hashPassword(newPassword);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: dataToUpdate,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        referral_code: true,
+      },
+    });
+
+    res.json({
+      message: "Profile berhasil diperbarui",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("UPDATE PROFILE ERROR:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function changePassword(req: Request, res: Response) {
+  const userId = req.user!.id;
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json({ message: "Semua field wajib diisi" });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: "Konfirmasi password tidak sama" });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
   });
 
-  res.json({
-    message: "Profile berhasil diperbarui",
-    user: updatedUser,
+  if (!user) {
+    return res.status(404).json({ message: "User tidak ditemukan" });
+  }
+
+  const isMatch = await comparePassword(oldPassword, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: "Password lama salah" });
+  }
+
+  const hashedPassword = await hashPassword(newPassword);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { password: hashedPassword },
   });
+
+  res.status(200).json({ message: "Password berhasil diubah" });
 }
