@@ -1,8 +1,22 @@
 import { Link, useLocation } from "react-router";
 import { LayoutDashboard, Calendar, Users, BarChart3 } from "lucide-react";
+import { useEffect, useState } from "react";
+
+type User = {
+  name: string;
+  role: "CUSTOMER" | "EVENT_ORGANIZER";
+};
 
 function SideBar() {
   const location = useLocation();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const menu = [
     { label: "Dashboard", path: "", icon: LayoutDashboard },
@@ -49,8 +63,8 @@ function SideBar() {
           {/* User Info */}
           <Link to={"/profile"}>
             <div className="flex-1 text-left">
-              <p className="text-sm font-medium text-slate-900 dark:text-white">Alex Morgan</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Organizer</p>
+              <p className="text-sm font-medium text-slate-900 dark:text-white">{user?.name || "User"}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{user?.role === "EVENT_ORGANIZER" ? "Organizer" : "Attendee"}</p>
             </div>
           </Link>
 
