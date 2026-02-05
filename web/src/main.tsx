@@ -10,6 +10,7 @@ import Organizer from "./routes/Organizer";
 import Dashboard from "./pages/organizer/Dashboard";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
+import EventOrganizer from "./pages/organizer/Event";
 import Event from "./pages/Event";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
@@ -38,7 +39,7 @@ createRoot(document.getElementById("root")!).render(
         </Route>
         <Route path="organizer" element={<Organizer />}>
           <Route index element={<Dashboard />} />
-          <Route path="events" element={<Event />} />
+          <Route path="events" element={<EventOrganizer />} />
           <Route path="approval" element={<Approval />} />
           <Route path="report" element={<Report />} />
         </Route>

@@ -6,7 +6,7 @@ export async function createVoucher(req: Request, res: Response) {
     const { eventId, code, discountAmount, quota, startDate, endDate } =
       req.body;
 
-    const voucher = create(
+    const voucher = await create(
       eventId,
       code,
       discountAmount,
@@ -15,7 +15,7 @@ export async function createVoucher(req: Request, res: Response) {
       endDate,
     );
 
-    res.status(200).json({ message: "Voucher successfully created" });
+    res.status(200).json({ message: "Voucher successfully created", voucher });
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: "Failed to create voucher" });
