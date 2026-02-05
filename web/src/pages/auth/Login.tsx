@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Mail, Lock, Eye, EyeOff, Moon, Sun, Apple, Chrome } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+import { toast } from "react-hot-toast";
 
 import { login as loginApi } from "../../services/auth.service";
 
@@ -35,7 +36,14 @@ function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!form.email || !form.password) {
+      toast.error("Email dan password wajib diisi");
+      return;
+    }
+
     setLoading(true);
+    const toastId = toast.loading("Sedang login...");
 
     try {
       const res = await loginApi(form);
@@ -43,13 +51,15 @@ function Login() {
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
 
+      toast.success("Login berhasil 🎉", { id: toastId });
+
       if (res.user.role === "CUSTOMER") {
         navigate("/");
       } else if (res.user.role === "EVENT_ORGANIZER") {
         navigate("/organizer");
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || "Login gagal");
+      toast.error(error.response?.data?.message || "Login gagal", { id: toastId });
     } finally {
       setLoading(false);
     }

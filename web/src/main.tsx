@@ -17,9 +17,12 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import EditProfile from "./pages/EditProfile";
 
+import { Toaster } from "react-hot-toast";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+      <Toaster position="top-center" />
       <Routes>
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
