@@ -18,7 +18,20 @@ export default function EditProfile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (newPassword || confirmPassword || oldPassword) {
+      if (!oldPassword || !newPassword || !confirmPassword) {
+        toast.error("Lengkapi semua field password");
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        toast.error("Konfirmasi password tidak sama");
+        return;
+      }
+    }
+
     setLoading(true);
+    const toastId = toast.loading("menyimpan perubahan ....");
 
     try {
       const payload: any = {
@@ -36,9 +49,16 @@ export default function EditProfile() {
       const res = await updateProfile(payload);
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      toast.success("Profile berhasil diperbarui", {
+        id: toastId,
+      });
+
       navigate("/profile");
     } catch (err: any) {
-      alert(err.response?.data?.message || "Gagal update profile");
+      toast.error(err.response?.data?.message || "Gagal update profile", {
+        id: toastId,
+      });
     } finally {
       setLoading(false);
     }
