@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   voucherSchema,
-  type VoucherInput,
   type VoucherOutput,
 } from "../../schemas/voucher.schema";
+import toast from "react-hot-toast";
 
 function Event() {
   const [formState, setFormState] = useState<"voucher" | "event" | null>(null);
@@ -38,10 +38,7 @@ function Event() {
   });
 
   const {
-    register,
-    handleSubmit,
     formState: { errors },
-    reset,
   } = form;
 
   async function handleSubmitButton(data: VoucherOutput) {
@@ -51,8 +48,15 @@ function Event() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, eventId: voucherEvents?.id }),
       });
+
+      if (!response.ok) {
+        toast.error("Failed to create voucher");
+        return;
+      }
+
+      toast.success("Voucher created successfully");
     } catch (error) {}
   }
 
@@ -139,16 +143,18 @@ function Event() {
                           placeholder="e.g. EARLYBIRD2024"
                           type="text"
                         />
-                        {errors.code && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors.code.message}
-                          </p>
-                        )}
+
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"></div>
                       </div>
+
                       <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                         Code must be unique and alphanumeric.
                       </p>
+                      {errors.code && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.code.message}
+                        </p>
+                      )}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
@@ -170,12 +176,12 @@ function Event() {
                             placeholder="0"
                             type="number"
                           />
-                          {errors.discountAmount && (
-                            <p className="text-red-500 text-sm mt-1">
-                              {errors.discountAmount.message}
-                            </p>
-                          )}
                         </div>
+                        {errors.discountAmount && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.discountAmount.message}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
@@ -207,12 +213,12 @@ function Event() {
                             id="start-date"
                             type="date"
                           />
-                          {errors.startDate && (
-                            <p className="text-red-500 text-sm mt-1">
-                              {errors.startDate.message}
-                            </p>
-                          )}
                         </div>
+                        {errors.startDate && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.startDate.message}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
@@ -225,12 +231,12 @@ function Event() {
                             id="end-date"
                             type="date"
                           />
-                          {errors.endDate && (
-                            <p className="text-red-500 text-sm mt-1">
-                              {errors.endDate.message}
-                            </p>
-                          )}
                         </div>
+                        {errors.endDate && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.endDate.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
