@@ -15,10 +15,14 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import EditProfile from "./pages/EditProfile";
+
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+      <Toaster position="top-center" />
       <Routes>
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
@@ -28,6 +32,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<Root />}>
           <Route index element={<Home />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="profile/edit" element={<EditProfile />} />
           <Route path="event/:id" element={<Event />} />
           <Route path="payment/:id" element={<Payment />} />
         </Route>
