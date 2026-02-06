@@ -1,7 +1,14 @@
 import { prisma } from "../lib/prisma.lib.js";
 import { Role } from "../generated/prisma/enums.js";
 
-export async function createUser(name: string, email: string, hashedPassword: string, role: Role, referralCode: string, referredBy?: string) {
+export async function createUser(
+  name: string,
+  email: string,
+  hashedPassword: string,
+  role: Role,
+  referralCode: string,
+  referredBy?: string,
+) {
   return prisma.$transaction(async (tx) => {
     // Create user baru
     const newUser = await tx.user.create({
@@ -27,7 +34,9 @@ export async function createUser(name: string, email: string, hashedPassword: st
             user_id: newUser.id,
             referrer_id: referrer.id,
             amount: 10000,
-            expired_at: new Date(new Date().setMonth(new Date().getMonth() + 3)),
+            expired_at: new Date(
+              new Date().setMonth(new Date().getMonth() + 3),
+            ),
           },
         });
 
@@ -36,7 +45,9 @@ export async function createUser(name: string, email: string, hashedPassword: st
           data: {
             user_id: referrer.id,
             amount: 10000,
-            expired_at: new Date(new Date().setMonth(new Date().getMonth() + 3)),
+            expired_at: new Date(
+              new Date().setMonth(new Date().getMonth() + 3),
+            ),
           },
         });
       }

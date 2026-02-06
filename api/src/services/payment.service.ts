@@ -14,16 +14,23 @@ export async function create(
   paidAt?: string,
   confirmedAt?: string,
 ) {
-  return await prisma.payment.create({
-    data: {
-      order_id: orderId,
-      amount,
-      method,
-      status,
-      proof_image: proofImage ?? null,
-      paid_at: paidAt ?? null,
-      confirmed_at: confirmedAt ?? null,
-    },
+  await prisma.$transaction(async (tx) => {
+    await tx.payment.create({
+      data: {
+        order_id: orderId,
+        amount,
+        method,
+        status: status ?? "WAITING_CONFIRMATION",
+        proof_image: proofImage ?? null,
+        paid_at: paidAt ?? new Date(),
+        confirmed_at: confirmedAt ?? null,
+      },
+    });
+
+    await tx.order.update({
+      where: { id: orderId },
+      data: { status: "WAITING_CONFIRMATION" },
+    });
   });
 }
 
