@@ -41,13 +41,14 @@ export type EventMinAggregateOutputType = {
   name: string | null
   price: runtime.Decimal | null
   description: string | null
-  about: string | null
+  tagline: string | null
   category: $Enums.Category | null
   venue: string | null
   city: string | null
   available_seats: number | null
   organizer_id: string | null
   image: string | null
+  about: string | null
   start_date: Date | null
   end_date: Date | null
   created_at: Date | null
@@ -60,13 +61,14 @@ export type EventMaxAggregateOutputType = {
   name: string | null
   price: runtime.Decimal | null
   description: string | null
-  about: string | null
+  tagline: string | null
   category: $Enums.Category | null
   venue: string | null
   city: string | null
   available_seats: number | null
   organizer_id: string | null
   image: string | null
+  about: string | null
   start_date: Date | null
   end_date: Date | null
   created_at: Date | null
@@ -79,13 +81,14 @@ export type EventCountAggregateOutputType = {
   name: number
   price: number
   description: number
-  about: number
+  tagline: number
   category: number
   venue: number
   city: number
   available_seats: number
   organizer_id: number
   image: number
+  about: number
   start_date: number
   end_date: number
   created_at: number
@@ -110,13 +113,14 @@ export type EventMinAggregateInputType = {
   name?: true
   price?: true
   description?: true
-  about?: true
+  tagline?: true
   category?: true
   venue?: true
   city?: true
   available_seats?: true
   organizer_id?: true
   image?: true
+  about?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -129,13 +133,14 @@ export type EventMaxAggregateInputType = {
   name?: true
   price?: true
   description?: true
-  about?: true
+  tagline?: true
   category?: true
   venue?: true
   city?: true
   available_seats?: true
   organizer_id?: true
   image?: true
+  about?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -148,13 +153,14 @@ export type EventCountAggregateInputType = {
   name?: true
   price?: true
   description?: true
-  about?: true
+  tagline?: true
   category?: true
   venue?: true
   city?: true
   available_seats?: true
   organizer_id?: true
   image?: true
+  about?: true
   start_date?: true
   end_date?: true
   created_at?: true
@@ -254,13 +260,14 @@ export type EventGroupByOutputType = {
   name: string
   price: runtime.Decimal
   description: string
-  about: string | null
+  tagline: string | null
   category: $Enums.Category
   venue: string | null
   city: string
   available_seats: number
   organizer_id: string
   image: string | null
+  about: string | null
   start_date: Date
   end_date: Date | null
   created_at: Date
@@ -296,13 +303,14 @@ export type EventWhereInput = {
   name?: Prisma.StringFilter<"Event"> | string
   price?: Prisma.DecimalFilter<"Event"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFilter<"Event"> | string
-  about?: Prisma.StringNullableFilter<"Event"> | string | null
+  tagline?: Prisma.StringNullableFilter<"Event"> | string | null
   category?: Prisma.EnumCategoryFilter<"Event"> | $Enums.Category
   venue?: Prisma.StringNullableFilter<"Event"> | string | null
   city?: Prisma.StringFilter<"Event"> | string
   available_seats?: Prisma.IntFilter<"Event"> | number
   organizer_id?: Prisma.StringFilter<"Event"> | string
   image?: Prisma.StringNullableFilter<"Event"> | string | null
+  about?: Prisma.StringNullableFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -319,13 +327,14 @@ export type EventOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   price?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  about?: Prisma.SortOrderInput | Prisma.SortOrder
+  tagline?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   venue?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  about?: Prisma.SortOrderInput | Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -345,13 +354,14 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Event"> | string
   price?: Prisma.DecimalFilter<"Event"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFilter<"Event"> | string
-  about?: Prisma.StringNullableFilter<"Event"> | string | null
+  tagline?: Prisma.StringNullableFilter<"Event"> | string | null
   category?: Prisma.EnumCategoryFilter<"Event"> | $Enums.Category
   venue?: Prisma.StringNullableFilter<"Event"> | string | null
   city?: Prisma.StringFilter<"Event"> | string
   available_seats?: Prisma.IntFilter<"Event"> | number
   organizer_id?: Prisma.StringFilter<"Event"> | string
   image?: Prisma.StringNullableFilter<"Event"> | string | null
+  about?: Prisma.StringNullableFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -368,13 +378,14 @@ export type EventOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   price?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  about?: Prisma.SortOrderInput | Prisma.SortOrder
+  tagline?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   venue?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  about?: Prisma.SortOrderInput | Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -395,13 +406,14 @@ export type EventScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Event"> | string
   price?: Prisma.DecimalWithAggregatesFilter<"Event"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringWithAggregatesFilter<"Event"> | string
-  about?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  tagline?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Event"> | $Enums.Category
   venue?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   city?: Prisma.StringWithAggregatesFilter<"Event"> | string
   available_seats?: Prisma.IntWithAggregatesFilter<"Event"> | number
   organizer_id?: Prisma.StringWithAggregatesFilter<"Event"> | string
   image?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  about?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -414,12 +426,13 @@ export type EventCreateInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -436,13 +449,14 @@ export type EventUncheckedCreateInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   organizer_id: string
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -458,12 +472,13 @@ export type EventUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,13 +495,14 @@ export type EventUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -502,13 +518,14 @@ export type EventCreateManyInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   organizer_id: string
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -521,12 +538,13 @@ export type EventUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -539,13 +557,14 @@ export type EventUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -568,13 +587,14 @@ export type EventCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   price?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  about?: Prisma.SortOrder
+  tagline?: Prisma.SortOrder
   category?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  about?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -592,13 +612,14 @@ export type EventMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   price?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  about?: Prisma.SortOrder
+  tagline?: Prisma.SortOrder
   category?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  about?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -611,13 +632,14 @@ export type EventMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   price?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  about?: Prisma.SortOrder
+  tagline?: Prisma.SortOrder
   category?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   city?: Prisma.SortOrder
   available_seats?: Prisma.SortOrder
   organizer_id?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  about?: Prisma.SortOrder
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -748,12 +770,13 @@ export type EventCreateWithoutEventOrganizerInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -769,12 +792,13 @@ export type EventUncheckedCreateWithoutEventOrganizerInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -819,13 +843,14 @@ export type EventScalarWhereInput = {
   name?: Prisma.StringFilter<"Event"> | string
   price?: Prisma.DecimalFilter<"Event"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFilter<"Event"> | string
-  about?: Prisma.StringNullableFilter<"Event"> | string | null
+  tagline?: Prisma.StringNullableFilter<"Event"> | string | null
   category?: Prisma.EnumCategoryFilter<"Event"> | $Enums.Category
   venue?: Prisma.StringNullableFilter<"Event"> | string | null
   city?: Prisma.StringFilter<"Event"> | string
   available_seats?: Prisma.IntFilter<"Event"> | number
   organizer_id?: Prisma.StringFilter<"Event"> | string
   image?: Prisma.StringNullableFilter<"Event"> | string | null
+  about?: Prisma.StringNullableFilter<"Event"> | string | null
   start_date?: Prisma.DateTimeFilter<"Event"> | Date | string
   end_date?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -838,12 +863,13 @@ export type EventCreateWithoutGotReviewedInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -859,13 +885,14 @@ export type EventUncheckedCreateWithoutGotReviewedInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   organizer_id: string
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -896,12 +923,13 @@ export type EventUpdateWithoutGotReviewedInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -917,13 +945,14 @@ export type EventUncheckedUpdateWithoutGotReviewedInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -938,12 +967,13 @@ export type EventCreateWithoutTicketsInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -959,13 +989,14 @@ export type EventUncheckedCreateWithoutTicketsInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   organizer_id: string
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -996,12 +1027,13 @@ export type EventUpdateWithoutTicketsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1017,13 +1049,14 @@ export type EventUncheckedUpdateWithoutTicketsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1038,12 +1071,13 @@ export type EventCreateWithoutVouchersInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -1059,13 +1093,14 @@ export type EventUncheckedCreateWithoutVouchersInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   organizer_id: string
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -1096,12 +1131,13 @@ export type EventUpdateWithoutVouchersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1117,13 +1153,14 @@ export type EventUncheckedUpdateWithoutVouchersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   organizer_id?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1138,12 +1175,13 @@ export type EventCreateManyEventOrganizerInput = {
   name: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   description: string
-  about?: string | null
+  tagline?: string | null
   category: $Enums.Category
   venue?: string | null
   city: string
   available_seats: number
   image?: string | null
+  about?: string | null
   start_date: Date | string
   end_date?: Date | string | null
   created_at?: Date | string
@@ -1156,12 +1194,13 @@ export type EventUpdateWithoutEventOrganizerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1177,12 +1216,13 @@ export type EventUncheckedUpdateWithoutEventOrganizerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1198,12 +1238,13 @@ export type EventUncheckedUpdateManyWithoutEventOrganizerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.StringFieldUpdateOperationsInput | string
   available_seats?: Prisma.IntFieldUpdateOperationsInput | number
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  about?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1265,13 +1306,14 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   name?: boolean
   price?: boolean
   description?: boolean
-  about?: boolean
+  tagline?: boolean
   category?: boolean
   venue?: boolean
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
   image?: boolean
+  about?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1289,13 +1331,14 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   price?: boolean
   description?: boolean
-  about?: boolean
+  tagline?: boolean
   category?: boolean
   venue?: boolean
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
   image?: boolean
+  about?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1309,13 +1352,14 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   price?: boolean
   description?: boolean
-  about?: boolean
+  tagline?: boolean
   category?: boolean
   venue?: boolean
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
   image?: boolean
+  about?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1329,13 +1373,14 @@ export type EventSelectScalar = {
   name?: boolean
   price?: boolean
   description?: boolean
-  about?: boolean
+  tagline?: boolean
   category?: boolean
   venue?: boolean
   city?: boolean
   available_seats?: boolean
   organizer_id?: boolean
   image?: boolean
+  about?: boolean
   start_date?: boolean
   end_date?: boolean
   created_at?: boolean
@@ -1343,7 +1388,7 @@ export type EventSelectScalar = {
   deleted_at?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "price" | "description" | "about" | "category" | "venue" | "city" | "available_seats" | "organizer_id" | "image" | "start_date" | "end_date" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "price" | "description" | "tagline" | "category" | "venue" | "city" | "available_seats" | "organizer_id" | "image" | "about" | "start_date" | "end_date" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   eventOrganizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Tickets?: boolean | Prisma.Event$TicketsArgs<ExtArgs>
@@ -1371,13 +1416,14 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     name: string
     price: runtime.Decimal
     description: string
-    about: string | null
+    tagline: string | null
     category: $Enums.Category
     venue: string | null
     city: string
     available_seats: number
     organizer_id: string
     image: string | null
+    about: string | null
     start_date: Date
     end_date: Date | null
     created_at: Date
@@ -1814,13 +1860,14 @@ export interface EventFieldRefs {
   readonly name: Prisma.FieldRef<"Event", 'String'>
   readonly price: Prisma.FieldRef<"Event", 'Decimal'>
   readonly description: Prisma.FieldRef<"Event", 'String'>
-  readonly about: Prisma.FieldRef<"Event", 'String'>
+  readonly tagline: Prisma.FieldRef<"Event", 'String'>
   readonly category: Prisma.FieldRef<"Event", 'Category'>
   readonly venue: Prisma.FieldRef<"Event", 'String'>
   readonly city: Prisma.FieldRef<"Event", 'String'>
   readonly available_seats: Prisma.FieldRef<"Event", 'Int'>
   readonly organizer_id: Prisma.FieldRef<"Event", 'String'>
   readonly image: Prisma.FieldRef<"Event", 'String'>
+  readonly about: Prisma.FieldRef<"Event", 'String'>
   readonly start_date: Prisma.FieldRef<"Event", 'DateTime'>
   readonly end_date: Prisma.FieldRef<"Event", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"Event", 'DateTime'>

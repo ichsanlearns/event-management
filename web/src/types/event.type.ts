@@ -24,7 +24,7 @@ export type TEvent = {
   id?: string;
   name: string;
   price: number;
-  description: string;
+  tagline: string;
   category: Category;
   city: string;
   available_seats: number;
@@ -32,6 +32,7 @@ export type TEvent = {
   start_date: Date;
   end_date?: Date;
   image?: string;
+  about?: string;
   Tickets?: ITicket[];
 };
 

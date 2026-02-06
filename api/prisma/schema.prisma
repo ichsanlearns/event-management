@@ -78,18 +78,20 @@ model User {
   @@map("users")
 }
 
+
 model Event {
   id String @id @default(uuid())
   name String
   price Decimal
   description String
-  about String?
+  tagline String?
   category Category
   venue String?
   city String
   available_seats Int
   organizer_id String
   image String?
+  about String?
 
   start_date DateTime
   end_date DateTime?

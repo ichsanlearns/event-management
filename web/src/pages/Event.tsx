@@ -135,7 +135,7 @@ function Event() {
                   {event?.name}
                 </h1>
                 <p className="text-lg text-gray-300 max-w-2xl font-medium">
-                  {event?.description}
+                  {event?.tagline}testtesttest
                 </p>
               </div>
             </div>
@@ -190,20 +190,29 @@ function Event() {
                 About the Event
               </h2>
               <div className="prose prose-invert prose-lg text-gray-300 leading-relaxed">
-                <p className="mb-4">
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Nesciunt, atque dolores. Obcaecati, numquam. Alias debitis
-                  reiciendis asperiores earum vel excepturi.
-                </p>
-                <p>
-                  The Grand Hall will be transformed into an intimate jazz club
-                  experience on a massive scale. Enjoy curated cocktails,
-                  artisanal food stalls, and a sound system designed to capture
-                  every nuance of the saxophone and double bass. Whether you are
-                  a hardcore jazz aficionado or just looking for a magical night
-                  ou t, the Midnight Jazz Festival promises memories that will
-                  last a lifetime. lorem1000
-                </p>
+                {event?.about ? (
+                  <>
+                    <p>{event.about}</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="mb-4">
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                      Nesciunt, atque dolores. Obcaecati, numquam. Alias debitis
+                      reiciendis asperiores earum vel excepturi.
+                    </p>
+                    <p>
+                      The Grand Hall will be transformed into an intimate jazz
+                      club experience on a massive scale. Enjoy curated
+                      cocktails, artisanal food stalls, and a sound system
+                      designed to capture every nuance of the saxophone and
+                      double bass. Whether you are a hardcore jazz aficionado or
+                      just looking for a magical night ou t, the Midnight Jazz
+                      Festival promises memories that will last a lifetime.
+                      lorem1000
+                    </p>
+                  </>
+                )}
               </div>
             </section>
           </div>

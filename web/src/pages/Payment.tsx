@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { paymentSchema, type PaymentInput } from "../schemas/payment.schema";
+import toast from "react-hot-toast";
 
 function Payment() {
   const { id } = useParams();
@@ -81,20 +82,25 @@ function Payment() {
 
   async function handleSubmit(data: PaymentInput) {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/orders/${id}/payment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+      toast.loading("Processing payment...");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/payments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          ...data,
+          orderId: id,
+          amount: order?.total,
+          method: "MANUAL_TRANSFER",
+        }),
+      });
+
+      console.log(response);
 
       const result = await response.json();
 
-      console.log(result);
+      toast.success("Payment successful");
     } catch (error) {
       console.log(error);
     }
@@ -318,13 +324,13 @@ function Payment() {
                   (link to upload proof)
                 </p>
                 <input
-                  {...form.register("imageUrl")}
+                  {...form.register("proofImage")}
                   placeholder="https://..."
                   className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2"
                 />
-                {form.formState.errors.imageUrl && (
+                {form.formState.errors.proofImage && (
                   <p className="text-red-500 text-sm mt-1">
-                    {form.formState.errors.imageUrl.message}
+                    {form.formState.errors.proofImage.message}
                   </p>
                 )}
               </section>
