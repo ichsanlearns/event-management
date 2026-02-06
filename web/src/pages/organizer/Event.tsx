@@ -103,10 +103,7 @@ function Event() {
                       ></div>
                     </div>
                     <div className="flex-1">
-                      <h3
-                        className="text-lg font-bold text-slate-900 dark:text-white"
-                        id="modal-title"
-                      >
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                         Create New Voucher
                       </h3>
                       <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -139,7 +136,6 @@ function Event() {
                         <input
                           {...form.register("code")}
                           className="block w-full rounded-md border-0 py-2.5 pl-3 pr-10 text-slate-900 dark:text-white dark:bg-slate-800 ring-1 ring-inset ring-slate-300 dark:ring-slate-600 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                          id="code"
                           placeholder="e.g. EARLYBIRD2024"
                           type="text"
                         />
@@ -172,7 +168,6 @@ function Event() {
                               valueAsNumber: true,
                             })}
                             className="block w-full rounded-md border-0 py-2.5 pl-12 pr-3 text-slate-900 dark:text-white dark:bg-slate-800 ring-1 ring-inset ring-slate-300 dark:ring-slate-600 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                            id="amount"
                             placeholder="0"
                             type="number"
                           />
@@ -190,7 +185,6 @@ function Event() {
                         <input
                           {...form.register("quota", { valueAsNumber: true })}
                           className="block w-full rounded-md border-0 pl-5 pr-2 py-2.5 text-slate-900 dark:text-white dark:bg-slate-800 ring-1 ring-inset ring-slate-300 dark:ring-slate-600 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                          id="quota"
                           placeholder="100"
                           type="number"
                         />
@@ -210,7 +204,6 @@ function Event() {
                           <input
                             {...form.register("startDate")}
                             className="block w-full rounded-md border-0 py-2.5 pl-3 pr-5 text-slate-900 dark:text-white dark:bg-slate-800 ring-1 ring-inset ring-slate-300 dark:ring-slate-600 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                            id="start-date"
                             type="date"
                           />
                         </div>
@@ -228,7 +221,6 @@ function Event() {
                           <input
                             {...form.register("endDate")}
                             className="block w-full rounded-md border-0 py-2.5 pl-3 pr-5 text-slate-900 dark:text-white dark:bg-slate-800 ring-1 ring-inset ring-slate-300 dark:ring-slate-600 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                            id="end-date"
                             type="date"
                           />
                         </div>
@@ -283,10 +275,7 @@ function Event() {
             <div className="inline-block align-bottom bg-surface-light dark:bg-surface-dark rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full border border-border-light dark:border-border-dark">
               <div className="px-6 py-5 border-b border-border-light dark:border-border-dark flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
                 <div>
-                  <h3
-                    className="text-lg font-bold leading-6 text-slate-900 dark:text-white"
-                    id="modal-title"
-                  >
+                  <h3 className="text-lg font-bold leading-6 text-slate-900 dark:text-white">
                     Create New Event
                   </h3>
                   <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -318,11 +307,7 @@ function Event() {
                         <div className="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
                           <label className="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
                             <span>Upload a file</span>
-                            <input
-                              className="sr-only"
-                              id="file-upload"
-                              type="file"
-                            />
+                            <input className="sr-only" type="file" />
                           </label>
                           <p className="pl-1">or drag and drop</p>
                         </div>
@@ -339,11 +324,21 @@ function Event() {
                       </label>
                       <input
                         className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                        id="event-name"
                         placeholder="e.g. Summer Music Festival 2024"
                         type="text"
                       />
                     </div>
+                    <div className="col-span-1 md:col-span-2">
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                        Tagline
+                      </label>
+                      <input
+                        className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
+                        placeholder="e.g. A full-beat night you won’t ever forget"
+                        type="text"
+                      />
+                    </div>
+
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                         Price
@@ -356,7 +351,6 @@ function Event() {
                         </div>
                         <input
                           className="block w-full pl-10 pr-12 rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary sm:text-sm py-2.5"
-                          id="price"
                           placeholder="0.00"
                           type="number"
                         />
@@ -369,10 +363,7 @@ function Event() {
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                         Category
                       </label>
-                      <select
-                        className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                        id="category"
-                      >
+                      <select className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3">
                         {cityArray.map((city) => (
                           <option>{city}</option>
                         ))}
@@ -392,7 +383,6 @@ function Event() {
                         </div>
                         <input
                           className="block w-full pl-10 rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5"
-                          id="venue"
                           placeholder="e.g. Grand Convention Center"
                           type="text"
                         />
@@ -404,7 +394,6 @@ function Event() {
                       </label>
                       <input
                         className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                        id="city"
                         placeholder="e.g. Jakarta"
                         type="text"
                       />
@@ -417,7 +406,6 @@ function Event() {
                       </label>
                       <input
                         className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                        id="start-date"
                         type="datetime-local"
                       />
                     </div>
@@ -427,7 +415,6 @@ function Event() {
                       </label>
                       <input
                         className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                        id="end-date"
                         type="datetime-local"
                       />
                     </div>
@@ -443,7 +430,6 @@ function Event() {
                         </div>
                         <input
                           className="block w-full pl-10 rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5"
-                          id="seats"
                           placeholder="100"
                           type="number"
                         />
@@ -452,12 +438,11 @@ function Event() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                      Description / About
+                      About the Event
                     </label>
                     <div className="mt-1">
                       <textarea
                         className="block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm px-3 py-2.5"
-                        id="about"
                         placeholder="Describe the event, agenda, speakers..."
                         rows={4}
                       ></textarea>
