@@ -84,3 +84,13 @@ export type Point = Prisma.PointModel
  * 
  */
 export type Coupon = Prisma.CouponModel
+/**
+ * Model ImagesEvent
+ * 
+ */
+export type ImagesEvent = Prisma.ImagesEventModel
+/**
+ * Model Image
+ * 
+ */
+export type Image = Prisma.ImageModel
