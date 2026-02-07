@@ -59,7 +59,9 @@ export const ModelName = {
   Payment: 'Payment',
   Voucher: 'Voucher',
   Point: 'Point',
-  Coupon: 'Coupon'
+  Coupon: 'Coupon',
+  ImagesEvent: 'ImagesEvent',
+  Image: 'Image'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -104,7 +106,7 @@ export const EventScalarFieldEnum = {
   city: 'city',
   available_seats: 'available_seats',
   organizer_id: 'organizer_id',
-  image: 'image',
+  hero_image: 'hero_image',
   about: 'about',
   start_date: 'start_date',
   end_date: 'end_date',
@@ -221,6 +223,23 @@ export const CouponScalarFieldEnum = {
 } as const
 
 export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
+
+
+export const ImagesEventScalarFieldEnum = {
+  id: 'id',
+  event_id: 'event_id',
+  image_id: 'image_id'
+} as const
+
+export type ImagesEventScalarFieldEnum = (typeof ImagesEventScalarFieldEnum)[keyof typeof ImagesEventScalarFieldEnum]
+
+
+export const ImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url'
+} as const
+
+export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
 
 
 export const SortOrder = {
