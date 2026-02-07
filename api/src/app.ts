@@ -13,6 +13,8 @@ import orderRoutes from "./routes/order.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import voucherRoutes from "./routes/voucher.route.js";
 import { startCronJobs } from "./jobs/cron.js";
+import { notFound } from "./middleware/not-found.middleware.js";
+import { error } from "./middleware/error.middleware.js";
 
 const app: Application = express();
 const PORT: number = 8000;
@@ -32,6 +34,9 @@ app.use("/api/user", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/vouchers", voucherRoutes);
+
+app.use(notFound);
+app.use(error);
 
 app.listen(PORT, () => {
   console.info(`Server is listening on port: ${PORT}`);
