@@ -63,6 +63,9 @@ model User {
   role Role
   referral_code String @unique
 
+  reset_token String?
+  reset_token_expiry DateTime?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   deleted_at DateTime?

@@ -87,6 +87,8 @@ export const UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   referral_code: 'referral_code',
+  reset_token: 'reset_token',
+  reset_token_expiry: 'reset_token_expiry',
   created_at: 'created_at',
   updated_at: 'updated_at',
   deleted_at: 'deleted_at'
