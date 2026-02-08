@@ -6,3 +6,5 @@ export async function login(data: { email: string; password: string }) {
   const res = await api.post("/auth/login", data);
   return res.data;
 }
+
+export const forgotPassword = (email: string) => api.post("/auth/forgot-password", { email });
