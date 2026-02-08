@@ -31,6 +31,8 @@ export type UserMinAggregateOutputType = {
   password: string | null
   role: $Enums.Role | null
   referral_code: string | null
+  reset_token: string | null
+  reset_token_expiry: Date | null
   created_at: Date | null
   updated_at: Date | null
   deleted_at: Date | null
@@ -43,6 +45,8 @@ export type UserMaxAggregateOutputType = {
   password: string | null
   role: $Enums.Role | null
   referral_code: string | null
+  reset_token: string | null
+  reset_token_expiry: Date | null
   created_at: Date | null
   updated_at: Date | null
   deleted_at: Date | null
@@ -55,6 +59,8 @@ export type UserCountAggregateOutputType = {
   password: number
   role: number
   referral_code: number
+  reset_token: number
+  reset_token_expiry: number
   created_at: number
   updated_at: number
   deleted_at: number
@@ -69,6 +75,8 @@ export type UserMinAggregateInputType = {
   password?: true
   role?: true
   referral_code?: true
+  reset_token?: true
+  reset_token_expiry?: true
   created_at?: true
   updated_at?: true
   deleted_at?: true
@@ -81,6 +89,8 @@ export type UserMaxAggregateInputType = {
   password?: true
   role?: true
   referral_code?: true
+  reset_token?: true
+  reset_token_expiry?: true
   created_at?: true
   updated_at?: true
   deleted_at?: true
@@ -93,6 +103,8 @@ export type UserCountAggregateInputType = {
   password?: true
   role?: true
   referral_code?: true
+  reset_token?: true
+  reset_token_expiry?: true
   created_at?: true
   updated_at?: true
   deleted_at?: true
@@ -178,6 +190,8 @@ export type UserGroupByOutputType = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token: string | null
+  reset_token_expiry: Date | null
   created_at: Date
   updated_at: Date
   deleted_at: Date | null
@@ -211,6 +225,8 @@ export type UserWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   referral_code?: Prisma.StringFilter<"User"> | string
+  reset_token?: Prisma.StringNullableFilter<"User"> | string | null
+  reset_token_expiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"User"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"User"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -229,6 +245,8 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   referral_code?: Prisma.SortOrder
+  reset_token?: Prisma.SortOrderInput | Prisma.SortOrder
+  reset_token_expiry?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -250,6 +268,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  reset_token?: Prisma.StringNullableFilter<"User"> | string | null
+  reset_token_expiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"User"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"User"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -268,6 +288,8 @@ export type UserOrderByWithAggregationInput = {
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   referral_code?: Prisma.SortOrder
+  reset_token?: Prisma.SortOrderInput | Prisma.SortOrder
+  reset_token_expiry?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -286,6 +308,8 @@ export type UserScalarWhereWithAggregatesInput = {
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   referral_code?: Prisma.StringWithAggregatesFilter<"User"> | string
+  reset_token?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  reset_token_expiry?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   deleted_at?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -298,6 +322,8 @@ export type UserCreateInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -316,6 +342,8 @@ export type UserUncheckedCreateInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -334,6 +362,8 @@ export type UserUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -352,6 +382,8 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -370,6 +402,8 @@ export type UserCreateManyInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -382,6 +416,8 @@ export type UserUpdateManyMutationInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -394,6 +430,8 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -406,6 +444,8 @@ export type UserCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   referral_code?: Prisma.SortOrder
+  reset_token?: Prisma.SortOrder
+  reset_token_expiry?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrder
@@ -418,6 +458,8 @@ export type UserMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   referral_code?: Prisma.SortOrder
+  reset_token?: Prisma.SortOrder
+  reset_token_expiry?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrder
@@ -430,6 +472,8 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   referral_code?: Prisma.SortOrder
+  reset_token?: Prisma.SortOrder
+  reset_token_expiry?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrder
@@ -448,12 +492,16 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type UserCreateNestedOneWithoutEventsInput = {
@@ -547,6 +595,8 @@ export type UserCreateWithoutEventsInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -564,6 +614,8 @@ export type UserUncheckedCreateWithoutEventsInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -597,6 +649,8 @@ export type UserUpdateWithoutEventsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -614,6 +668,8 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -631,6 +687,8 @@ export type UserCreateWithoutReviewedInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -648,6 +706,8 @@ export type UserUncheckedCreateWithoutReviewedInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -681,6 +741,8 @@ export type UserUpdateWithoutReviewedInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -698,6 +760,8 @@ export type UserUncheckedUpdateWithoutReviewedInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -715,6 +779,8 @@ export type UserCreateWithoutOrderedInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -732,6 +798,8 @@ export type UserUncheckedCreateWithoutOrderedInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -765,6 +833,8 @@ export type UserUpdateWithoutOrderedInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -782,6 +852,8 @@ export type UserUncheckedUpdateWithoutOrderedInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -799,6 +871,8 @@ export type UserCreateWithoutPointsInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -816,6 +890,8 @@ export type UserUncheckedCreateWithoutPointsInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -849,6 +925,8 @@ export type UserUpdateWithoutPointsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -866,6 +944,8 @@ export type UserUncheckedUpdateWithoutPointsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -883,6 +963,8 @@ export type UserCreateWithoutCouponInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -900,6 +982,8 @@ export type UserUncheckedCreateWithoutCouponInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -922,6 +1006,8 @@ export type UserCreateWithoutReferringInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -939,6 +1025,8 @@ export type UserUncheckedCreateWithoutReferringInput = {
   password: string
   role: $Enums.Role
   referral_code: string
+  reset_token?: string | null
+  reset_token_expiry?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -972,6 +1060,8 @@ export type UserUpdateWithoutCouponInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -989,6 +1079,8 @@ export type UserUncheckedUpdateWithoutCouponInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1017,6 +1109,8 @@ export type UserUpdateWithoutReferringInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1034,6 +1128,8 @@ export type UserUncheckedUpdateWithoutReferringInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   referral_code?: Prisma.StringFieldUpdateOperationsInput | string
+  reset_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reset_token_expiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1127,6 +1223,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   role?: boolean
   referral_code?: boolean
+  reset_token?: boolean
+  reset_token_expiry?: boolean
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
@@ -1146,6 +1244,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   role?: boolean
   referral_code?: boolean
+  reset_token?: boolean
+  reset_token_expiry?: boolean
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
@@ -1158,6 +1258,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   role?: boolean
   referral_code?: boolean
+  reset_token?: boolean
+  reset_token_expiry?: boolean
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
@@ -1170,12 +1272,14 @@ export type UserSelectScalar = {
   password?: boolean
   role?: boolean
   referral_code?: boolean
+  reset_token?: boolean
+  reset_token_expiry?: boolean
   created_at?: boolean
   updated_at?: boolean
   deleted_at?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "referral_code" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "referral_code" | "reset_token" | "reset_token_expiry" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Events?: boolean | Prisma.User$EventsArgs<ExtArgs>
   Reviewed?: boolean | Prisma.User$ReviewedArgs<ExtArgs>
@@ -1205,6 +1309,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string
     role: $Enums.Role
     referral_code: string
+    reset_token: string | null
+    reset_token_expiry: Date | null
     created_at: Date
     updated_at: Date
     deleted_at: Date | null
@@ -1643,6 +1749,8 @@ export interface UserFieldRefs {
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly referral_code: Prisma.FieldRef<"User", 'String'>
+  readonly reset_token: Prisma.FieldRef<"User", 'String'>
+  readonly reset_token_expiry: Prisma.FieldRef<"User", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"User", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"User", 'DateTime'>
   readonly deleted_at: Prisma.FieldRef<"User", 'DateTime'>
