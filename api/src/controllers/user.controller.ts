@@ -13,6 +13,7 @@ export const getUserPointAndCoupon = async (req: Request, res: Response) => {
           gt: new Date(),
         },
       },
+      orderBy: { expired_at: "asc" },
     });
 
     const coupons = await prisma.coupon.findMany({
@@ -22,6 +23,7 @@ export const getUserPointAndCoupon = async (req: Request, res: Response) => {
           gt: new Date(),
         },
       },
+      orderBy: { expired_at: "asc" },
     });
 
     return res.json({

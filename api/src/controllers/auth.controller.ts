@@ -52,6 +52,14 @@ export async function register(req: Request, res: Response) {
         where: { referral_code: referred_by },
       });
 
+      if (!referrer) {
+        throw new Error("Referral code tidak valid");
+      }
+
+      if (referrer.id === newUser.id) {
+        throw new Error("Tidak bisa menggunakan referral sendiri");
+      }
+
       if (referrer) {
         const expiredAt = new Date();
         expiredAt.setMonth(expiredAt.getMonth() + 3);
