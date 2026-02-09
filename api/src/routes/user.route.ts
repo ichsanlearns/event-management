@@ -4,9 +4,9 @@ import { getUserPointAndCoupon, updateProfile, getMe, changePassword } from "../
 
 const router = Router();
 
-router.get("/rewards", authMiddleware, getUserPointAndCoupon);
 router.get("/me", authMiddleware, getMe);
 router.put("/me", authMiddleware, updateProfile);
 router.put("/change-password", authMiddleware, changePassword);
+router.get("/rewards", authMiddleware, getUserPointAndCoupon);
 
 export default router;
