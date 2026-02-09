@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff, ArrowLeft, Check, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -29,7 +29,7 @@ function ResetPassword() {
   return (
     <main className="bg-[#f7f5f8] dark:bg-[#191022] min-h-screen flex flex-col font-['Spline_Sans'] transition-colors duration-300">
       <div className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-[480px] bg-white dark:bg-[#251a33] rounded-[2rem] shadow-xl border border-[#e0dbe6] dark:border-[#3b2d4a] overflow-hidden">
+        <div className="w-full max-w-120 bg-white dark:bg-[#251a33] rounded-4xl shadow-xl border border-[#e0dbe6] dark:border-[#3b2d4a] overflow-hidden">
           <div className="p-8 md:p-10 flex flex-col gap-8">
             {/* Page Heading */}
             <div className="flex flex-col gap-3">
