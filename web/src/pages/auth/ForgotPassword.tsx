@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Mail, ArrowLeft, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { forgotPassword } from "../../services/auth.service";
+
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -38,12 +40,12 @@ function ForgotPassword() {
     setErrorMessage("");
 
     try {
-      // Api
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      await forgotPassword(email);
 
       setSuccessMessage("If the email is registered, a reset password link has been sent.");
-    } catch (error) {
-      setErrorMessage("Something went wrong. Please try again.");
+      setEmail("");
+    } catch (err: any) {
+      setErrorMessage(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
