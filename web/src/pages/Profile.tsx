@@ -3,6 +3,9 @@ import { User, Mail, Shield, Gift, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 import api from "../lib/api";
 
+/* =======================
+   INTERFACES
+======================= */
 interface UserProfile {
   id: string;
   name: string;
@@ -29,49 +32,56 @@ interface UserRewards {
   coupons: Coupon[];
 }
 
-function Profile() {
+/* =======================
+   COMPONENT
+======================= */
+export default function Profile() {
   const navigate = useNavigate();
+
   const [user, setUser] = useState<UserProfile | null>(null);
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
+  /* =======================
+     FETCH DATA
+  ======================= */
   useEffect(() => {
-    console.log("TOKEN:", localStorage.getItem("token"));
-
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
-        const res = await api.get("/auth/me");
-        console.log("PROFILE:", res.data);
-        setUser(res.data);
+        const profileRes = await api.get("/auth/me");
+        setUser(profileRes.data);
 
         const rewardsRes = await api.get("/user/rewards");
-        console.log("REWARDS:", rewardsRes.data);
         setRewards(rewardsRes.data);
-      } catch (error: any) {
-        console.error("ERROR PROFILE", error.response?.data);
+      } catch (error) {
+        console.error("PROFILE ERROR:", error);
         navigate("/login");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchData();
   }, []);
 
+  /* =======================
+     LOGOUT
+  ======================= */
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
   };
 
-  if (loading) {
-    return <p className="p-6">Loading...</p>;
-  }
+  /* =======================
+     STATES
+  ======================= */
+  if (loading) return <p className="p-6">Loading...</p>;
+  if (!user) return <p className="p-6">User tidak ditemukan</p>;
 
-  if (!user) {
-    return <p className="p-6">User tidak ditemukan</p>;
-  }
-
+  /* =======================
+     UI
+  ======================= */
   return (
     <main className="min-h-screen bg-slate-50 flex justify-center items-center p-6">
       <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8">
@@ -79,7 +89,7 @@ function Profile() {
 
         {/* Avatar */}
         <div className="flex items-center gap-4 mb-10">
-          <div className="w-20 h-20 rounded-full bg-indigo-500 flex items-center justify-center text-white shadow-lg">
+          <div className="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-lg">
             <User size={36} />
           </div>
           <div>
@@ -91,18 +101,18 @@ function Profile() {
         {/* Info */}
         <div className="space-y-4">
           <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl">
-            <Mail className="text-slate-400" size={20} />
+            <Mail size={20} className="text-slate-400" />
             <span className="text-slate-700 font-medium">{user.email}</span>
           </div>
 
           <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl">
-            <Shield className="text-slate-400" size={20} />
+            <Shield size={20} className="text-slate-400" />
             <span className="text-slate-700 font-medium">Role: {user.role}</span>
           </div>
 
           {user.referral_code && (
             <div className="flex items-center gap-3 bg-indigo-50 border border-indigo-100 p-4 rounded-xl">
-              <Gift className="text-indigo-400" size={20} />
+              <Gift size={20} className="text-indigo-400" />
               <span className="text-indigo-700 font-semibold">Referral Code: {user.referral_code}</span>
             </div>
           )}
@@ -113,13 +123,13 @@ function Profile() {
           <div className="mt-8 space-y-4">
             {/* Points */}
             <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl">
-              <p className="text-sm text-yellow-700 font-semibold">Total Points</p>
+              <p className="text-sm font-semibold text-yellow-700">Total Points</p>
               <p className="text-2xl font-bold text-yellow-800">{rewards.total_point.toLocaleString()}</p>
             </div>
 
             {/* Coupons */}
             <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
-              <p className="text-sm text-green-700 font-semibold mb-2">Coupons</p>
+              <p className="text-sm font-semibold text-green-700 mb-2">Coupons</p>
 
               {rewards.coupons.length === 0 ? (
                 <p className="text-sm text-slate-500">Belum ada coupon</p>
@@ -137,11 +147,11 @@ function Profile() {
 
         {/* Actions */}
         <div className="mt-10 space-y-4">
-          <button onClick={() => navigate("/profile/edit")} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white font-bold">
+          <button onClick={() => navigate("/profile/edit")} className="w-full py-3 rounded-xl bg-indigo-600 text-white font-bold">
             Edit Profile
           </button>
 
-          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold">
+          <button onClick={handleLogout} className="w-full py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold flex items-center justify-center gap-2">
             <LogOut size={18} />
             Logout
           </button>
@@ -150,5 +160,3 @@ function Profile() {
     </main>
   );
 }
-
-export default Profile;
