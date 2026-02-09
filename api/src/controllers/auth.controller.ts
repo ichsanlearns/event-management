@@ -25,6 +25,7 @@ export async function register(req: Request, res: Response) {
     return res.status(409).json({ message: "Email sudah terdaftar" });
   }
 
+  // Generate unique referral code
   let referralCode: string;
   do {
     referralCode = generateReferralCode();
@@ -32,15 +33,60 @@ export async function register(req: Request, res: Response) {
 
   const hashedPassword = await hashPassword(password);
 
-  const user = await createUser(name, email, hashedPassword, role, referralCode, referred_by);
+  // TRANSACTION BIAR AMAN
+  const result = await prisma.$transaction(async (tx) => {
+    // Create user
+    const newUser = await tx.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role,
+        referral_code: referralCode,
+      },
+    });
+
+    // Jika pakai referral
+    if (referred_by) {
+      const referrer = await tx.user.findUnique({
+        where: { referral_code: referred_by },
+      });
+
+      if (referrer) {
+        const expiredAt = new Date();
+        expiredAt.setMonth(expiredAt.getMonth() + 3);
+
+        // POINT UNTUK REFERRER
+        await tx.point.create({
+          data: {
+            user_id: referrer.id,
+            amount: 10000,
+            expired_at: expiredAt,
+          },
+        });
+
+        // COUPON UNTUK USER BARU
+        await tx.coupon.create({
+          data: {
+            user_id: newUser.id,
+            referrer_id: referrer.id,
+            amount: 10000, // contoh diskon
+            expired_at: expiredAt,
+          },
+        });
+      }
+    }
+
+    return newUser;
+  });
 
   res.status(201).json({
     message: "User berhasil dibuat",
     user: {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      referral_code: user.referral_code,
+      id: result.id,
+      email: result.email,
+      role: result.role,
+      referral_code: result.referral_code,
     },
   });
 }
