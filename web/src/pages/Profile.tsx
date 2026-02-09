@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User, Mail, Shield, Gift, LogOut, Edit } from "lucide-react";
+import { User, Mail, Shield, Gift, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 import api from "../lib/api";
 
@@ -11,9 +11,28 @@ interface UserProfile {
   referral_code?: string;
 }
 
+interface Point {
+  id: string;
+  amount: number;
+  expired_at: string;
+}
+
+interface Coupon {
+  id: string;
+  amount: number;
+  expired_at: string;
+}
+
+interface UserRewards {
+  total_point: number;
+  points: Point[];
+  coupons: Coupon[];
+}
+
 function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,6 +43,10 @@ function Profile() {
         const res = await api.get("/auth/me");
         console.log("PROFILE:", res.data);
         setUser(res.data);
+
+        const rewardsRes = await api.get("/user/rewards");
+        console.log("REWARDS:", rewardsRes.data);
+        setRewards(rewardsRes.data);
       } catch (error: any) {
         console.error("ERROR PROFILE", error.response?.data);
         navigate("/login");
@@ -84,6 +107,33 @@ function Profile() {
             </div>
           )}
         </div>
+
+        {/* Rewards */}
+        {rewards && (
+          <div className="mt-8 space-y-4">
+            {/* Points */}
+            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl">
+              <p className="text-sm text-yellow-700 font-semibold">Total Points</p>
+              <p className="text-2xl font-bold text-yellow-800">{rewards.total_point.toLocaleString()}</p>
+            </div>
+
+            {/* Coupons */}
+            <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
+              <p className="text-sm text-green-700 font-semibold mb-2">Coupons</p>
+
+              {rewards.coupons.length === 0 ? (
+                <p className="text-sm text-slate-500">Belum ada coupon</p>
+              ) : (
+                rewards.coupons.map((coupon) => (
+                  <div key={coupon.id} className="flex justify-between text-sm text-green-800">
+                    <span>Discount</span>
+                    <span className="font-bold">{coupon.amount.toLocaleString()}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Actions */}
         <div className="mt-10 space-y-4">
