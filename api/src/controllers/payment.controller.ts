@@ -1,20 +1,18 @@
 import { type Request, type Response } from "express";
 import { create, get } from "../services/payment.service.js";
+import { uploadSingleService } from "../services/image.service.js";
 
 export async function createPayment(req: Request, res: Response) {
   try {
-    const { orderId, amount, method, status, proofImage, paidAt, confirmedAt } =
-      req.body;
-    const payment = await create(
-      orderId,
-      amount,
-      method,
-      status,
-      proofImage,
-      paidAt,
-      confirmedAt,
-    );
-    res.status(201).json(payment);
+    const file = req.file as Express.Multer.File;
+    const { orderId, amount, method, status } = req.body;
+
+    const proofImage = await uploadSingleService(file);
+
+    const payment = await create(orderId, amount, method, status, proofImage);
+    console.log(payment);
+
+    res.status(201).json({ message: "Payment created successfully", payment });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to create payment" });
