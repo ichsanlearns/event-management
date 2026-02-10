@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User, Mail, Shield, Gift, LogOut } from "lucide-react";
+import { User, Mail, Shield, Gift, LogOut, Camera } from "lucide-react";
 import { useNavigate } from "react-router";
 import api from "../lib/api";
 
@@ -12,6 +12,7 @@ interface UserProfile {
   email: string;
   role: string;
   referral_code?: string;
+  profile_image?: string;
 }
 
 interface Point {
@@ -42,6 +43,9 @@ export default function Profile() {
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [image, setImage] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+
   /* =======================
      FETCH DATA
   ======================= */
@@ -63,6 +67,34 @@ export default function Profile() {
 
     fetchData();
   }, []);
+
+  /* =======================
+   UPLOAD IMAGE
+======================= */
+  const handleUploadImage = async () => {
+    if (!image || !user) return;
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    try {
+      setUploading(true);
+
+      const res = await api.put(
+        "/user/profile/image",
+        formData,
+        // ❌ JANGAN SET HEADER
+      );
+
+      // ✅ backend kirim: { image: "/uploads/profile/xxx.jpg" }
+      setUser({ ...user, profile_image: res.data.image });
+      setImage(null);
+    } catch (error: any) {
+      console.error("UPLOAD ERROR:", error.response?.data || error);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   /* =======================
      LOGOUT
@@ -89,12 +121,33 @@ export default function Profile() {
 
         {/* Avatar */}
         <div className="flex items-center gap-4 mb-10">
-          <div className="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-lg">
-            <User size={36} />
+          <div className="relative">
+            <label className="cursor-pointer">
+              {user.profile_image ? (
+                <img src={user.profile_image} alt="avatar" className="w-20 h-20 rounded-full object-cover border" />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-lg">
+                  <User size={36} />
+                </div>
+              )}
+
+              <div className="absolute bottom-0 right-0 bg-indigo-600 p-1 rounded-full text-white">
+                <Camera size={14} />
+              </div>
+
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+            </label>
           </div>
+
           <div>
             <p className="text-2xl font-bold text-slate-800">{user.name}</p>
             <p className="text-sm text-slate-500">{user.role}</p>
+
+            {image && (
+              <button onClick={handleUploadImage} disabled={uploading} className="mt-2 text-sm text-indigo-600 font-semibold">
+                {uploading ? "Uploading..." : "Save Photo"}
+              </button>
+            )}
           </div>
         </div>
 
@@ -121,13 +174,11 @@ export default function Profile() {
         {/* Rewards */}
         {rewards && (
           <div className="mt-8 space-y-4">
-            {/* Points */}
             <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl">
               <p className="text-sm font-semibold text-yellow-700">Total Points</p>
               <p className="text-2xl font-bold text-yellow-800">{rewards.total_point.toLocaleString()}</p>
             </div>
 
-            {/* Coupons */}
             <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
               <p className="text-sm font-semibold text-green-700 mb-2">Coupons</p>
 
