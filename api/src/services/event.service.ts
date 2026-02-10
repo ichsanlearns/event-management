@@ -72,7 +72,7 @@ export async function getAll(limit: number, query?: string) {
           id: ticket.id,
           type: ticket.type,
           price: ticket.price,
-          quota: ticket.Quota,
+          quota: ticket.quota,
           bought: ticket.bought,
         };
       }),
