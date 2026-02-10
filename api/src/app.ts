@@ -1,6 +1,7 @@
 import express, { type Application, type Request, type Response } from "express";
 
 import cors from "cors";
+import path from "path";
 
 import authRoutes from "./routes/auth.route.js";
 import eventRoutes from "./routes/event.route.js";
@@ -28,6 +29,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/vouchers", voucherRoutes);
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use(notFound);
 app.use(error);

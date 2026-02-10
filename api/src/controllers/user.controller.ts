@@ -60,6 +60,26 @@ export async function getMe(req: Request, res: Response) {
   res.json(user);
 }
 
+export async function updateProfileImage(req: Request, res: Response) {
+  const userId = req.user!.id;
+
+  if (!req.file) {
+    return res.status(400).json({ message: "File tidak ditemukan" });
+  }
+
+  const imagePath = `/uploads/profile/${req.file.filename}`;
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { profile_image: imagePath },
+  });
+
+  res.json({
+    message: "Foto profile berhasil diperbarui",
+    image: imagePath,
+  });
+}
+
 export async function updateProfile(req: Request, res: Response) {
   try {
     const userId = req.user!.id;
