@@ -74,7 +74,13 @@ function Event() {
           Create New Event
         </button>
       </div>
-      {formState === "event" && <FormEvent onClose={()=>{setFormState(null)}} />}
+      {formState === "event" && (
+        <FormEvent
+          onClose={() => {
+            setFormState(null);
+          }}
+        />
+      )}
     </>
   );
 }

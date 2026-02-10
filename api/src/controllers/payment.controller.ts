@@ -1,10 +1,14 @@
 import { type Request, type Response } from "express";
 import { create, get } from "../services/payment.service.js";
+import { uploadSingleService } from "../services/image.service.js";
 
 export async function createPayment(req: Request, res: Response) {
   try {
-    const { orderId, amount, method, status, proofImage, paidAt, confirmedAt } =
-      req.body;
+    const file = req.file as Express.Multer.File;
+
+    const proofImage = await uploadSingleService(file);
+
+    const { orderId, amount, method, status, paidAt, confirmedAt } = req.body;
     const payment = await create(
       orderId,
       amount,
