@@ -11,19 +11,16 @@ export async function create(
     | "REJECTED"
     | "FAILED",
   proofImage?: string,
-  paidAt?: string,
-  confirmedAt?: string,
 ) {
-  await prisma.$transaction(async (tx) => {
-    await tx.payment.create({
+  return await prisma.$transaction(async (tx) => {
+    const payment = await tx.payment.create({
       data: {
         order_id: orderId,
         amount,
         method,
         status: status ?? "WAITING_CONFIRMATION",
         proof_image: proofImage ?? null,
-        paid_at: paidAt ?? new Date(),
-        confirmed_at: confirmedAt ?? null,
+        paid_at: new Date(),
       },
     });
 
@@ -31,6 +28,8 @@ export async function create(
       where: { id: orderId },
       data: { status: "WAITING_CONFIRMATION" },
     });
+
+    return payment;
   });
 }
 
