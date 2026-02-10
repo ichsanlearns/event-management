@@ -18,6 +18,7 @@ function Card() {
         );
         const data = await response.json();
 
+        console.log(data.data);
         setEvents(data.data);
       } catch (error) {
         console.error(error);
@@ -68,16 +69,16 @@ function Card() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {/* card main */}
           {events?.map((event) => {
-            const imageUrl = event.image
-              ? optimizeImage(event.image)
+            const imageUrl = event.heroImage
+              ? optimizeImage(event.heroImage)
               : "/placeholder-event.jpg";
 
             const formattedPrice = new Intl.NumberFormat("id-ID").format(
-              event.Tickets![0].price,
+              event.tickets![0].price,
             );
 
             return (
-              <Link to={`/event/${event.id}`}>
+              <Link key={event.id} to={`/event/${event.id}`}>
                 <article className="group bg-white dark:bg-[#1E1B2E] rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col h-full overflow-hidden">
                   <div className="relative h-56 w-full overflow-hidden">
                     <img
@@ -98,7 +99,7 @@ function Card() {
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-primary font-bold text-sm tracking-wide">
                         {/* Sun, 01 Sep • 13:00  */}
-                        {formatEventDate(event.start_date)}
+                        {formatEventDate(event.startDate)}
                       </span>
                     </div>
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight mb-2 line-clamp-2 group-hover:text-primary transition-colors">

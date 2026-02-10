@@ -43,14 +43,43 @@ export async function getAll(limit: number, query?: string) {
           { name: { contains: query, mode: "insensitive" } },
         ],
       },
-      include: { Tickets: true },
+      select: { id: true, name: true },
     });
   }
 
-  return await prisma.event.findMany({
+  const events = await prisma.event.findMany({
     include: { Tickets: true },
     take: limit,
   });
+
+  const mapped = events.map((event: any) => {
+    return {
+      id: event.id,
+      name: event.name,
+      price: event.price,
+      tagline: event.tagline,
+      category: event.category,
+      venue: event.venue,
+      city: event.city,
+      availableSeats: event.available_seats,
+      organizerId: event.organizer_id,
+      heroImage: event.hero_image,
+      about: event.about,
+      startDate: event.start_date,
+      endDate: event.end_date,
+      tickets: event.Tickets.map((ticket: any) => {
+        return {
+          id: ticket.id,
+          type: ticket.type,
+          price: ticket.price,
+          quota: ticket.quota,
+          bought: ticket.bought,
+        };
+      }),
+    };
+  });
+
+  return mapped;
 }
 
 export async function getById(id: string) {

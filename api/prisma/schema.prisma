@@ -137,7 +137,7 @@ model Review {
   event_id String
   type Types
   price Decimal
-  Quota Int
+  quota Int
   bought Int @default(0)
 
   created_at DateTime @default(now()) 

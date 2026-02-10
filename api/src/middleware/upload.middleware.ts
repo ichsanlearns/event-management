@@ -32,3 +32,26 @@ export const upload = multer({
 
   limits: { fileSize: 5 * 1024 * 1024, files: 5 },
 });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, publicDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `profile-${Date.now()}${ext}`);
+  },
+});
+
+export const uploadProfile = multer({
+  storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2MB
+  },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      cb(new Error("File harus berupa gambar"));
+    }
+    cb(null, true);
+  },
+});

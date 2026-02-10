@@ -7,33 +7,26 @@ type Category = (typeof Category)[keyof typeof Category];
 
 export interface ITicket {
   id: string;
-  event_id: string;
   type: "EARLYBIRD" | "REGULER" | "VIP";
   price: number;
   quota: number;
   bought: number;
-
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: string | null;
-
-  EventName: TEvent;
 }
 
 export type TEvent = {
-  id?: string;
+  id: string;
   name: string;
   price: number;
   tagline: string;
   category: Category;
   city: string;
-  available_seats: number;
-  organizer_id: string;
-  start_date: Date;
-  end_date?: Date;
-  image?: string;
-  about?: string;
-  Tickets?: ITicket[];
+  availableSeats: number;
+  organizerId: string;
+  heroImage: string;
+  about: string;
+  startDate: Date;
+  endDate?: Date;
+  tickets?: ITicket[];
 };
 
 type OrderStatus =
