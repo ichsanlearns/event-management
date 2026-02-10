@@ -43,7 +43,7 @@ export async function getAll(limit: number, query?: string) {
           { name: { contains: query, mode: "insensitive" } },
         ],
       },
-      include: { Tickets: true },
+      select: { id: true, name: true },
     });
   }
 
@@ -79,10 +79,7 @@ export async function getAll(limit: number, query?: string) {
     };
   });
 
-  return {
-    data: mapped,
-    total: events.length,
-  };
+  return mapped;
 }
 
 export async function getById(id: string) {
