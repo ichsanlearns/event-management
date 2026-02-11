@@ -80,22 +80,25 @@ export default function Profile() {
     try {
       setUploading(true);
 
-      const res = await api.put(
-        "/user/profile/image",
-        formData,
-        // ❌ JANGAN SET HEADER
+      const res = await api.put("/user/profile/image", formData);
+
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              profile_image: res.data.profile_image,
+            }
+          : prev,
       );
 
-      // ✅ backend kirim: { image: "/uploads/profile/xxx.jpg" }
-      setUser({ ...user, profile_image: res.data.image });
       setImage(null);
-    } catch (error: any) {
-      console.error("UPLOAD ERROR:", error.response?.data || error);
+    } catch (error) {
+      console.error("UPLOAD ERROR:", error);
+      alert("Upload foto gagal");
     } finally {
       setUploading(false);
     }
   };
-
   /* =======================
      LOGOUT
   ======================= */
@@ -123,10 +126,10 @@ export default function Profile() {
         <div className="flex items-center gap-4 mb-10">
           <div className="relative">
             <label className="cursor-pointer">
-              {user.profile_image ? (
-                <img src={user.profile_image} alt="avatar" className="w-20 h-20 rounded-full object-cover border" />
+              {user.profile_image || image ? (
+                <img key={user.profile_image} src={image ? URL.createObjectURL(image) : user.profile_image} alt="avatar" className="w-20 h-20 rounded-full object-cover border" />
               ) : (
-                <div className="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-lg">
+                <div className="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white">
                   <User size={36} />
                 </div>
               )}
@@ -137,11 +140,6 @@ export default function Profile() {
 
               <input type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] || null)} />
             </label>
-          </div>
-
-          <div>
-            <p className="text-2xl font-bold text-slate-800">{user.name}</p>
-            <p className="text-sm text-slate-500">{user.role}</p>
 
             {image && (
               <button onClick={handleUploadImage} disabled={uploading} className="mt-2 text-sm text-indigo-600 font-semibold">
