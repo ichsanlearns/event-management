@@ -1,8 +1,4 @@
-import express, {
-  type Application,
-  type Request,
-  type Response,
-} from "express";
+import express, { type Application, type Request, type Response } from "express";
 
 import cors from "cors";
 import path from "path";
@@ -26,9 +22,7 @@ app.use(cors({ origin: `${process.env.WEB_URL}` }));
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 app.get("/api/status", (req: Request, res: Response) => {
-  res
-    .status(200)
-    .json({ message: "API is running!", uptime: process.uptime() });
+  res.status(200).json({ message: "API is running!", uptime: process.uptime() });
 });
 
 app.use("/api/auth", authRoutes);
