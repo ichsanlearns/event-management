@@ -1,17 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import { LayoutDashboard, Calendar, Users, BarChart3 } from "lucide-react";
 import { useEffect, useState } from "react";
-
-type User = {
-  name: string;
-  role: "CUSTOMER" | "EVENT_ORGANIZER";
-  profile_image?: string;
-};
+import type { UserProfile } from "../types/user.type";
 
 function SideBar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

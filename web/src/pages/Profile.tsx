@@ -3,35 +3,8 @@ import { User, Mail, Shield, Gift, LogOut, Camera } from "lucide-react";
 import { useNavigate } from "react-router";
 import api from "../lib/api";
 
-/* =======================
-   INTERFACES
-======================= */
-interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  role: "CUSTOMER" | "EVENT_ORGANIZER";
-  referral_code?: string;
-  profile_image?: string;
-}
-
-interface Point {
-  id: string;
-  amount: number;
-  expired_at: string;
-}
-
-interface Coupon {
-  id: string;
-  amount: number;
-  expired_at: string;
-}
-
-interface UserRewards {
-  total_point: number;
-  points: Point[];
-  coupons: Coupon[];
-}
+import type { UserProfile } from "../types/user.type";
+import type { UserRewards } from "../types/reward.type";
 
 /* =======================
    COMPONENT
