@@ -1,6 +1,10 @@
 import { type Request, type Response } from "express";
 import { Role } from "../generated/prisma/enums.js";
-import { createUser, findByEmail, findByReferral } from "../services/auth.service.js";
+import {
+  createUser,
+  findByEmail,
+  findByReferral,
+} from "../services/auth.service.js";
 import { generateReferralCode } from "../utils/referral.util.js";
 import { hashPassword, comparePassword } from "../utils/hash.util.js";
 import { generateToken } from "../utils/jwt.util.js";

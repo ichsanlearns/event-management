@@ -9,6 +9,11 @@ export async function createEvent(req: Request, res: Response) {
 
   const result = await create(data);
 
+  const keys = await redis.keys("events:*");
+  if (keys.length > 0) {
+    await redis.del(keys);
+  }
+
   res.status(200).json({ message: "Event has been created", data: result });
 }
 
@@ -21,9 +26,12 @@ export async function getAllEvent(req: Request, res: Response) {
   const cachedEvents = await redis.get(cacheKey);
 
   if (!query && cachedEvents) {
+    const cachedEventsData = JSON.parse(cachedEvents);
+
     return res.status(200).json({
       message: "Event fetch from cached",
-      data: JSON.parse(cachedEvents),
+      data: cachedEventsData,
+      length: cachedEventsData.length,
     });
   }
 
