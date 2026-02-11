@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
-import { cityArray } from "../../constants/city.constant";
 import type { TEvent } from "../../types/event.type";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import toast from "react-hot-toast";
-import {
-  EventInputSchema,
-  type EventInputType,
-} from "../../schemas/event.schema";
 import FormVoucher from "../../components/FormVoucher";
 import FormEvent from "../../components/FormEvent";
 
