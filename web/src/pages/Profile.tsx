@@ -57,6 +57,9 @@ export default function Profile() {
 
         const rewardsRes = await api.get("/user/rewards");
         setRewards(rewardsRes.data);
+
+        // const imageRes = await api.get("user//profile/images");
+        // setImage(imageRes.data);
       } catch (error) {
         console.error("PROFILE ERROR:", error);
         navigate("/login");
@@ -72,7 +75,7 @@ export default function Profile() {
    UPLOAD IMAGE
 ======================= */
   const handleUploadImage = async () => {
-    if (!image || !user) return;
+    if (!image) return;
 
     const formData = new FormData();
     formData.append("image", image);
@@ -119,11 +122,11 @@ export default function Profile() {
   ======================= */
   return (
     <main className="min-h-screen bg-slate-50 flex justify-center items-center p-6">
-      <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8">
+      <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8 mt-20">
         <h1 className="text-3xl font-bold text-slate-800 mb-8">My Profile</h1>
 
         {/* Avatar */}
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-6">
           <div className="relative">
             <label className="cursor-pointer">
               {user.profile_image || image ? (
@@ -151,6 +154,11 @@ export default function Profile() {
 
         {/* Info */}
         <div className="space-y-4">
+          <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl">
+            <User size={20} className="text-slate-400" />
+            <span className="text-slate-700 font-medium">{user.name}</span>
+          </div>
+
           <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl">
             <Mail size={20} className="text-slate-400" />
             <span className="text-slate-700 font-medium">{user.email}</span>

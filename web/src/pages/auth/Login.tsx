@@ -177,8 +177,8 @@ function Login() {
                   Remember me
                 </label>
               </div>
-              <Link to="/forgot-password">
-                <a className="text-sm font-bold text-[#6366f1] hover:text-indigo-400 transition-colors">Forgot password?</a>
+              <Link to="/forgot-password" className="text-sm font-bold text-[#6366f1] hover:text-indigo-400 transition-colors">
+                Forgot password?
               </Link>
             </div>
 
@@ -211,8 +211,8 @@ function Login() {
 
           <p className="mt-12 text-center text-slate-500 dark:text-slate-400 font-medium">
             Don't have an account?
-            <Link to="/register">
-              <a className="font-bold text-[#6366f1] hover:underline transition-all"> Start for free</a>
+            <Link to="/register" className="font-bold text-[#6366f1] hover:underline transition-all ml-1">
+              Start for free
             </Link>
           </p>
         </div>
