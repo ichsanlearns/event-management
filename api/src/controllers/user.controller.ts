@@ -73,12 +73,12 @@ export async function uploadProfileImage(req: Request, res: Response) {
 
     await prisma.user.update({
       where: { id: userId },
-      data: { avatar: imageUrl },
+      data: { profile_image: imageUrl },
     });
 
     res.json({
       message: "Upload berhasil",
-      avatar: imageUrl,
+      profile_image: imageUrl,
     });
   } catch (error) {
     console.error(error);

@@ -12,8 +12,10 @@ if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
    CLOUDINARY UPLOAD (PROFILE)
 ================================ */
 export const uploadCloud = multer({
-  storage: multer.memoryStorage(), // 🔥 WAJIB
-  limits: { fileSize: 5 * 1024 * 1024 },
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
   fileFilter: (_req, file, cb) => {
     const allowed = ["image/jpeg", "image/png", "image/webp"];
 
@@ -28,36 +30,35 @@ export const uploadCloud = multer({
 /* ================================
    LOCAL UPLOAD (OPTIONAL)
 ================================ */
-// kalau masih mau simpan ke public
-export const uploadLocal = multer({
-  storage: multer.diskStorage({
-    destination: "public",
-    filename: (_req, file, cb) => {
-      const ext = file.originalname.split(".").pop();
-      cb(null, `${Date.now()}-${Math.random()}.${ext}`);
-    },
-  }),
-});
+// export const uploadLocal = multer({
+//   storage: multer.diskStorage({
+//     destination: "public",
+//     filename: (_req, file, cb) => {
+//       const ext = file.originalname.split(".").pop();
+//       cb(null, `${Date.now()}-${Math.random()}.${ext}`);
+//     },
+//   }),
+// });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, publicDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `profile-${Date.now()}${ext}`);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, publicDir);
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = path.extname(file.originalname);
+//     cb(null, `profile-${Date.now()}${ext}`);
+//   },
+// });
 
-export const uploadProfile = multer({
-  storage,
-  limits: {
-    fileSize: 2 * 1024 * 1024, // 2MB
-  },
-  fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("image/")) {
-      cb(new Error("File harus berupa gambar"));
-    }
-    cb(null, true);
-  },
-});
+// export const uploadProfile = multer({
+//   storage,
+//   limits: {
+//     fileSize: 2 * 1024 * 1024, // 2MB
+//   },
+//   fileFilter: (req, file, cb) => {
+//     if (!file.mimetype.startsWith("image/")) {
+//       cb(new Error("File harus berupa gambar"));
+//     }
+//     cb(null, true);
+//   },
+// });
