@@ -1,0 +1,418 @@
+import {
+  Category,
+  Role,
+  Types,
+  Status,
+} from "../src/generated/prisma/enums.js";
+import {
+  type User,
+  type Event,
+  type Ticket,
+  type Voucher,
+  type Order,
+  Prisma,
+} from "../src/generated/prisma/client.js";
+import { prisma } from "../src/lib/prisma.lib.js";
+import { Faker, id_ID } from "@faker-js/faker";
+
+// 🇮🇩 Use Indonesian locale
+const faker = new Faker({ locale: [id_ID] });
+
+// =============================
+// INDONESIA DATA
+// =============================
+const INDONESIAN_CITIES = [
+  "Jakarta",
+  "Bandung",
+  "Surabaya",
+  "Yogyakarta",
+  "Semarang",
+  "Solo",
+  "Malang",
+  "Denpasar",
+  "Medan",
+  "Palembang",
+  "Pekanbaru",
+  "Balikpapan",
+  "Banjarmasin",
+  "Pontianak",
+  "Makassar",
+  "Manado",
+  "Kupang",
+];
+
+const EVENT_IMAGE_MAP = {
+  Konser: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
+  Festival: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
+  Seminar: "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+  Workshop: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655",
+  Tech: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+};
+
+const EVENT_NAMES = [
+  "Konser Musik Nusantara",
+  "Festival Jazz Indonesia",
+  "Pameran UMKM Lokal",
+  "Seminar Startup Digital",
+  "Workshop UI/UX Design",
+  "Konser Akustik Senja",
+  "Festival Kuliner Nusantara",
+  "Tech Conference Indonesia",
+  "Indonesia Creative Expo",
+  "Music Fest Akhir Tahun",
+];
+
+const EVENT_DESCRIPTIONS = [
+  "Acara seru dengan konsep modern dan bintang tamu menarik.",
+  "Event eksklusif yang menghadirkan pengalaman tak terlupakan.",
+  "Cocok untuk semua kalangan, dari pemula hingga profesional.",
+  "Jangan lewatkan event spesial dengan hiburan dan networking.",
+  "Pengalaman terbaik dengan konsep rapi dan suasana yang seru.",
+];
+
+async function seed() {
+  try {
+    // =============================
+    // CLEAN DB
+    // =============================
+    await prisma.payment.deleteMany({});
+    await prisma.order.deleteMany({});
+    await prisma.review.deleteMany({});
+    await prisma.ticket.deleteMany({});
+    await prisma.voucher.deleteMany({});
+    await prisma.point.deleteMany({});
+    await prisma.coupon.deleteMany({});
+    await prisma.event.deleteMany({});
+    await prisma.user.deleteMany({});
+
+    console.log("🌱 Seeding started...");
+
+    const tickets: Ticket[] = [];
+    const vouchers: Voucher[] = [];
+    const orders: Order[] = [];
+
+    // =============================
+    // USERS
+    // =============================
+    const users = [
+      {
+        // JAVA JAZZ FESTIVAL
+        id: "012e717a-2429-4757-945f-e24724bcd7ac",
+        name: "PT Java Festival Production",
+        email: "java.festivalproduction@mail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "AXCRYBLW",
+      },
+      {
+        // DWP
+        id: "17a6619c-f6b5-469a-adf4-66196a67d187",
+        name: "Ismaya Live",
+        email: "ismaya.live@mail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "BZXPLMKA",
+      },
+      {
+        // Hammersonic Festival
+        id: "1aab8418-5347-4d4a-8243-b4cc5cb02200",
+        name: "Ravel Entertainment",
+        email: "ravel.entertainment@mail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "CRTYMNQW",
+      },
+      {
+        // Synchronize Festival
+        id: "1c7627d7-6582-4ec0-833c-46278a5b390b",
+        name: "Rajawali Indonesia",
+        email: "rajawali.indonesia@mail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "DLPOQWER",
+      },
+      {
+        // Jazz goes to Campus
+        id: "2a340993-2618-4dc8-bd30-22bde8ff31ec",
+        name: "BEM UI",
+        email: "bem.ui@gmail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "EMNVBXZA",
+      },
+      {
+        // Djakarta Artmosphere
+        id: "405aec92-d64d-46ed-9c01-aab197217fe1",
+        name: "G Productions",
+        email: "g.productions@mail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "FJKLPOIU",
+      },
+      {
+        // Joyland Festival
+        id: "4af6aa73-3aea-48ea-8ecb-9507edfd4d9c",
+        name: "Associated Production",
+        email: "associated.production@mail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "GHYTREWS",
+      },
+      {
+        id: "1c92f1d5-7b6e-4b8a-9d33-2a6c7b1e5f10",
+        name: "Putri Amelia",
+        email: "putri.amelia@gmail.com",
+        password: "password123",
+        role: Role.CUSTOMER,
+        referral_code: "HGFDSAQW",
+      },
+      {
+        id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+        name: "Customer One",
+        email: "customer.one@gmail.com",
+        password: "password123",
+        role: Role.CUSTOMER,
+        referral_code: "IJNBVCXZ",
+      },
+      {
+        // Nihon No Matsuri (Japanese cultural fest)
+        id: "58c4a937-88c4-42ee-a99a-a5b6c32899cd",
+        name: "Nihon No Matsuri Event Organizer",
+        email: "nihonnomatsuri@mail.com",
+        password: "password123",
+        role: Role.EVENT_ORGANIZER,
+        referral_code: "KLOPIUYT",
+      },
+    ];
+
+    await prisma.user.createMany({
+      data: users,
+    });
+
+    // =============================
+    // REFERRALS
+    // =============================
+    // for (let i = 0; i < 8; i++) {
+    //   const referrer = faker.helpers.arrayElement(customers);
+    //   const referred = faker.helpers.arrayElement(
+    //     customers.filter((c) => c.id !== referrer.id),
+    //   );
+
+    //   await prisma.point.create({
+    //     data: {
+    //       user_id: referrer.id,
+    //       amount: 10000,
+    //       expired_at: faker.date.soon({ days: 90 }),
+    //     },
+    //   });
+
+    //   await prisma.coupon.create({
+    //     data: {
+    //       user_id: referred.id,
+    //       amount: 25000,
+    //       expired_at: faker.date.soon({ days: 90 }),
+    //       referrer_id: referrer.id,
+    //     },
+    //   });
+    // }
+
+    // =============================
+    // EVENTS (SAME NAME = SAME ORGANIZER)
+    // =============================
+    const events = [
+      {
+        id: "5ff8500f-b903-4fa1-9efb-5eaa161b0802",
+        name: "Java Jazz Festival",
+        price: new Prisma.Decimal(150000),
+        tagline: "Java Jazz Festival Beyond the Horizon",
+        category: Category.MUSIC,
+        venue: "Jakarta International Expo",
+        city: "Jakarta",
+        available_seats: 1000,
+        organizer_id: "012e717a-2429-4757-945f-e24724bcd7ac",
+        hero_image:
+          "https://images.unsplash.com/photo-1518770660439-4636190af475",
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2022-01-01"),
+        end_date: new Date("2022-01-02"),
+      },
+      {
+        id: "695145ee-242c-45ad-a192-dc05c9c6b8de",
+        name: "DWP",
+        price: new Prisma.Decimal(200000),
+        tagline: "DWP Beyond the Horizon",
+        category: Category.MUSIC,
+        venue: "Jakarta International Expo",
+        city: "Jakarta",
+        available_seats: 1000,
+        organizer_id: "17a6619c-f6b5-469a-adf4-66196a67d187",
+        hero_image: EVENT_IMAGE_MAP.Konser,
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2023-01-01"),
+        end_date: new Date("2023-01-03"),
+      },
+      {
+        id: "6b8667ea-c524-4500-b5ba-a605022910b4",
+        name: "Hammersonic Festival",
+        price: new Prisma.Decimal(250000),
+        tagline: "Hammersonic Festival Beyond the Horizon",
+        category: Category.MUSIC,
+        venue: "Jakarta International Expo",
+        city: "Jakarta",
+        available_seats: 1000,
+        organizer_id: "1aab8418-5347-4d4a-8243-b4cc5cb02200",
+        hero_image: EVENT_IMAGE_MAP.Seminar,
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2024-01-01"),
+        end_date: new Date("2024-01-03"),
+      },
+      {
+        id: "737a5d9e-52df-47b8-b96c-7fbdd05e05cc",
+        name: "Synchronize Festival",
+        price: new Prisma.Decimal(300000),
+        tagline: "Synchronize Festival Beyond the Horizon",
+        category: Category.MUSIC,
+        venue: "Jakarta International Expo",
+        city: "Jakarta",
+        available_seats: 1000,
+        organizer_id: "1c7627d7-6582-4ec0-833c-46278a5b390b",
+        hero_image: EVENT_IMAGE_MAP.Tech,
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2025-01-01"),
+        end_date: new Date("2025-01-03"),
+      },
+      {
+        id: "7390e609-1ab5-45d9-828f-f2adefa34d0c",
+        name: "Jazz goes to Campus",
+        price: new Prisma.Decimal(85000),
+        tagline: "Jazz goes to Campus Beyond the Horizon",
+        category: Category.THEATRE,
+        venue: "International Convention Center",
+        city: "Bandung",
+        available_seats: 1000,
+        organizer_id: "2a340993-2618-4dc8-bd30-22bde8ff31ec",
+        hero_image: EVENT_IMAGE_MAP.Workshop,
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2026-03-01"),
+        end_date: new Date("2026-03-03"),
+      },
+      {
+        id: "7b8aee32-542d-4727-92a1-6363676fd940",
+        name: "Djakarta Artmosphere",
+        price: new Prisma.Decimal(120000),
+        tagline: "Djakarta Artmosphere Beyond the Horizon",
+        category: Category.THEATRE,
+        venue: "International Convention Center",
+        city: "Bandung",
+        available_seats: 1000,
+        organizer_id: "405aec92-d64d-46ed-9c01-aab197217fe1",
+        hero_image: EVENT_IMAGE_MAP.Workshop,
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2026-04-01"),
+        end_date: new Date("2026-04-03"),
+      },
+      {
+        id: "7d2c367d-fe52-429e-8554-a26e2d092a18",
+        name: "Joyland Festival",
+        price: new Prisma.Decimal(150000),
+        tagline: "Joyland Festival Beyond the Horizon",
+        category: Category.MUSIC,
+        venue: "International Convention Center",
+        city: "Bandung",
+        available_seats: 1000,
+        organizer_id: "4af6aa73-3aea-48ea-8ecb-9507edfd4d9c",
+        hero_image: EVENT_IMAGE_MAP.Konser,
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2026-05-01"),
+        end_date: new Date("2026-05-03"),
+      },
+      {
+        id: "7dcf8cd3-f966-43ff-8782-11ad68dff25a",
+        name: "Nihon No Matsuri",
+        price: new Prisma.Decimal(100000),
+        tagline: "Nihon No Matsuri Beyond the Horizon",
+        category: Category.SPORT,
+        venue: "International Convention Center",
+        city: "Bandung",
+        available_seats: 1000,
+        organizer_id: "4af6aa73-3aea-48ea-8ecb-9507edfd4d9c",
+        hero_image: EVENT_IMAGE_MAP.Konser,
+        about: `lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit`,
+        start_date: new Date("2026-02-01"),
+        end_date: new Date("2026-02-03"),
+      },
+    ];
+
+    await prisma.event.createMany({
+      data: events,
+    });
+
+    // =============================
+    // TICKETS
+    // =============================
+
+    for (const event of events) {
+      const base = Number(event.price);
+
+      await prisma.ticket.createMany({
+        data: [
+          {
+            event_id: event.id,
+            type: Types.EARLYBIRD,
+            price: Math.floor(base * 0.7),
+            quota: 50,
+          },
+          {
+            event_id: event.id,
+            type: Types.REGULER,
+            price: base,
+            quota: 200,
+          },
+          {
+            event_id: event.id,
+            type: Types.VIP,
+            price: Math.floor(base * 1.8),
+            quota: 30,
+          },
+        ],
+      });
+
+      const eventTickets = await prisma.ticket.findMany({
+        where: { event_id: event.id },
+      });
+
+      tickets.push(...eventTickets);
+    }
+
+    // =============================
+    // POINTS
+    // =============================
+
+    for (const user of users) {
+      if (user.role === Role.CUSTOMER) {
+        await prisma.point.createMany({
+          data: [
+            {
+              user_id: user.id,
+              amount: 1000,
+              expired_at: new Date("2026-06-01"),
+            },
+          ],
+        });
+      }
+    }
+
+    // =============================
+    // (REST: vouchers, orders, reviews — unchanged)
+    // =============================
+
+    console.log("✅ Seeding completed successfully");
+  } catch (error) {
+    console.error("❌ Seeding failed:", error);
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+seed();

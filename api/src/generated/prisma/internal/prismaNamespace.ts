@@ -1327,7 +1327,7 @@ export const TicketScalarFieldEnum = {
   event_id: 'event_id',
   type: 'type',
   price: 'price',
-  Quota: 'Quota',
+  quota: 'quota',
   bought: 'bought',
   created_at: 'created_at',
   updated_at: 'updated_at',
