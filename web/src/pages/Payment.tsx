@@ -349,7 +349,7 @@ function Payment() {
                     className="h-32 w-full bg-cover bg-center relative"
                     data-alt="Neon festival crowd with lasers and stage lights"
                     style={{
-                      backgroundImage: `url(${order?.Ticket.EventName.image})`,
+                      backgroundImage: `url(${order?.Ticket.EventName.hero_image})`,
                     }}
                   >
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
