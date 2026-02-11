@@ -150,6 +150,7 @@ export async function me(req: Request, res: Response) {
       email: true,
       role: true,
       referral_code: true,
+      profile_image: true,
     },
   });
 

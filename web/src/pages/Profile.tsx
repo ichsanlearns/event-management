@@ -10,7 +10,7 @@ interface UserProfile {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: "CUSTOMER" | "EVENT_ORGANIZER";
   referral_code?: string;
   profile_image?: string;
 }
@@ -38,8 +38,9 @@ interface UserRewards {
 ======================= */
 export default function Profile() {
   const navigate = useNavigate();
+  const storedUser = localStorage.getItem("user");
 
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(storedUser ? JSON.parse(storedUser) : null);
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +54,9 @@ export default function Profile() {
     const fetchData = async () => {
       try {
         const profileRes = await api.get("/auth/me");
+
         setUser(profileRes.data);
+        localStorage.setItem("user", JSON.stringify(profileRes.data));
 
         const rewardsRes = await api.get("/user/rewards");
         setRewards(rewardsRes.data);
@@ -72,7 +75,7 @@ export default function Profile() {
    UPLOAD IMAGE
 ======================= */
   const handleUploadImage = async () => {
-    if (!image || !user) return;
+    if (!image) return;
 
     const formData = new FormData();
     formData.append("image", image);
@@ -82,14 +85,17 @@ export default function Profile() {
 
       const res = await api.put("/user/profile/image", formData);
 
-      setUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              profile_image: res.data.profile_image,
-            }
-          : prev,
-      );
+      setUser((prev) => {
+        if (!prev) return prev;
+
+        const updatedUser = {
+          ...prev,
+          profile_image: res.data.profile_image,
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        return updatedUser;
+      });
 
       setImage(null);
     } catch (error) {
@@ -119,11 +125,11 @@ export default function Profile() {
   ======================= */
   return (
     <main className="min-h-screen bg-slate-50 flex justify-center items-center p-6">
-      <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8">
+      <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8 mt-20">
         <h1 className="text-3xl font-bold text-slate-800 mb-8">My Profile</h1>
 
         {/* Avatar */}
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-6">
           <div className="relative">
             <label className="cursor-pointer">
               {user.profile_image || image ? (
@@ -151,6 +157,11 @@ export default function Profile() {
 
         {/* Info */}
         <div className="space-y-4">
+          <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl">
+            <User size={20} className="text-slate-400" />
+            <span className="text-slate-700 font-medium">{user.name}</span>
+          </div>
+
           <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl">
             <Mail size={20} className="text-slate-400" />
             <span className="text-slate-700 font-medium">{user.email}</span>
