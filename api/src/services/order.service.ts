@@ -1,5 +1,6 @@
 import type { Status } from "../generated/prisma/enums.js";
 import { prisma } from "../lib/prisma.lib.js";
+import { AppError } from "../utils/app-error.util.js";
 
 export async function create(
   orderCode: string,
@@ -40,12 +41,54 @@ export async function create(
 }
 
 export async function getById(id: string) {
-  return prisma.order.findUnique({
+  const order = await prisma.order.findUnique({
     where: { id },
-    include: {
-      Ticket: { include: { EventName: true } },
+    select: {
+      id: true,
+      customer_id: true,
+      status: true,
+      total: true,
+      order_code: true,
+      quantity: true,
+      using_point: true,
+      expired_at: true,
+      Ticket: {
+        select: {
+          event_id: true,
+          type: true,
+          price: true,
+          EventName: { select: { name: true, city: true, hero_image: true } },
+        },
+      },
     },
   });
+
+  if (!order) {
+    throw new AppError(404, "Event not found");
+  }
+
+  const mapped = {
+    id: order.id,
+    customerId: order.customer_id,
+    status: order.status,
+    total: order.total,
+    orderCode: order.order_code,
+    quantity: order.quantity,
+    usingPoint: order.using_point,
+    expiredAt: order.expired_at,
+    ticket: {
+      eventId: order.Ticket.event_id,
+      type: order.Ticket.type,
+      price: order.Ticket.price,
+      eventName: {
+        name: order.Ticket.EventName.name,
+        city: order.Ticket.EventName.city,
+        heroImage: order.Ticket.EventName.hero_image,
+      },
+    },
+  };
+
+  return mapped;
 }
 
 export async function getAll() {

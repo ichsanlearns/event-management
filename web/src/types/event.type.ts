@@ -7,10 +7,12 @@ type Category = (typeof Category)[keyof typeof Category];
 
 export interface ITicket {
   id: string;
+  eventId: string;
   type: "EARLYBIRD" | "REGULER" | "VIP";
   price: number;
   quota: number;
   bought: number;
+  eventName: TEvent;
 }
 
 export type TEvent = {
@@ -40,16 +42,17 @@ type OrderStatus =
 
 export interface IOrder {
   id: string;
-  order_code: string;
-  customer_id: string;
-  ticket_id: string;
-  voucher_id: string;
+  orderCode: string;
+  customerId: string;
+  ticketId: string;
+  voucherId: string;
   status: OrderStatus;
   quantity: number;
-  using_point: number;
+  usingPoint: number;
   total: number;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-  Ticket: ITicket;
+  expiredAt: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  ticket: ITicket;
 }
