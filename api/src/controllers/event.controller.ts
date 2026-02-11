@@ -3,11 +3,14 @@ import { type Request, type Response } from "express";
 import { create, getAll, getById } from "../services/event.service.js";
 
 import { redis } from "../lib/redis.lib.js";
+import { createEventSchema } from "../validators/event.validator.js";
 
 export async function createEvent(req: Request, res: Response) {
-  const data = req.body;
+  const validatedData = createEventSchema.parse({
+    ...req.body,
+  });
 
-  const result = await create(data);
+  const result = await create(validatedData);
 
   const keys = await redis.keys("events:*");
   if (keys.length > 0) {
