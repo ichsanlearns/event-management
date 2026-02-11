@@ -2,6 +2,8 @@ import { type Request, type Response } from "express";
 
 import { create, getAll, getById } from "../services/event.service.js";
 
+import { redis } from "../lib/redis.lib.js";
+
 export async function createEvent(req: Request, res: Response) {
   const data = req.body;
 
@@ -11,13 +13,28 @@ export async function createEvent(req: Request, res: Response) {
 }
 
 export async function getAllEvent(req: Request, res: Response) {
-  const query =
-    typeof req.query.search === "string" ? req.query.search : undefined;
-
+  const query = typeof req.query.search === "string" ? req.query.search : "";
   const limit = req.query.limit ? Number(req.query.limit) : 4;
 
+  const cacheKey = `events:${limit}`;
+
+  const cachedEvents = await redis.get(cacheKey);
+
+  if (!query && cachedEvents) {
+    return res.status(200).json({
+      message: "Event fetch from cached",
+      data: JSON.parse(cachedEvents),
+    });
+  }
+
   const events = await getAll(limit, query);
-  res.status(200).json({ message: "Event berhasil diambil", data: events });
+  await redis.set(cacheKey, JSON.stringify(events), "EX", 60 * 5);
+
+  res.status(200).json({
+    message: "Event berhasil diambil",
+    data: events,
+    length: events.length,
+  });
 }
 
 export async function getEventById(req: Request, res: Response) {
