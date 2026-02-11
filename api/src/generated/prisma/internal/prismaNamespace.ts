@@ -1312,6 +1312,7 @@ export const ReviewScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
   event_id: 'event_id',
+  order_id: 'order_id',
   comment: 'comment',
   rating: 'rating',
   created_at: 'created_at',
