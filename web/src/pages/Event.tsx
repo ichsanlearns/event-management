@@ -20,7 +20,7 @@ function Event() {
   const navigate = useNavigate();
 
   const [event, setEvent] = useState<TEvent | null>(null);
-  const orderNumber = event?.Tickets?.reduce(
+  const orderNumber = event?.tickets?.reduce(
     (total, ticket) => total + ticket.bought,
     0,
   );
@@ -58,7 +58,7 @@ function Event() {
 
     payload.orderCode = generateOrderId(
       event!.name,
-      event?.start_date!,
+      event?.startDate!,
       orderNumber! + 1,
     );
 
@@ -115,7 +115,7 @@ function Event() {
                   alt="Vintage style jazz poster"
                   className="w-full h-auto object-cover aspect-2/3"
                   data-alt="Vintage style poster for the Midnight Jazz Festival featuring a saxophone silhouette"
-                  src={event?.image}
+                  src={event?.heroImage}
                 />
               </div>
               {/* Title & Key Info */}
@@ -135,7 +135,7 @@ function Event() {
                   {event?.name}
                 </h1>
                 <p className="text-lg text-gray-300 max-w-2xl font-medium">
-                  {event?.tagline}testtesttest
+                  {event?.tagline}
                 </p>
               </div>
             </div>
@@ -179,7 +179,7 @@ function Event() {
                 <div>
                   <p className="text-sm text-gray-400">Venue</p>
                   <p className="font-semibold text-white">
-                    Grand Hall, {event?.city}
+                    {event?.venue}, {event?.city}
                   </p>
                 </div>
               </div>
@@ -230,7 +230,7 @@ function Event() {
                   id="ticketForm"
                   className="space-y-4"
                 >
-                  {event?.Tickets!.map((ticket) => (
+                  {event?.tickets!.map((ticket) => (
                     <>
                       <label
                         key={ticket.id}
