@@ -10,7 +10,7 @@ interface UserProfile {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: "CUSTOMER" | "EVENT_ORGANIZER";
   referral_code?: string;
   profile_image?: string;
 }
@@ -38,8 +38,9 @@ interface UserRewards {
 ======================= */
 export default function Profile() {
   const navigate = useNavigate();
+  const storedUser = localStorage.getItem("user");
 
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(storedUser ? JSON.parse(storedUser) : null);
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,13 +54,12 @@ export default function Profile() {
     const fetchData = async () => {
       try {
         const profileRes = await api.get("/auth/me");
+
         setUser(profileRes.data);
+        localStorage.setItem("user", JSON.stringify(profileRes.data));
 
         const rewardsRes = await api.get("/user/rewards");
         setRewards(rewardsRes.data);
-
-        // const imageRes = await api.get("user//profile/images");
-        // setImage(imageRes.data);
       } catch (error) {
         console.error("PROFILE ERROR:", error);
         navigate("/login");
@@ -85,14 +85,17 @@ export default function Profile() {
 
       const res = await api.put("/user/profile/image", formData);
 
-      setUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              profile_image: res.data.profile_image,
-            }
-          : prev,
-      );
+      setUser((prev) => {
+        if (!prev) return prev;
+
+        const updatedUser = {
+          ...prev,
+          profile_image: res.data.profile_image,
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        return updatedUser;
+      });
 
       setImage(null);
     } catch (error) {
