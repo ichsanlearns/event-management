@@ -63,7 +63,7 @@ model User {
   role Role
   referral_code String @unique
 
-  profile_image String?
+  avatar String?
 
   reset_token String?
   reset_token_expiry DateTime?

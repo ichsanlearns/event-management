@@ -8,29 +8,35 @@ const publicDir = path.join(process.cwd(), "public");
 
 if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
 
-export const upload = multer({
-  storage: multer.diskStorage({
-    destination: (_req, _file, cb) => {
-      cb(null, publicDir);
-    },
-
-    filename: (_req, file, cb) => {
-      const ext = path.extname(file.originalname);
-      const fileName = `${Date.now()}-${Math.random() * 1e9}${ext}`;
-      cb(null, fileName);
-    },
-  }),
+/* ================================
+   CLOUDINARY UPLOAD (PROFILE)
+================================ */
+export const uploadCloud = multer({
+  storage: multer.memoryStorage(), // 🔥 WAJIB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
-    const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp"];
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
 
-    if (!allowedMimeTypes.includes(file.mimetype)) {
+    if (!allowed.includes(file.mimetype)) {
       return cb(new AppError(400, "Invalid file type"));
     }
 
     cb(null, true);
   },
+});
 
-  limits: { fileSize: 5 * 1024 * 1024, files: 5 },
+/* ================================
+   LOCAL UPLOAD (OPTIONAL)
+================================ */
+// kalau masih mau simpan ke public
+export const uploadLocal = multer({
+  storage: multer.diskStorage({
+    destination: "public",
+    filename: (_req, file, cb) => {
+      const ext = file.originalname.split(".").pop();
+      cb(null, `${Date.now()}-${Math.random()}.${ext}`);
+    },
+  }),
 });
 
 const storage = multer.diskStorage({

@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.lib.js";
 import { comparePassword, hashPassword } from "../utils/hash.util.js";
+import { uploadToCloudinary } from "../services/image.service.js";
 
 export const getUserPointAndCoupon = async (req: Request, res: Response) => {
   try {
@@ -60,24 +61,29 @@ export async function getMe(req: Request, res: Response) {
   res.json(user);
 }
 
-export async function updateProfileImage(req: Request, res: Response) {
-  const userId = req.user!.id;
+export async function uploadProfileImage(req: Request, res: Response) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "File tidak ditemukan" });
+    }
 
-  if (!req.file) {
-    return res.status(400).json({ message: "File tidak ditemukan" });
+    const userId = req.user!.id;
+
+    const imageUrl = await uploadToCloudinary(req.file.buffer, "profile");
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { avatar: imageUrl },
+    });
+
+    res.json({
+      message: "Upload berhasil",
+      avatar: imageUrl,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Upload gagal" });
   }
-
-  const imagePath = `/uploads/profile/${req.file.filename}`;
-
-  const user = await prisma.user.update({
-    where: { id: userId },
-    data: { profile_image: imagePath },
-  });
-
-  res.json({
-    message: "Foto profile berhasil diperbarui",
-    image: imagePath,
-  });
 }
 
 export async function updateProfile(req: Request, res: Response) {
