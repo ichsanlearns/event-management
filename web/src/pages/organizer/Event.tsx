@@ -21,9 +21,7 @@ function Event() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/events?limit=100`,
-        );
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`);
 
         const data = await response.json();
 

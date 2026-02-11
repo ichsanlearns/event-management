@@ -6,6 +6,7 @@ import { Link } from "react-router";
 function Card() {
   const [events, setEvents] = useState<TEvent[] | null>(null);
   const [limit, setLimit] = useState(4);
+  const [max, setMax] = useState(false);
 
   useEffect(() => {
     async function getEvents() {
@@ -20,6 +21,9 @@ function Card() {
 
         console.log(data.data);
         setEvents(data.data);
+        if (data.length < limit) {
+          setMax(true);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -129,7 +133,8 @@ function Card() {
         </div>
 
         {/*  */}
-        <div className="mt-16 flex justify-center">
+
+        <div className="mt-16 flex justify-center" hidden={max}>
           <button
             onClick={() => setLimit(limit + 4)}
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 font-bold py-3.5 px-10 rounded-2xl transition-colors shadow-sm text-lg cursor-pointer"

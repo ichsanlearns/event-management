@@ -19,6 +19,7 @@ export type TEvent = {
   price: number;
   tagline: string;
   category: Category;
+  venue: string;
   city: string;
   availableSeats: number;
   organizerId: string;

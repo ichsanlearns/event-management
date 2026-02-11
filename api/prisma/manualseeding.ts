@@ -238,7 +238,7 @@ async function seed() {
       },
       {
         id: "695145ee-242c-45ad-a192-dc05c9c6b8de",
-        name: "DWP",
+        name: "Djakarta Warehouse Project",
         price: new Prisma.Decimal(200000),
         tagline: "DWP Beyond the Horizon",
         category: Category.MUSIC,
