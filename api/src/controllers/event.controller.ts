@@ -20,52 +20,17 @@ export async function createEvent(req: Request, res: Response) {
   res.status(200).json({ message: "Event has been created", data: result });
 }
 
-// export async function getAllEvent(req: Request, res: Response) {
-//   const query = typeof req.query.search === "string" ? req.query.search : "";
-//   const limit = req.query.limit ? Number(req.query.limit) : 10;
-
-//   const cacheKey = `events:${limit}`;
-
-//   const cachedEvents = await redis.get(cacheKey);
-
-//   if (!query && cachedEvents) {
-//     const cachedEventsData = JSON.parse(cachedEvents);
-
-//     return res.status(200).json({
-//       message: "Event fetch from cached",
-//       data: cachedEventsData,
-//       length: cachedEventsData.length,
-//     });
-//   }
-
-//   const events = await getAll(limit, query);
-//   await redis.set(cacheKey, JSON.stringify(events), "EX", 60 * 5);
-
-//   res.status(200).json({
-//     message: "Event berhasil diambil",
-//     data: events,
-//     length: events.length,
-//   });
-// }
-
 export async function getAllEvent(req: Request, res: Response) {
-  const query = typeof req.query.search === "string" ? req.query.search : "";
   const page = req.query.page ? Number(req.query.page) : 1;
   const limit = req.query.limit ? Number(req.query.limit) : 4;
+  const query = typeof req.query.search === "string" ? req.query.search : "";
 
   const result = await getAll(page, limit, query);
-
-  const totalPages = Math.ceil(result.total / limit);
 
   res.status(200).json({
     message: "Event berhasil diambil",
     data: result.data,
-    meta: {
-      page,
-      limit,
-      total: result.total,
-      totalPages,
-    },
+    meta: result.meta,
   });
 }
 

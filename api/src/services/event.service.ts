@@ -23,34 +23,29 @@ export async function create({ name, price, tagline, category, venue, city, avai
 }
 
 export async function getAll(page: number, limit: number, query?: string) {
-  // SEARCH (tidak dipagination dulu, biar aman)
-  if (query) {
-    const data = await prisma.event.findMany({
-      where: {
-        OR: [{ name: { contains: query, mode: "insensitive" } }],
-      },
-      select: { id: true, name: true },
-    });
-
-    return {
-      data,
-      total: data.length,
-    };
-  }
-
   const skip = (page - 1) * limit;
 
-  const [data, total] = await Promise.all([
+  const where = query
+    ? {
+        name: {
+          contains: query,
+          mode: "insensitive" as const,
+        },
+      }
+    : {};
+
+  const [events, total] = await Promise.all([
     prisma.event.findMany({
+      where,
       include: { Tickets: true },
       take: limit,
       skip,
       orderBy: { start_date: "desc" },
     }),
-    prisma.event.count(),
+    prisma.event.count({ where }),
   ]);
 
-  const mapped = data.map((event: any) => ({
+  const mapped = events.map((event: any) => ({
     id: event.id,
     name: event.name,
     price: event.price,
@@ -75,7 +70,11 @@ export async function getAll(page: number, limit: number, query?: string) {
 
   return {
     data: mapped,
-    total,
+    meta: {
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    },
   };
 }
 
