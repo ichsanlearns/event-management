@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { formattedPrice, formatTime } from "../utils/format.util";
@@ -10,17 +10,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { paymentSchema, type PaymentInput } from "../schemas/payment.schema";
 import toast from "react-hot-toast";
+import { v4 as uuidV4 } from "uuid";
+import api from "../lib/api";
+
+interface UploadedFile {
+  id: string;
+  preview: string;
+  name: string;
+  rawFile: File;
+}
 
 function Payment() {
   const { id } = useParams();
 
+  const [open, setOpen] = useState<"atm" | "banking" | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [file, setFile] = useState<UploadedFile | null>(null);
+  const [order, setOrder] = useState<IOrder | null>(null);
+  const [error, setError] = useState<String | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [voucher, setVoucher] = useState<{
     code: string;
     discount: number;
   } | null>();
-  const [open, setOpen] = useState<"atm" | "banking" | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [order, setOrder] = useState<IOrder | null>(null);
+
   const [{ hoursState, minutesState, secondsState }, setTimer] = useState<{
     hoursState: string;
     minutesState: string;
@@ -81,24 +95,39 @@ function Payment() {
   }
 
   async function handleSubmit(data: PaymentInput) {
+    if (!order) {
+      return;
+    }
+    setError(null);
+    setIsLoading(true);
+
     try {
+      const formData = new FormData();
+      formData.append("singleImage", data.proofImage);
+      formData.append("orderId", order?.id);
+      formData.append("amount", order?.quantity.toString());
+      formData.append("method", "MANUAL_TRANSFER");
+      formData.append("status", "WAITING_CONFIRMATION");
+
       toast.loading("Processing payment...");
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/payments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...data,
-          orderId: id,
-          amount: order?.total,
-          method: "MANUAL_TRANSFER",
-        }),
-      });
+      // const response = await fetch(`${import.meta.env.VITE_API_URL}/payments`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     ...data,
+      //     orderId: id,
+      //     amount: order?.total,
+      //     method: "MANUAL_TRANSFER",
+      //   }),
+      // });
 
-      console.log(response);
+      // console.log(response);
 
-      const result = await response.json();
+      // const result = await response.json();
+
+      await api.post("/payments", formData);
 
       toast.success("Payment successful");
     } catch (error) {
@@ -117,6 +146,59 @@ function Payment() {
       secondsState: seconds,
     });
   }, [order, timeLeft]);
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files?.[0]) {
+      form.setValue("proofImage", e.target.files?.[0]);
+      handleFileSelect(e.target.files?.[0]);
+    }
+  }
+
+  function handleFileSelect(selectedFile: File) {
+    if (selectedFile) {
+      if (selectedFile.size > 5 * 1024 * 1024) {
+        setError("File size must be less than 5 MB");
+        return;
+      }
+
+      if (!selectedFile.type.startsWith("image/")) {
+        setError("Please select an image file");
+        return;
+      }
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const preview = e.target?.result as string;
+        setFile({
+          id: uuidV4(),
+          preview: preview,
+          name: selectedFile.name,
+          rawFile: selectedFile,
+        });
+      };
+
+      reader.readAsDataURL(selectedFile);
+    }
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave() {
+    setIsDragging(false);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files[0]);
+    }
+  }
 
   return (
     <main className="max-w-full bg-background-dark p-30">
@@ -332,19 +414,77 @@ function Payment() {
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
                   Upload Payment Proof
                 </h3>
-                <p className="text-sm text-slate-900 dark:text-white mb-4">
+                {/* <p className="text-sm text-slate-900 dark:text-white mb-4">
                   (link to upload proof)
-                </p>
-                <input
+                </p> */}
+                {/* <input
                   {...form.register("proofImage")}
                   placeholder="https://..."
                   className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2"
-                />
-                {form.formState.errors.proofImage && (
+                /> */}
+                {!file ? (
+                  <label
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    htmlFor="proofImage"
+                    className={`block relative border-2 border-dashed  dark:border-slate-600 rounded-xl p-8 transition-colors hover:border-primary hover:bg-slate-50 dark:hover:bg-[#25203b] group cursor-pointer text-center ${isDragging ? "border-primary bg-slate-50" : " border-slate-300"}`}
+                  >
+                    <input
+                      id="proofImage"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      type="file"
+                      onChange={handleInputChange}
+                      accept="image/*"
+                    />
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-2xl">
+                          cloud_upload
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-slate-900 dark:text-white font-medium">
+                          Click to upload or drag and drop
+                        </p>
+                        <p className="text-sm text-slate-500 mt-1">
+                          SVG, PNG, JPG or GIF (max. 2MB)
+                        </p>
+                      </div>
+                    </div>
+                  </label>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <img
+                        className="h-64 object-contain rounded-lg w-full"
+                        src={file.preview || "/placeholder.svg"}
+                        alt={file.name}
+                      />
+                      <button
+                        onClick={() => {
+                          setFile(null);
+                          setError(null);
+                        }}
+                        type="button"
+                        className="absolute flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 hover:scale-110 text-white rounded-full p-1 min-h-7 min-w-7"
+                      >
+                        <span className="text-sm leading-none">x</span>
+                      </button>
+                      <div>
+                        <p className="text-sm text-gray-600 truncate text-center">
+                          {file.name}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* {form.formState.errors.proofImage && (
                   <p className="text-red-500 text-sm mt-1">
                     {form.formState.errors.proofImage.message}
                   </p>
-                )}
+                )} */}
               </section>
               {/* CTA */}
               <button className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2">
@@ -396,12 +536,21 @@ function Payment() {
                     </div>
                     <div className="space-y-4">
                       {/* Items */}
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-sm mb-2">
                         <span className="text-slate-600 dark:text-slate-300">
-                          {order?.ticket.type} Access ({order?.quantity}x)
+                          {order?.ticket.type} Access
                         </span>
                         <span className="font-medium text-slate-900 dark:text-white">
                           Rp {order?.ticket.price}
+                        </span>
+                      </div>
+                      <div className="border-slate-300 border-t" />
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-600 dark:text-slate-300">
+                          Subtotal Produk ({order?.quantity}x)
+                        </span>
+                        <span className="font-medium text-slate-900 dark:text-white">
+                          Rp {order?.total}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
