@@ -66,10 +66,7 @@ export async function getAll(limit: number, query?: string) {
   if (query) {
     return await prisma.event.findMany({
       where: {
-        OR: [
-          { name: { startsWith: query, mode: "insensitive" } },
-          { name: { contains: query, mode: "insensitive" } },
-        ],
+        OR: [{ name: { startsWith: query, mode: "insensitive" } }, { name: { contains: query, mode: "insensitive" } }],
       },
       select: { id: true, name: true },
     });
@@ -148,4 +145,76 @@ export async function getById(id: string) {
   return mapped;
 }
 
-export async function getByOrganizerId(organizerId: string) {}
+export async function getByOrganizerId(organizerId: string) {
+  const events = await prisma.event.findMany({
+    where: {
+      organizer_id: organizerId,
+    },
+    include: {
+      Tickets: true,
+    },
+    orderBy: {
+      start_date: "desc",
+    },
+  });
+
+  const mapped = events.map((event: any) => {
+    return {
+      id: event.id,
+      name: event.name,
+      price: event.price,
+      tagline: event.tagline,
+      category: event.category,
+      venue: event.venue,
+      city: event.city,
+      availableSeats: event.available_seats,
+      organizerId: event.organizer_id,
+      heroImage: event.hero_image,
+      about: event.about,
+      startDate: event.start_date,
+      endDate: event.end_date,
+      tickets: event.Tickets.map((ticket: any) => ({
+        id: ticket.id,
+        type: ticket.type,
+        price: ticket.price,
+        quota: ticket.quota,
+        bought: ticket.bought,
+      })),
+    };
+  });
+
+  return mapped;
+}
+
+export async function updateById(id: string, data: any) {
+  return prisma.event.update({
+    where: { id },
+    data: {
+      name: data.name,
+      price: data.price,
+      tagline: data.tagline,
+      category: data.category,
+      venue: data.venue,
+      city: data.city,
+      available_seats: data.availableSeats,
+      hero_image: data.heroImage,
+      about: data.about,
+      start_date: data.startDate,
+      end_date: data.endDate,
+    },
+  });
+}
+
+export async function remove(id: string) {
+  const event = await prisma.event.findUnique({ where: { id } });
+
+  if (!event) {
+    throw new AppError(404, "Event not found");
+  }
+
+  await prisma.event.delete({
+    where: { id },
+  });
+
+  return true;
+}

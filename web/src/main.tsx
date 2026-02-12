@@ -35,6 +35,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="profile" element={<Profile />} />
           <Route path="profile/edit" element={<EditProfile />} />
           <Route path="event/:id" element={<Event />} />
+
           <Route path="payment/:id" element={<Payment />} />
         </Route>
         <Route path="organizer" element={<Organizer />}>
