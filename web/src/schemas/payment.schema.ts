@@ -1,10 +1,7 @@
 import { z } from "zod";
 
 export const paymentSchema = z.object({
-  proofImage: z
-    .string()
-    .url("Must be valid URL")
-    .min(1, "Image URL is required"),
+  proofImage: z.instanceof(File, { message: "Proof image is required" }),
   voucherCode: z.string().optional(),
 });
 
