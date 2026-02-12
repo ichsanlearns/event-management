@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
-import { CalendarDays, Search, SlidersHorizontal, ArrowUpDown, MapPin, Ticket, Eye, Pencil, Trash2, Plus } from "lucide-react"; // Menggunakan Lucide React
+import {
+  CalendarDays,
+  Search,
+  SlidersHorizontal,
+  ArrowUpDown,
+  MapPin,
+  Ticket,
+  Eye,
+  Pencil,
+  Trash2,
+  Plus,
+} from "lucide-react"; // Menggunakan Lucide React
 import type { TEvent } from "../../types/event.type";
 
 import FormVoucher from "../../components/FormVoucher";
@@ -11,21 +22,24 @@ function Event() {
   const [formState, setFormState] = useState<"voucher" | "event" | null>(null);
   const [events, setEvents] = useState<TEvent[] | null>(null);
   const [voucherEvents, setVoucherEvents] = useState<TEvent | null>(null);
-  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 4;
 
   useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`);
+
+        const data = await response.json();
+
+        setEvents(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
     fetchEvents();
-  }, [page, search]);
-
-  const fetchEvents = async () => {
-    const res = await api.get(`/events?page=${page}&limit=${limit}&search=${search}`);
-
-    setEvents(res.data.data);
-    setTotalPages(res.data.meta.totalPages);
-  };
+  }, []);
 
   return (
     <div className="flex h-screen w-full relative font-['Manrope'] bg-[#f6f6f8] dark:bg-[#101622] text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
@@ -36,22 +50,37 @@ function Event() {
             {/* Breadcrumb & Header */}
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2 text-[13px] text-slate-400 dark:text-slate-500 font-medium">
-                <span className="hover:text-indigo-600 cursor-pointer transition-colors">Dashboard</span>
+                <span className="hover:text-indigo-600 cursor-pointer transition-colors">
+                  Dashboard
+                </span>
                 <span className="text-slate-300">/</span>
-                <span className="text-slate-900 dark:text-white">My Events</span>
+                <span className="text-slate-900 dark:text-white">
+                  My Events
+                </span>
               </div>
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">My Events</h2>
-                  <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">Manage your upcoming and past events efficiently.</p>
+                  <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                    My Events
+                  </h2>
+                  <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                    Manage your upcoming and past events efficiently.
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <ActionButton icon={<SlidersHorizontal size={16} />} label="Filter" hideMobile />
+                  <ActionButton
+                    icon={<SlidersHorizontal size={16} />}
+                    label="Filter"
+                    hideMobile
+                  />
                   <ActionButton icon={<ArrowUpDown size={16} />} label="Sort" />
 
-                  {/* Create event */}
-                  <button onClick={() => setFormState("event")} className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-sm active:scale-95 transition">
+                  {/* CREATE EVENT */}
+                  <button
+                    onClick={() => setFormState("event")}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-sm active:scale-95 transition"
+                  >
                     <Plus size={16} />
                     Create Event
                   </button>
@@ -65,13 +94,8 @@ function Event() {
                 <Search className="text-slate-400" size={18} />
                 <input
                   className="w-full bg-transparent border-none p-0 text-sm focus:ring-0 placeholder-slate-400 font-medium"
-                  placeholder="Search events by name..."
+                  placeholder="Search events by name, venue, or status..."
                   type="text"
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                  }}
                 />
               </div>
             </div>
@@ -88,7 +112,9 @@ function Event() {
                     <div className="w-full md:w-48 h-44 shrink-0 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
                       <div
                         className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                        style={{ backgroundImage: `url(${event.heroImage || "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop"})` }}
+                        style={{
+                          backgroundImage: `url(${event.heroImage || "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop"})`,
+                        }}
                       ></div>
                       <div className="absolute top-3 left-3">
                         <span className="bg-white/95 dark:bg-[#1a2233]/95 text-slate-900 dark:text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wider border border-slate-100 dark:border-slate-700">
@@ -102,18 +128,39 @@ function Event() {
                       <div>
                         <div className="flex justify-between items-start mb-4">
                           <div className="max-w-[70%]">
-                            <h3 className="text-xl font-extrabold mb-1 group-hover:text-indigo-600 transition-colors truncate">{event.name}</h3>
+                            <h3 className="text-xl font-extrabold mb-1 group-hover:text-indigo-600 transition-colors truncate">
+                              {event.name}
+                            </h3>
                             <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-sm font-medium">
                               <MapPin size={14} className="text-indigo-500" />
-                              <span className="truncate">{event.city || "Online Event"}</span>
+                              <span className="truncate">
+                                {event.city || "Online Event"}
+                              </span>
                             </div>
                           </div>
                           <StatusBadge status="Published" />
                         </div>
 
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                          <InfoBox label="Date" value={new Date(event.startDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })} />
-                          <InfoBox label="Start Price" value={event.price === 0 ? "Free" : `IDR ${event.price.toLocaleString()}`} />
+                          <InfoBox
+                            label="Date"
+                            value={new Date(event.startDate).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
+                          />
+                          <InfoBox
+                            label="Start Price"
+                            value={
+                              event.price === 0
+                                ? "Free"
+                                : `IDR ${event.price.toLocaleString()}`
+                            }
+                          />
                           <InfoBox label="Seats" value="2,450 / 5,000" />
                           <InfoBox label="Revenue" value="IDR 1.2B" />
                         </div>
@@ -136,8 +183,15 @@ function Event() {
 
                         <div className="flex items-center gap-1">
                           <IconButton icon={<Eye size={18} />} label="View" />
-                          <IconButton icon={<Pencil size={18} />} label="Edit" />
-                          <IconButton icon={<Trash2 size={18} />} label="Delete" variant="danger" />
+                          <IconButton
+                            icon={<Pencil size={18} />}
+                            label="Edit"
+                          />
+                          <IconButton
+                            icon={<Trash2 size={18} />}
+                            label="Delete"
+                            variant="danger"
+                          />
                         </div>
                       </div>
                     </div>
@@ -190,7 +244,9 @@ function Event() {
           }}
         />
       )}
-      {formState === "event" && <FormEvent onClose={() => setFormState(null)} />}
+      {formState === "event" && (
+        <FormEvent onClose={() => setFormState(null)} />
+      )}
     </div>
   );
 }
@@ -214,8 +270,12 @@ const IconButton = ({ icon, variant = "default" }: any) => (
 
 const InfoBox = ({ label, value }: any) => (
   <div className="flex flex-col gap-0.5">
-    <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-widest">{label}</span>
-    <span className="text-[13px] font-bold text-slate-800 dark:text-slate-200 truncate">{value}</span>
+    <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-widest">
+      {label}
+    </span>
+    <span className="text-[13px] font-bold text-slate-800 dark:text-slate-200 truncate">
+      {value}
+    </span>
   </div>
 );
 
