@@ -55,7 +55,7 @@ function Event() {
         event?.startDate!,
         orderNumber! + 1,
       ),
-      customerId: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+      customerId: "54dbb77d-8ad0-4df0-981f-f9de9d1ef9fd",
       ticketId: selectedTicket!.id,
       quantity: quantity,
       status: "WAITING_PAYMENT",
@@ -89,7 +89,7 @@ function Event() {
   return (
     <div className="bg-background-dark dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
       {/* Hero Section  */}
-      <div className="relative w-full h-[50vh] min-h-[400px] ">
+      <div className="relative w-full h-[50vh] min-h-100 ">
         {/* Background Image with Blur */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -101,7 +101,7 @@ function Event() {
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
         <div className="absolute inset-0 bg-linear-to-t from-[#101622] via-[#101622]/80 to-transparent"></div>
         {/* Hero Content */}
-        <div className="relative h-full flex items-end pb-12 mx-auto max-w-[1280px] px-6 lg:px-10">
+        <div className="relative h-full flex items-end pb-12 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="w-full">
             <div className="flex flex-col md:flex-row gap-8 items-end">
               {/* Event Poster */}
@@ -137,7 +137,7 @@ function Event() {
           </div>
         </div>
       </div>
-      <main className="grow w-full mx-auto max-w-[1280px] px-6 lg:px-10 py-12 ">
+      <main className="grow w-full mx-auto max-w-7xl px-6 lg:px-10 py-12 ">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column: Content */}
           <div className="lg:col-span-8 flex flex-col gap-10">
@@ -366,7 +366,7 @@ function Event() {
 
       {/* Footer  */}
       <footer className="bg-[#0b0f17] border-t border-[#232f48] py-12 mt-12">
-        <div className="mx-auto max-w-[1280px] px-6 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="mx-auto max-w-7xl px-6 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3 text-white opacity-50">
             <span className="text-sm">
               © 2024 TicketMaster. All rights reserved.
