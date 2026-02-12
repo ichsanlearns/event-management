@@ -94,3 +94,32 @@ export async function getById(id: string) {
 export async function getAll() {
   return prisma.order.findMany();
 }
+
+export async function getByUserId(customerId: string) {
+  const orders = await prisma.order.findMany({
+    where: { customer_id: customerId },
+    select: {
+      id: true,
+      order_code: true,
+      ticket_id: true,
+      voucher_id: true,
+      status: true,
+      quantity: true,
+      using_point: true,
+      total: true,
+    },
+  });
+
+  const mapped = orders.map((order) => ({
+    id: order.id,
+    orderCode: order.order_code,
+    ticketId: order.ticket_id,
+    voucherId: order.voucher_id,
+    status: order.status,
+    quantity: order.quantity,
+    usingPoint: order.using_point,
+    total: order.total,
+  }));
+
+  return mapped;
+}

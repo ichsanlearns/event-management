@@ -58,6 +58,7 @@ export async function create({
         },
       ],
     });
+    return event;
   });
 }
 

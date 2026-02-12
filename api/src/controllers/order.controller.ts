@@ -1,6 +1,12 @@
 import { type Request, type Response } from "express";
-import { create, getAll, getById } from "../services/order.service.js";
+import {
+  create,
+  getAll,
+  getById,
+  getByUserId,
+} from "../services/order.service.js";
 import { transporter } from "../utils/email.util.js";
+import { catchAsync } from "../utils/catch-async.util.js";
 
 export async function createOrder(req: Request, res: Response) {
   try {
@@ -15,8 +21,6 @@ export async function createOrder(req: Request, res: Response) {
       email,
     } = req.body;
 
-    console.info(req.body);
-
     const order = await create(
       orderCode,
       customerId,
@@ -26,8 +30,6 @@ export async function createOrder(req: Request, res: Response) {
       usingPoint,
       total,
     );
-
-    console.info(order, "test");
 
     // await transporter.sendMail({
     //   from: `"Event App" <${process.env.EMAIL_USER}>`,
@@ -64,3 +66,13 @@ export async function getAllOrders(req: Request, res: Response) {
     res.status(500).json({ message: "Failed to get orders" });
   }
 }
+
+export const getOrderByUserId = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.body;
+
+    const order = await getByUserId(userId);
+
+    res.status(200).json({ message: "Order list by user", data: order });
+  },
+);
