@@ -11,12 +11,6 @@ export async function create(
   usingPoint: number,
   total: number,
 ) {
-  const ticket = await prisma.ticket.findFirst({
-    where: { id: "b2045595-1181-4d86-bd8e-029cb7b510e9" },
-  });
-
-  console.log(ticket);
-
   return prisma.$transaction(async (tx) => {
     const newOrder = await tx.order.create({
       data: {

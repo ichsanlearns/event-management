@@ -55,7 +55,7 @@ function Event() {
         event?.startDate!,
         orderNumber! + 1,
       ),
-      customerId: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+      customerId: "54dbb77d-8ad0-4df0-981f-f9de9d1ef9fd",
       ticketId: selectedTicket!.id,
       quantity: quantity,
       status: "WAITING_PAYMENT",

@@ -5,6 +5,7 @@ import api from "../lib/api";
 
 import type { UserProfile } from "../types/user.type";
 import type { UserRewards } from "../types/reward.type";
+import type { Order } from "../types/order.type";
 
 /* =======================
    COMPONENT
@@ -16,6 +17,8 @@ export default function Profile() {
   const [user, setUser] = useState<UserProfile | null>(
     storedUser ? JSON.parse(storedUser) : null,
   );
+  const [userOrders, setUserOrders] = useState<Order[] | null>(null);
+
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +48,21 @@ export default function Profile() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    async function getOrdersById() {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/orders/customer/${user?.id}`,
+        );
+
+        const data = await response.json();
+        setUserOrders(data.data);
+      } catch (error) {}
+    }
+
+    getOrdersById();
+  }, [user]);
 
   /* =======================
    UPLOAD IMAGE
@@ -99,9 +117,9 @@ export default function Profile() {
      UI
   ======================= */
   return (
-    <main className="min-w-screen  flex justify-center items-center bg-slate-50">
-      <div className="min-h-screen min-w-[50%]  flex justify-center items-center p-6">
-        <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8 mt-20">
+    <main className="min-w-screen min-h-screen  flex justify-center  bg-slate-500">
+      <div className="min-h-screen min-w-[50%]  flex justify-center items-center p-6 gap-10  mt-20">
+        <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8 ">
           <h1 className="text-3xl font-bold text-slate-800 mb-8">My Profile</h1>
 
           {/* Avatar */}
@@ -230,9 +248,16 @@ export default function Profile() {
             </button>
           </div>
         </div>
-      </div>
-      <div className="min-w-[50%]">
-        <div className="w-full h-full max-w-xl bg-white rounded-3xl shadow-xl p-8 mt-20"></div>
+        <div className="w-full h-full max-w-xl max-h-220 bg-white rounded-3xl shadow-xl p-8 flex flex-col gap-5 p-10">
+          {userOrders?.map((order) => (
+            <div
+              key={order.id}
+              className="border border-primary rounded-xl h-100 w-100"
+            >
+              {order.orderCode}
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );

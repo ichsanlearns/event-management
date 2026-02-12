@@ -67,9 +67,9 @@ export async function getAllOrders(req: Request, res: Response) {
   }
 }
 
-export const getOrderByUserId = catchAsync(
+export const getOrdersByUserId = catchAsync(
   async (req: Request, res: Response) => {
-    const userId = req.body;
+    const userId = req.params.userid as string;
 
     const order = await getByUserId(userId);
 
