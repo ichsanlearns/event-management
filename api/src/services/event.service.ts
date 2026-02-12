@@ -2,6 +2,7 @@ import { start } from "node:repl";
 import { prisma } from "../lib/prisma.lib.js";
 import { type EventInput } from "../types/event.type.js";
 import { AppError } from "../utils/app-error.util.js";
+import { Types } from "../generated/prisma/enums.js";
 
 export async function create({
   name,
@@ -17,21 +18,46 @@ export async function create({
   startDate,
   endDate,
 }: EventInput) {
-  return await prisma.event.create({
-    data: {
-      name,
-      price,
-      tagline,
-      category,
-      venue,
-      city,
-      available_seats: availableSeats,
-      organizer_id: organizerId,
-      hero_image: heroImage,
-      about: about,
-      start_date: startDate,
-      end_date: endDate,
-    },
+  await prisma.$transaction(async () => {
+    const event = await prisma.event.create({
+      data: {
+        name,
+        price,
+        tagline,
+        category,
+        venue,
+        city,
+        available_seats: availableSeats,
+        organizer_id: organizerId,
+        hero_image: heroImage,
+        about: about,
+        start_date: startDate,
+        end_date: endDate,
+      },
+    });
+
+    await prisma.ticket.createMany({
+      data: [
+        {
+          event_id: event.id,
+          type: Types.EARLYBIRD,
+          price: Math.floor(Number(event.price) * 0.7),
+          quota: 50,
+        },
+        {
+          event_id: event.id,
+          type: Types.REGULER,
+          price: Number(event.price),
+          quota: 200,
+        },
+        {
+          event_id: event.id,
+          type: Types.VIP,
+          price: Math.floor(Number(event.price) * 1.8),
+          quota: 30,
+        },
+      ],
+    });
   });
 }
 
