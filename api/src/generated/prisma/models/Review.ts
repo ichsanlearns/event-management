@@ -27,19 +27,20 @@ export type AggregateReview = {
 }
 
 export type ReviewAvgAggregateOutputType = {
-  rating: runtime.Decimal | null
+  rating: number | null
 }
 
 export type ReviewSumAggregateOutputType = {
-  rating: runtime.Decimal | null
+  rating: number | null
 }
 
 export type ReviewMinAggregateOutputType = {
   id: string | null
   user_id: string | null
   event_id: string | null
+  order_id: string | null
   comment: string | null
-  rating: runtime.Decimal | null
+  rating: number | null
   created_at: Date | null
   updated_at: Date | null
   deleted_at: Date | null
@@ -49,8 +50,9 @@ export type ReviewMaxAggregateOutputType = {
   id: string | null
   user_id: string | null
   event_id: string | null
+  order_id: string | null
   comment: string | null
-  rating: runtime.Decimal | null
+  rating: number | null
   created_at: Date | null
   updated_at: Date | null
   deleted_at: Date | null
@@ -60,6 +62,7 @@ export type ReviewCountAggregateOutputType = {
   id: number
   user_id: number
   event_id: number
+  order_id: number
   comment: number
   rating: number
   created_at: number
@@ -81,6 +84,7 @@ export type ReviewMinAggregateInputType = {
   id?: true
   user_id?: true
   event_id?: true
+  order_id?: true
   comment?: true
   rating?: true
   created_at?: true
@@ -92,6 +96,7 @@ export type ReviewMaxAggregateInputType = {
   id?: true
   user_id?: true
   event_id?: true
+  order_id?: true
   comment?: true
   rating?: true
   created_at?: true
@@ -103,6 +108,7 @@ export type ReviewCountAggregateInputType = {
   id?: true
   user_id?: true
   event_id?: true
+  order_id?: true
   comment?: true
   rating?: true
   created_at?: true
@@ -201,8 +207,9 @@ export type ReviewGroupByOutputType = {
   id: string
   user_id: string
   event_id: string
+  order_id: string
   comment: string
-  rating: runtime.Decimal
+  rating: number
   created_at: Date
   updated_at: Date
   deleted_at: Date | null
@@ -235,19 +242,22 @@ export type ReviewWhereInput = {
   id?: Prisma.StringFilter<"Review"> | string
   user_id?: Prisma.StringFilter<"Review"> | string
   event_id?: Prisma.StringFilter<"Review"> | string
+  order_id?: Prisma.StringFilter<"Review"> | string
   comment?: Prisma.StringFilter<"Review"> | string
-  rating?: Prisma.DecimalFilter<"Review"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFilter<"Review"> | number
   created_at?: Prisma.DateTimeFilter<"Review"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Review"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"Review"> | Date | string | null
   Customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   Event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
+  Order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }
 
 export type ReviewOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   event_id?: Prisma.SortOrder
+  order_id?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -255,28 +265,33 @@ export type ReviewOrderByWithRelationInput = {
   deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
   Customer?: Prisma.UserOrderByWithRelationInput
   Event?: Prisma.EventOrderByWithRelationInput
+  Order?: Prisma.OrderOrderByWithRelationInput
 }
 
 export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  user_id_event_id?: Prisma.ReviewUser_idEvent_idCompoundUniqueInput
   AND?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
   OR?: Prisma.ReviewWhereInput[]
   NOT?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
   user_id?: Prisma.StringFilter<"Review"> | string
   event_id?: Prisma.StringFilter<"Review"> | string
+  order_id?: Prisma.StringFilter<"Review"> | string
   comment?: Prisma.StringFilter<"Review"> | string
-  rating?: Prisma.DecimalFilter<"Review"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFilter<"Review"> | number
   created_at?: Prisma.DateTimeFilter<"Review"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Review"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"Review"> | Date | string | null
   Customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   Event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
-}, "id">
+  Order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+}, "id" | "user_id_event_id">
 
 export type ReviewOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   event_id?: Prisma.SortOrder
+  order_id?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -296,8 +311,9 @@ export type ReviewScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Review"> | string
   user_id?: Prisma.StringWithAggregatesFilter<"Review"> | string
   event_id?: Prisma.StringWithAggregatesFilter<"Review"> | string
+  order_id?: Prisma.StringWithAggregatesFilter<"Review"> | string
   comment?: Prisma.StringWithAggregatesFilter<"Review"> | string
-  rating?: Prisma.DecimalWithAggregatesFilter<"Review"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntWithAggregatesFilter<"Review"> | number
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Review"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"Review"> | Date | string
   deleted_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Review"> | Date | string | null
@@ -306,20 +322,22 @@ export type ReviewScalarWhereWithAggregatesInput = {
 export type ReviewCreateInput = {
   id?: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
   Customer: Prisma.UserCreateNestedOneWithoutReviewedInput
   Event: Prisma.EventCreateNestedOneWithoutGotReviewedInput
+  Order: Prisma.OrderCreateNestedOneWithoutReviewsInput
 }
 
 export type ReviewUncheckedCreateInput = {
   id?: string
   user_id: string
   event_id: string
+  order_id: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -328,20 +346,22 @@ export type ReviewUncheckedCreateInput = {
 export type ReviewUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Customer?: Prisma.UserUpdateOneRequiredWithoutReviewedNestedInput
   Event?: Prisma.EventUpdateOneRequiredWithoutGotReviewedNestedInput
+  Order?: Prisma.OrderUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type ReviewUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -351,8 +371,9 @@ export type ReviewCreateManyInput = {
   id?: string
   user_id: string
   event_id: string
+  order_id: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -361,7 +382,7 @@ export type ReviewCreateManyInput = {
 export type ReviewUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -371,8 +392,9 @@ export type ReviewUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -388,10 +410,16 @@ export type ReviewOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ReviewUser_idEvent_idCompoundUniqueInput = {
+  user_id: string
+  event_id: string
+}
+
 export type ReviewCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   event_id?: Prisma.SortOrder
+  order_id?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -407,6 +435,7 @@ export type ReviewMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   event_id?: Prisma.SortOrder
+  order_id?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -418,6 +447,7 @@ export type ReviewMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   event_id?: Prisma.SortOrder
+  order_id?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -513,21 +543,65 @@ export type ReviewUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
 }
 
+export type ReviewCreateNestedManyWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutOrderInput, Prisma.ReviewUncheckedCreateWithoutOrderInput> | Prisma.ReviewCreateWithoutOrderInput[] | Prisma.ReviewUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutOrderInput | Prisma.ReviewCreateOrConnectWithoutOrderInput[]
+  createMany?: Prisma.ReviewCreateManyOrderInputEnvelope
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+}
+
+export type ReviewUncheckedCreateNestedManyWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutOrderInput, Prisma.ReviewUncheckedCreateWithoutOrderInput> | Prisma.ReviewCreateWithoutOrderInput[] | Prisma.ReviewUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutOrderInput | Prisma.ReviewCreateOrConnectWithoutOrderInput[]
+  createMany?: Prisma.ReviewCreateManyOrderInputEnvelope
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+}
+
+export type ReviewUpdateManyWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutOrderInput, Prisma.ReviewUncheckedCreateWithoutOrderInput> | Prisma.ReviewCreateWithoutOrderInput[] | Prisma.ReviewUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutOrderInput | Prisma.ReviewCreateOrConnectWithoutOrderInput[]
+  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutOrderInput | Prisma.ReviewUpsertWithWhereUniqueWithoutOrderInput[]
+  createMany?: Prisma.ReviewCreateManyOrderInputEnvelope
+  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutOrderInput | Prisma.ReviewUpdateWithWhereUniqueWithoutOrderInput[]
+  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutOrderInput | Prisma.ReviewUpdateManyWithWhereWithoutOrderInput[]
+  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
+}
+
+export type ReviewUncheckedUpdateManyWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutOrderInput, Prisma.ReviewUncheckedCreateWithoutOrderInput> | Prisma.ReviewCreateWithoutOrderInput[] | Prisma.ReviewUncheckedCreateWithoutOrderInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutOrderInput | Prisma.ReviewCreateOrConnectWithoutOrderInput[]
+  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutOrderInput | Prisma.ReviewUpsertWithWhereUniqueWithoutOrderInput[]
+  createMany?: Prisma.ReviewCreateManyOrderInputEnvelope
+  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutOrderInput | Prisma.ReviewUpdateWithWhereUniqueWithoutOrderInput[]
+  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutOrderInput | Prisma.ReviewUpdateManyWithWhereWithoutOrderInput[]
+  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
+}
+
 export type ReviewCreateWithoutCustomerInput = {
   id?: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
   Event: Prisma.EventCreateNestedOneWithoutGotReviewedInput
+  Order: Prisma.OrderCreateNestedOneWithoutReviewsInput
 }
 
 export type ReviewUncheckedCreateWithoutCustomerInput = {
   id?: string
   event_id: string
+  order_id: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -566,8 +640,9 @@ export type ReviewScalarWhereInput = {
   id?: Prisma.StringFilter<"Review"> | string
   user_id?: Prisma.StringFilter<"Review"> | string
   event_id?: Prisma.StringFilter<"Review"> | string
+  order_id?: Prisma.StringFilter<"Review"> | string
   comment?: Prisma.StringFilter<"Review"> | string
-  rating?: Prisma.DecimalFilter<"Review"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFilter<"Review"> | number
   created_at?: Prisma.DateTimeFilter<"Review"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Review"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"Review"> | Date | string | null
@@ -576,18 +651,20 @@ export type ReviewScalarWhereInput = {
 export type ReviewCreateWithoutEventInput = {
   id?: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
   Customer: Prisma.UserCreateNestedOneWithoutReviewedInput
+  Order: Prisma.OrderCreateNestedOneWithoutReviewsInput
 }
 
 export type ReviewUncheckedCreateWithoutEventInput = {
   id?: string
   user_id: string
+  order_id: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -619,11 +696,60 @@ export type ReviewUpdateManyWithWhereWithoutEventInput = {
   data: Prisma.XOR<Prisma.ReviewUpdateManyMutationInput, Prisma.ReviewUncheckedUpdateManyWithoutEventInput>
 }
 
+export type ReviewCreateWithoutOrderInput = {
+  id?: string
+  comment: string
+  rating: number
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+  Customer: Prisma.UserCreateNestedOneWithoutReviewedInput
+  Event: Prisma.EventCreateNestedOneWithoutGotReviewedInput
+}
+
+export type ReviewUncheckedCreateWithoutOrderInput = {
+  id?: string
+  user_id: string
+  event_id: string
+  comment: string
+  rating: number
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+}
+
+export type ReviewCreateOrConnectWithoutOrderInput = {
+  where: Prisma.ReviewWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReviewCreateWithoutOrderInput, Prisma.ReviewUncheckedCreateWithoutOrderInput>
+}
+
+export type ReviewCreateManyOrderInputEnvelope = {
+  data: Prisma.ReviewCreateManyOrderInput | Prisma.ReviewCreateManyOrderInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReviewUpsertWithWhereUniqueWithoutOrderInput = {
+  where: Prisma.ReviewWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReviewUpdateWithoutOrderInput, Prisma.ReviewUncheckedUpdateWithoutOrderInput>
+  create: Prisma.XOR<Prisma.ReviewCreateWithoutOrderInput, Prisma.ReviewUncheckedCreateWithoutOrderInput>
+}
+
+export type ReviewUpdateWithWhereUniqueWithoutOrderInput = {
+  where: Prisma.ReviewWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReviewUpdateWithoutOrderInput, Prisma.ReviewUncheckedUpdateWithoutOrderInput>
+}
+
+export type ReviewUpdateManyWithWhereWithoutOrderInput = {
+  where: Prisma.ReviewScalarWhereInput
+  data: Prisma.XOR<Prisma.ReviewUpdateManyMutationInput, Prisma.ReviewUncheckedUpdateManyWithoutOrderInput>
+}
+
 export type ReviewCreateManyCustomerInput = {
   id?: string
   event_id: string
+  order_id: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -632,18 +758,20 @@ export type ReviewCreateManyCustomerInput = {
 export type ReviewUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Event?: Prisma.EventUpdateOneRequiredWithoutGotReviewedNestedInput
+  Order?: Prisma.OrderUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type ReviewUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -652,8 +780,9 @@ export type ReviewUncheckedUpdateWithoutCustomerInput = {
 export type ReviewUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   event_id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -662,8 +791,9 @@ export type ReviewUncheckedUpdateManyWithoutCustomerInput = {
 export type ReviewCreateManyEventInput = {
   id?: string
   user_id: string
+  order_id: string
   comment: string
-  rating: runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating: number
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
@@ -672,18 +802,20 @@ export type ReviewCreateManyEventInput = {
 export type ReviewUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Customer?: Prisma.UserUpdateOneRequiredWithoutReviewedNestedInput
+  Order?: Prisma.OrderUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type ReviewUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -692,8 +824,53 @@ export type ReviewUncheckedUpdateWithoutEventInput = {
 export type ReviewUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  order_id?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ReviewCreateManyOrderInput = {
+  id?: string
+  user_id: string
+  event_id: string
+  comment: string
+  rating: number
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+}
+
+export type ReviewUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  comment?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  Customer?: Prisma.UserUpdateOneRequiredWithoutReviewedNestedInput
+  Event?: Prisma.EventUpdateOneRequiredWithoutGotReviewedNestedInput
+}
+
+export type ReviewUncheckedUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  event_id?: Prisma.StringFieldUpdateOperationsInput | string
+  comment?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ReviewUncheckedUpdateManyWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  event_id?: Prisma.StringFieldUpdateOperationsInput | string
+  comment?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -705,6 +882,7 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   id?: boolean
   user_id?: boolean
   event_id?: boolean
+  order_id?: boolean
   comment?: boolean
   rating?: boolean
   created_at?: boolean
@@ -712,12 +890,14 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   deleted_at?: boolean
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   user_id?: boolean
   event_id?: boolean
+  order_id?: boolean
   comment?: boolean
   rating?: boolean
   created_at?: boolean
@@ -725,12 +905,14 @@ export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deleted_at?: boolean
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   user_id?: boolean
   event_id?: boolean
+  order_id?: boolean
   comment?: boolean
   rating?: boolean
   created_at?: boolean
@@ -738,12 +920,14 @@ export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deleted_at?: boolean
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectScalar = {
   id?: boolean
   user_id?: boolean
   event_id?: boolean
+  order_id?: boolean
   comment?: boolean
   rating?: boolean
   created_at?: boolean
@@ -751,18 +935,21 @@ export type ReviewSelectScalar = {
   deleted_at?: boolean
 }
 
-export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "event_id" | "comment" | "rating" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["review"]>
+export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "event_id" | "order_id" | "comment" | "rating" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["review"]>
 export type ReviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 export type ReviewIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 export type ReviewIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   Event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  Order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 
 export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -770,13 +957,15 @@ export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     Customer: Prisma.$UserPayload<ExtArgs>
     Event: Prisma.$EventPayload<ExtArgs>
+    Order: Prisma.$OrderPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     user_id: string
     event_id: string
+    order_id: string
     comment: string
-    rating: runtime.Decimal
+    rating: number
     created_at: Date
     updated_at: Date
     deleted_at: Date | null
@@ -1176,6 +1365,7 @@ export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   Customer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   Event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1208,8 +1398,9 @@ export interface ReviewFieldRefs {
   readonly id: Prisma.FieldRef<"Review", 'String'>
   readonly user_id: Prisma.FieldRef<"Review", 'String'>
   readonly event_id: Prisma.FieldRef<"Review", 'String'>
+  readonly order_id: Prisma.FieldRef<"Review", 'String'>
   readonly comment: Prisma.FieldRef<"Review", 'String'>
-  readonly rating: Prisma.FieldRef<"Review", 'Decimal'>
+  readonly rating: Prisma.FieldRef<"Review", 'Int'>
   readonly created_at: Prisma.FieldRef<"Review", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"Review", 'DateTime'>
   readonly deleted_at: Prisma.FieldRef<"Review", 'DateTime'>
