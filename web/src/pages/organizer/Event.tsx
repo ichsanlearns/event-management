@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, Search, SlidersHorizontal, ArrowUpDown, MapPin, Ticket, Eye, Pencil, Trash2, Plus } from "lucide-react"; // Menggunakan Lucide React
 import type { TEvent } from "../../types/event.type";
-import type { TEvent } from "../../types/event.type";
 
 import FormVoucher from "../../components/FormVoucher";
 import FormEvent from "../../components/FormEvent";
@@ -12,16 +11,17 @@ function Event() {
   const [formState, setFormState] = useState<"voucher" | "event" | null>(null);
   const [events, setEvents] = useState<TEvent[] | null>(null);
   const [voucherEvents, setVoucherEvents] = useState<TEvent | null>(null);
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 4;
 
   useEffect(() => {
     fetchEvents();
-  }, [page]);
+  }, [page, search]);
 
   const fetchEvents = async () => {
-    const res = await api.get(`/events?page=${page}&limit=${limit}`);
+    const res = await api.get(`/events?page=${page}&limit=${limit}&search=${search}`);
 
     setEvents(res.data.data);
     setTotalPages(res.data.meta.totalPages);
@@ -50,7 +50,7 @@ function Event() {
                   <ActionButton icon={<SlidersHorizontal size={16} />} label="Filter" hideMobile />
                   <ActionButton icon={<ArrowUpDown size={16} />} label="Sort" />
 
-                  {/* CREATE EVENT */}
+                  {/* Create event */}
                   <button onClick={() => setFormState("event")} className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-sm active:scale-95 transition">
                     <Plus size={16} />
                     Create Event
@@ -63,7 +63,16 @@ function Event() {
             <div className="flex bg-white dark:bg-[#1a2233] p-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
               <div className="flex items-center w-full h-11 px-3 gap-3 bg-[#f6f6f8] dark:bg-[#101622] rounded-lg border border-transparent focus-within:border-indigo-500/50 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all">
                 <Search className="text-slate-400" size={18} />
-                <input className="w-full bg-transparent border-none p-0 text-sm focus:ring-0 placeholder-slate-400 font-medium" placeholder="Search events by name, venue, or status..." type="text" />
+                <input
+                  className="w-full bg-transparent border-none p-0 text-sm focus:ring-0 placeholder-slate-400 font-medium"
+                  placeholder="Search events by name..."
+                  type="text"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+                />
               </div>
             </div>
 
