@@ -21,16 +21,30 @@ export async function createEvent(req: Request, res: Response) {
 }
 
 export async function getAllEvent(req: Request, res: Response) {
-  const page = req.query.page ? Number(req.query.page) : 1;
-  const limit = req.query.limit ? Number(req.query.limit) : 4;
   const query = typeof req.query.search === "string" ? req.query.search : "";
+  const limit = req.query.limit ? Number(req.query.limit) : 4;
 
-  const result = await getAll(page, limit, query);
+  const cacheKey = `events:${limit}`;
+
+  const cachedEvents = await redis.get(cacheKey);
+
+  if (!query && cachedEvents) {
+    const cachedEventsData = JSON.parse(cachedEvents);
+
+    return res.status(200).json({
+      message: "Event fetch from cached",
+      data: cachedEventsData,
+      length: cachedEventsData.length,
+    });
+  }
+
+  const events = await getAll(limit, query);
+  await redis.set(cacheKey, JSON.stringify(events), "EX", 60 * 5);
 
   res.status(200).json({
     message: "Event berhasil diambil",
-    data: result.data,
-    meta: result.meta,
+    data: events,
+    length: events.length,
   });
 }
 
@@ -51,3 +65,5 @@ export async function getEventById(req: Request, res: Response) {
 
   res.status(200).json({ message: "Event berhasil diambil", data: event });
 }
+
+export async function getEventByOrganizerId(req: Request, res: Response) {}
