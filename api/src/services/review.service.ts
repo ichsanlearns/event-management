@@ -12,3 +12,11 @@ export async function create(data: ReviewInput) {
     },
   });
 }
+
+export async function getByEventId(eventId: string) {
+  return await prisma.review.findMany({
+    where: {
+      event_id: eventId,
+    },
+  });
+}
