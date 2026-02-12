@@ -119,16 +119,20 @@ model Review {
   id String @id @default(uuid())
   user_id String
   event_id String
+  order_id String
+  
   comment String
-  rating Decimal
+  rating Int
 
   created_at DateTime @default(now()) 
-  updated_at DateTime @updatedAt
+  updated_at DateTime @updatedAt 
   deleted_at DateTime?
 
   Customer User @relation(fields: [user_id], references: [id])
   Event Event @relation(fields: [event_id], references: [id])
+  Order Order @relation(fields: [order_id], references: [id])
 
+  @@unique([user_id, event_id])
   @@map("reviews")
 }
 
@@ -173,6 +177,7 @@ model Order {
   Customer User @relation(fields: [customer_id], references: [id])
 
   Payments Payment[]
+  Reviews Review[]
 
   @@map("orders")
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, Search, SlidersHorizontal, ArrowUpDown, MapPin, Ticket, Eye, Pencil, Trash2, Plus } from "lucide-react"; // Menggunakan Lucide React
 import type { TEvent } from "../../types/event.type";
+import type { TEvent } from "../../types/event.type";
+
 import FormVoucher from "../../components/FormVoucher";
 import FormEvent from "../../components/FormEvent";
 

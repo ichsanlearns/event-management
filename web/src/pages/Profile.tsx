@@ -13,7 +13,9 @@ export default function Profile() {
   const navigate = useNavigate();
   const storedUser = localStorage.getItem("user");
 
-  const [user, setUser] = useState<UserProfile | null>(storedUser ? JSON.parse(storedUser) : null);
+  const [user, setUser] = useState<UserProfile | null>(
+    storedUser ? JSON.parse(storedUser) : null,
+  );
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -106,7 +108,12 @@ export default function Profile() {
           <div className="relative">
             <label className="cursor-pointer">
               {user.profile_image || image ? (
-                <img key={user.profile_image} src={image ? URL.createObjectURL(image) : user.profile_image} alt="avatar" className="w-20 h-20 rounded-full object-cover border" />
+                <img
+                  key={user.profile_image}
+                  src={image ? URL.createObjectURL(image) : user.profile_image}
+                  alt="avatar"
+                  className="w-20 h-20 rounded-full object-cover border"
+                />
               ) : (
                 <div className="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white">
                   <User size={36} />
@@ -117,11 +124,20 @@ export default function Profile() {
                 <Camera size={14} />
               </div>
 
-              <input type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => setImage(e.target.files?.[0] || null)}
+              />
             </label>
 
             {image && (
-              <button onClick={handleUploadImage} disabled={uploading} className="mt-2 text-sm text-indigo-600 font-semibold">
+              <button
+                onClick={handleUploadImage}
+                disabled={uploading}
+                className="mt-2 text-sm text-indigo-600 font-semibold"
+              >
                 {uploading ? "Uploading..." : "Save Photo"}
               </button>
             )}
@@ -142,13 +158,17 @@ export default function Profile() {
 
           <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl">
             <Shield size={20} className="text-slate-400" />
-            <span className="text-slate-700 font-medium">Role: {user.role}</span>
+            <span className="text-slate-700 font-medium">
+              Role: {user.role}
+            </span>
           </div>
 
           {user.referral_code && (
             <div className="flex items-center gap-3 bg-indigo-50 border border-indigo-100 p-4 rounded-xl">
               <Gift size={20} className="text-indigo-400" />
-              <span className="text-indigo-700 font-semibold">Referral Code: {user.referral_code}</span>
+              <span className="text-indigo-700 font-semibold">
+                Referral Code: {user.referral_code}
+              </span>
             </div>
           )}
         </div>
@@ -157,20 +177,31 @@ export default function Profile() {
         {rewards && (
           <div className="mt-8 space-y-4">
             <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl">
-              <p className="text-sm font-semibold text-yellow-700">Total Points</p>
-              <p className="text-2xl font-bold text-yellow-800">{rewards.total_point.toLocaleString()}</p>
+              <p className="text-sm font-semibold text-yellow-700">
+                Total Points
+              </p>
+              <p className="text-2xl font-bold text-yellow-800">
+                {rewards.total_point.toLocaleString()}
+              </p>
             </div>
 
             <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
-              <p className="text-sm font-semibold text-green-700 mb-2">Coupons</p>
+              <p className="text-sm font-semibold text-green-700 mb-2">
+                Coupons
+              </p>
 
               {rewards.coupons.length === 0 ? (
                 <p className="text-sm text-slate-500">Belum ada coupon</p>
               ) : (
                 rewards.coupons.map((coupon) => (
-                  <div key={coupon.id} className="flex justify-between text-sm text-green-800">
+                  <div
+                    key={coupon.id}
+                    className="flex justify-between text-sm text-green-800"
+                  >
                     <span>Discount</span>
-                    <span className="font-bold">{coupon.amount.toLocaleString()}</span>
+                    <span className="font-bold">
+                      {coupon.amount.toLocaleString()}
+                    </span>
                   </div>
                 ))
               )}
@@ -180,11 +211,17 @@ export default function Profile() {
 
         {/* Actions */}
         <div className="mt-10 space-y-4">
-          <button onClick={() => navigate("/profile/edit")} className="w-full py-3 rounded-xl bg-indigo-600 text-white font-bold">
+          <button
+            onClick={() => navigate("/profile/edit")}
+            className="w-full py-3 rounded-xl bg-indigo-600 text-white font-bold"
+          >
             Edit Profile
           </button>
 
-          <button onClick={handleLogout} className="w-full py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold flex items-center justify-center gap-2">
+          <button
+            onClick={handleLogout}
+            className="w-full py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold flex items-center justify-center gap-2"
+          >
             <LogOut size={18} />
             Logout
           </button>

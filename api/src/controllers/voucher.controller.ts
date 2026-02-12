@@ -26,7 +26,7 @@ export async function getVoucher(req: Request, res: Response) {
   try {
     const voucher = await get();
 
-    res.status(200).json({ voucher });
+    res.status(200).json({ message: "Event voucher fetched", data: voucher });
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: "Failed to fetch data" });

@@ -20,6 +20,8 @@ function Event() {
   const navigate = useNavigate();
 
   const [event, setEvent] = useState<TEvent | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const orderNumber = event?.tickets?.reduce(
     (total, ticket) => total + ticket.bought,
     0,
@@ -44,30 +46,22 @@ function Event() {
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
+    setIsLoading(true);
     e.preventDefault();
 
     const payload = {
-      orderCode: "",
-      customerId: "",
-      ticketId: "",
-      quantity: 1,
-      status: "",
+      orderCode: generateOrderId(
+        event!.name,
+        event?.startDate!,
+        orderNumber! + 1,
+      ),
+      customerId: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+      ticketId: selectedTicket!.id,
+      quantity: quantity,
+      status: "WAITING_PAYMENT",
       usingPoint: 0,
-      total: 0,
+      total: currentPrice,
     };
-
-    payload.orderCode = generateOrderId(
-      event!.name,
-      event?.startDate!,
-      orderNumber! + 1,
-    );
-
-    payload.customerId = "033b2c73-d294-4bac-bf78-2b88b61557c1";
-    payload.ticketId = selectedTicket!.id;
-    payload.quantity = quantity;
-    payload.status = "WAITING_PAYMENT";
-    payload.usingPoint = 0;
-    payload.total = currentPrice;
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
@@ -84,6 +78,7 @@ function Event() {
 
       const data = await response.json();
 
+      setIsLoading(false);
       navigate(`/payment/${data.id}`);
     } catch (error) {
       console.error(error);

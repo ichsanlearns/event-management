@@ -26,7 +26,10 @@ export async function create(
 
     await tx.order.update({
       where: { id: orderId },
-      data: { status: "WAITING_CONFIRMATION" },
+      data: {
+        status: "WAITING_CONFIRMATION",
+        expired_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      },
     });
 
     return payment;

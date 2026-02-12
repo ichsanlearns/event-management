@@ -27,17 +27,19 @@ export async function createOrder(req: Request, res: Response) {
       total,
     );
 
-    await transporter.sendMail({
-      from: `"Event App" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "New order event app",
-      html: `
-          <h2>New Order event app</h2>
-          <p>Order code: ${orderCode}</p>
-          <p>Quantity: ${quantity}</p>
-          <p>total: ${total}</p>
-        `,
-    });
+    console.info(order, "test");
+
+    // await transporter.sendMail({
+    //   from: `"Event App" <${process.env.EMAIL_USER}>`,
+    //   to: email,
+    //   subject: "New order event app",
+    //   html: `
+    //       <h2>New Order event app</h2>
+    //       <p>Order code: ${orderCode}</p>
+    //       <p>Quantity: ${quantity}</p>
+    //       <p>total: ${total}</p>
+    //     `,
+    // });
 
     res.status(201).json(order);
   } catch (error) {
