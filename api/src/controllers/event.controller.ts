@@ -1,13 +1,6 @@
 import { type Request, type Response } from "express";
 
-import {
-  create,
-  getAll,
-  getById,
-  getByOrganizerId,
-  remove,
-  updateById,
-} from "../services/event.service.js";
+import { create, getAll, getById, getByOrganizerId, remove, updateById } from "../services/event.service.js";
 
 import { redis } from "../lib/redis.lib.js";
 import { createEventSchema } from "../validators/event.validator.js";
@@ -80,9 +73,7 @@ export async function getEventById(req: Request, res: Response) {
 
 export async function getEventByOrganizerId(req: Request, res: Response) {
   const organizerIdParam = req.params.organizerId;
-  const organizerId = Array.isArray(organizerIdParam)
-    ? organizerIdParam[0]
-    : organizerIdParam;
+  const organizerId = Array.isArray(organizerIdParam) ? organizerIdParam[0] : organizerIdParam;
 
   if (!organizerId) {
     return res.status(400).json({
@@ -90,26 +81,16 @@ export async function getEventByOrganizerId(req: Request, res: Response) {
     });
   }
 
-  const cacheKey = `events:organizer:${organizerId}`;
-
-  const cached = await redis.get(cacheKey);
-  if (cached) {
-    const data = JSON.parse(cached);
-    return res.status(200).json({
-      message: "Events fetched from cache",
-      data,
-      length: data.length,
-    });
-  }
+  const search = typeof req.query.search === "string" ? req.query.search.toLowerCase() : "";
 
   const events = await getByOrganizerId(organizerId);
 
-  await redis.set(cacheKey, JSON.stringify(events), "EX", 60 * 5);
+  const filtered = search ? events.filter((e: any) => e.name.toLowerCase().includes(search) || e.city?.toLowerCase().includes(search) || e.venue?.toLowerCase().includes(search)) : events;
 
   res.status(200).json({
     message: "Events fetched by organizer",
-    data: events,
-    length: events.length,
+    data: filtered,
+    length: filtered.length,
   });
 }
 
