@@ -52,7 +52,7 @@ function FormVoucher({ data, onClose }: { data: TEvent; onClose: () => void }) {
                   <div
                     className="h-full w-full bg-cover bg-center"
                     style={{
-                      backgroundImage: `url(${voucherEvents?.image})`,
+                      backgroundImage: `url(${voucherEvents?.heroImage})`,
                     }}
                   ></div>
                 </div>
