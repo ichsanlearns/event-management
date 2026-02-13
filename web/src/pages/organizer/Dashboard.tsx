@@ -1,4 +1,29 @@
+import { useEffect, useState } from "react";
+import { getEventByOrganizer } from "../../services/event.service";
+
 function Dashboard() {
+  const [activeEvents, setActiveEvents] = useState(0);
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const organizerId = user?.id;
+
+  async function fetchActiveEvents() {
+    if (!organizerId) return;
+
+    try {
+      const res = await getEventByOrganizer(organizerId, 1, 100);
+
+      const events = res.data || [];
+
+      setActiveEvents(events.length);
+    } catch (error) {
+      console.error("failed load active events", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchActiveEvents();
+  }, [organizerId]);
   return (
     <main className="min-h-screen mi bg-slate-100 dark:bg-slate-900 flex">
       {/* Content */}
@@ -27,7 +52,7 @@ function Dashboard() {
 
           <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow">
             <p className="text-sm text-slate-500">Active Events</p>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">4</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{activeEvents}</h2>
           </div>
         </div>
 
