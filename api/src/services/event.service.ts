@@ -18,7 +18,7 @@ export async function create({
   startDate,
   endDate,
 }: EventInput) {
-  await prisma.$transaction(async () => {
+  return await prisma.$transaction(async () => {
     const event = await prisma.event.create({
       data: {
         name,
@@ -66,7 +66,10 @@ export async function getAll(limit: number, query?: string) {
   if (query) {
     return await prisma.event.findMany({
       where: {
-        OR: [{ name: { startsWith: query, mode: "insensitive" } }, { name: { contains: query, mode: "insensitive" } }],
+        OR: [
+          { name: { startsWith: query, mode: "insensitive" } },
+          { name: { contains: query, mode: "insensitive" } },
+        ],
       },
       select: { id: true, name: true },
     });

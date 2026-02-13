@@ -1,23 +1,35 @@
 import { type Request, type Response } from "express";
 
-import { create, getAll, getById, getByOrganizerId, remove, updateById } from "../services/event.service.js";
+import {
+  create,
+  getAll,
+  getById,
+  getByOrganizerId,
+  remove,
+  updateById,
+} from "../services/event.service.js";
 
 import { redis } from "../lib/redis.lib.js";
 import { createEventSchema } from "../validators/event.validator.js";
+import { uploadSingleService } from "../services/image.service.js";
 
 export async function createEvent(req: Request, res: Response) {
+  const file = req.file as Express.Multer.File;
+
   const validatedData = createEventSchema.parse({
     ...req.body,
   });
 
-  const result = await create(validatedData);
+  const heroImage = await uploadSingleService(file);
+
+  const result = await create({ ...validatedData, heroImage });
 
   const keys = await redis.keys("events:*");
   if (keys.length > 0) {
     await redis.del(keys);
   }
 
-  res.status(200).json({ message: "Event has been created", data: result });
+  res.status(200).json({ message: "Event 2 has been created", data: result });
 }
 
 export async function getAllEvent(req: Request, res: Response) {
@@ -68,7 +80,9 @@ export async function getEventById(req: Request, res: Response) {
 
 export async function getEventByOrganizerId(req: Request, res: Response) {
   const organizerIdParam = req.params.organizerId;
-  const organizerId = Array.isArray(organizerIdParam) ? organizerIdParam[0] : organizerIdParam;
+  const organizerId = Array.isArray(organizerIdParam)
+    ? organizerIdParam[0]
+    : organizerIdParam;
 
   if (!organizerId) {
     return res.status(400).json({

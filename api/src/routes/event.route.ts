@@ -1,10 +1,19 @@
 import express from "express";
 
-import { createEvent, getAllEvent, getEventById, getEventByOrganizerId, deleteEvent, updateEvent } from "../controllers/event.controller.js";
+import {
+  createEvent,
+  getAllEvent,
+  getEventById,
+  getEventByOrganizerId,
+  deleteEvent,
+  updateEvent,
+} from "../controllers/event.controller.js";
+
+import { uploadLocal } from "../middleware/upload.middleware.js";
 
 const router = express.Router();
 
-router.post("/", createEvent);
+router.post("/", uploadLocal.single("heroImage"), createEvent);
 router.get("/", getAllEvent);
 router.get("/:id", getEventById);
 router.get("/organizer/:organizerId", getEventByOrganizerId);
