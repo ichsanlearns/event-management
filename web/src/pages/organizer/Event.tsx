@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CalendarDays, Search, SlidersHorizontal, ArrowUpDown, MapPin, Ticket, Eye, Pencil, Trash2, Plus } from "lucide-react"; // Menggunakan Lucide React
+import { Search, SlidersHorizontal, ArrowUpDown, MapPin, Ticket, Eye, Pencil, Trash2, Plus, CalendarCheck2 } from "lucide-react"; // Menggunakan Lucide React
 import type { TEvent } from "../../types/event.type";
 
 import FormVoucher from "../../components/FormVoucher";
@@ -18,6 +18,7 @@ function Event() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const [openEdit, setOpenEdit] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -29,18 +30,20 @@ function Event() {
   const organizerId = user?.id;
 
   async function fetchEvents() {
-    console.log("test");
     if (!organizerId) return;
+
+    setLoading(true);
 
     try {
       const res = await getEventByOrganizer(organizerId, page, limit, debouncedSearch);
 
-      console.log(res);
-
-      setEvents(res.data);
+      setEvents(res.data || []);
       setTotalPages(res.meta?.totalPages || 1);
     } catch (error) {
       console.log(error);
+      setEvents([]);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -128,7 +131,7 @@ function Event() {
               <div className="flex items-center w-full h-11 px-3 gap-3 bg-[#f6f6f8] dark:bg-[#101622] rounded-lg border border-transparent focus-within:border-indigo-500/50 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all">
                 <Search className="text-slate-400" size={18} />
                 <input
-                  className="w-full bg-transparent border-none p-0 text-sm focus:ring-0 placeholder-slate-400 font-medium"
+                  className="w-full bg-transparent border-none p-0 text-sm outline-none placeholder-slate-400 font-medium"
                   placeholder="Search events by name, venue, or status..."
                   type="text"
                   value={search}
@@ -139,7 +142,9 @@ function Event() {
 
             {/* Events List */}
             <div className="flex flex-col gap-4">
-              {events ? (
+              {loading ? (
+                <p>Loading events...</p>
+              ) : events && events.length > 0 ? (
                 events.map((event) => (
                   <div
                     key={event.id}
@@ -223,9 +228,46 @@ function Event() {
                   </div>
                 ))
               ) : (
-                <div className="flex flex-col items-center justify-center py-24 text-slate-400 gap-4">
-                  <CalendarDays size={48} className="opacity-20" />
-                  <p className="font-medium">Fetching your awesome events...</p>
+                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center rounded-4xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-[#1a2233]/30">
+                  {/* Illustration Area */}
+                  <div className="relative size-64 flex items-center justify-center mb-8">
+                    {/* Glow Background */}
+                    <div className="absolute inset-0 bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-3xl transform scale-75 opacity-60"></div>
+
+                    {/* Main Icon Circle */}
+                    <div className="relative bg-white dark:bg-[#1a2233] p-10 rounded-full shadow-2xl shadow-indigo-100 dark:shadow-none border border-slate-50 dark:border-slate-800 z-10">
+                      <CalendarCheck2 className="text-indigo-600" size={80} strokeWidth={1.5} />
+                    </div>
+
+                    {/* Floating Elements */}
+                    <div className="absolute top-[20%] right-[10%] bg-white dark:bg-[#1a2233] px-3 py-2 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 z-20 animate-bounce">
+                      <div className="flex gap-2 items-center">
+                        <div className="size-2 rounded-full bg-emerald-500"></div>
+                        <div className="h-2 w-12 bg-slate-100 dark:bg-slate-700 rounded-full"></div>
+                      </div>
+                    </div>
+
+                    <div className="absolute bottom-[20%] left-[10%] bg-white dark:bg-[#1a2233] p-3 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 z-20 animate-[bounce_4s_infinite]">
+                      <Ticket className="text-orange-400 rotate-12" size={28} />
+                    </div>
+                  </div>
+
+                  {/* Text Area */}
+                  <div className="max-w-md mx-auto space-y-3 mb-10">
+                    <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">You haven't created any events yet</h2>
+                    <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed font-medium">
+                      Welcome to your dashboard! It looks like you're just getting started. Create your first event to begin selling tickets and managing your attendees.
+                    </p>
+                  </div>
+
+                  {/* CTA Button */}
+                  <button
+                    onClick={() => setFormState("event")}
+                    className="group relative flex items-center gap-3 px-8 py-4 bg-indigo-600 text-white rounded-2xl text-lg font-bold shadow-xl shadow-indigo-200 dark:shadow-none hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-300 active:scale-95"
+                  >
+                    <Plus className="group-hover:rotate-90 transition-transform duration-300" size={24} strokeWidth={3} />
+                    Create Your First Event
+                  </button>
                 </div>
               )}
 
