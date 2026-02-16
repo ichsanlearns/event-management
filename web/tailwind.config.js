@@ -13,7 +13,14 @@ module.exports = {
           light: "#ffffff",
           dark: "#1e2736",
         },
+        brand: {
+          primary: "#5D5FEF",
+          light: "#F9FAFB",
+          sidebar: "#FFFFFF",
+          activeBg: "#F3F4F6",
+        },
       },
+
       fontFamily: {
         display: ["Plus Jakarta Sans", "sans-serif"],
       },
