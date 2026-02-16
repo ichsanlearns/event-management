@@ -89,20 +89,78 @@ export async function getAll() {
   return prisma.order.findMany();
 }
 
-export async function getByUserId(customerId: string) {
-  const orders = await prisma.order.findMany({
-    where: { customer_id: customerId },
-    select: {
-      id: true,
-      order_code: true,
-      ticket_id: true,
-      voucher_id: true,
-      status: true,
-      quantity: true,
-      using_point: true,
-      total: true,
-    },
-  });
+export async function getByUserId(customerId: string, status: string) {
+  let orders;
+  if (status) {
+    if (status === "active") {
+      orders = await prisma.order.findMany({
+        where: {
+          customer_id: customerId,
+          status: { in: ["PAID", "WAITING_CONFIRMATION", "WAITING_PAYMENT"] },
+        },
+        select: {
+          id: true,
+          order_code: true,
+          ticket_id: true,
+          voucher_id: true,
+          status: true,
+          quantity: true,
+          using_point: true,
+          total: true,
+        },
+      });
+    } else if (status === "need_review") {
+      orders = await prisma.order.findMany({
+        where: {
+          customer_id: customerId,
+          status: "DONE",
+        },
+        select: {
+          id: true,
+          order_code: true,
+          ticket_id: true,
+          voucher_id: true,
+          status: true,
+          quantity: true,
+          using_point: true,
+          total: true,
+        },
+      });
+    } else {
+      orders = await prisma.order.findMany({
+        where: {
+          customer_id: customerId,
+        },
+        select: {
+          id: true,
+          order_code: true,
+          ticket_id: true,
+          voucher_id: true,
+          status: true,
+          quantity: true,
+          using_point: true,
+          total: true,
+        },
+        orderBy: {
+          created_at: "desc",
+        },
+      });
+    }
+  } else {
+    orders = await prisma.order.findMany({
+      where: { customer_id: customerId },
+      select: {
+        id: true,
+        order_code: true,
+        ticket_id: true,
+        voucher_id: true,
+        status: true,
+        quantity: true,
+        using_point: true,
+        total: true,
+      },
+    });
+  }
 
   const mapped = orders.map((order) => ({
     id: order.id,
