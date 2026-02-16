@@ -19,6 +19,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import EditProfile from "./pages/EditProfile";
 
 import { Toaster } from "react-hot-toast";
+import MyTicket from "./pages/customer/MyTicket";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -43,6 +44,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="events" element={<EventOrganizer />} />
           <Route path="approval" element={<Approval />} />
           <Route path="report" element={<Report />} />
+          <Route path="myticket" element={<MyTicket />} />
         </Route>
       </Routes>
     </BrowserRouter>
