@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Calendar, Users, BarChart3 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "../types/user.type";
@@ -16,10 +16,10 @@ function SideBar() {
   }, []);
 
   const menu = [
-    { label: "Dashboard", path: "", icon: LayoutDashboard },
-    { label: "Events", path: "events", icon: Calendar },
-    { label: "Approval", path: "approval", icon: Users },
-    { label: "Reports", path: "report", icon: BarChart3 },
+    { label: "Dashboard", path: "/organizer", icon: LayoutDashboard },
+    { label: "Events", path: "/organizer/events", icon: Calendar },
+    { label: "Approval", path: "/organizer/approval", icon: Users },
+    { label: "Reports", path: "/organizer/report", icon: BarChart3 },
   ];
 
   /* =======================
@@ -41,21 +41,21 @@ function SideBar() {
         <p className="px-3 py-2 text-xs text-slate-400 uppercase tracking-wide">Management</p>
 
         {menu.map((item) => {
-          const isActive = location.pathname === `/dashboard/${item.path}` || (item.path === "" && location.pathname === "/dashboard");
-
           const Icon = item.icon;
 
           return (
-            <Link
+            <NavLink
               key={item.label}
               to={item.path}
-              className={`flex items-center gap-3 px-4 py-2 rounded-lg transition
-                ${isActive ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-medium" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"}
-              `}
+              end={item.path === "/organizer"}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium
+        ${isActive ? "bg-indigo-600 text-white shadow-md" : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-600"}`
+              }
             >
               <Icon className="w-4 h-4" />
-              <span>{item.label}</span>
-            </Link>
+              {item.label}
+            </NavLink>
           );
         })}
       </nav>
@@ -67,12 +67,12 @@ function SideBar() {
           <img src={user?.profile_image} alt="User Avatar" className="w-10 h-10 rounded-full object-cover" />
 
           {/* User Info */}
-          <Link to={"/profile"}>
+          <NavLink to={"/profile"}>
             <div className="flex-1 text-left">
               <p className="text-sm font-medium text-slate-900 dark:text-white">{user?.name || "User"}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400">{user?.role === "EVENT_ORGANIZER" ? "Organizer" : "Attendee"}</p>
             </div>
-          </Link>
+          </NavLink>
 
           {/* Dropdown Icon */}
           <p onClick={handleLogout} className="block px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 ">
