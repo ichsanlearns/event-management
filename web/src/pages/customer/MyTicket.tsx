@@ -6,7 +6,7 @@ import OrderActive from "./OrderActive";
 type OrderTab = "active" | "need_review" | "all";
 
 function MyTicket() {
-  const [isActive, setIsActive] = useState<OrderTab>("active");
+  const [isActive, setIsActive] = useState<OrderTab>("all");
 
   return (
     <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-background-light dark:bg-background-dark">
@@ -65,9 +65,9 @@ function MyTicket() {
         </button>
       </div>
       {/* Order list */}
+      {isActive === "active" && <OrderActive />}
       {isActive === "need_review" && <OrderFinished />}
       {isActive === "all" && <OrderAll />}
-      {isActive === "active" && <OrderActive />}
     </main>
   );
 }

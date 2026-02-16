@@ -71,12 +71,10 @@ export async function getAllOrders(req: Request, res: Response) {
 export const getOrdersByUserId = catchAsync(
   async (req: Request, res: Response) => {
     const userId = req.params.userid as string;
-    const status = req.query.status as Status;
+    const status = req.query.status as string;
 
     const order = await getByUserId(userId, status);
 
-    res
-      .status(200)
-      .json({ message: "Order list by user", data: order, status });
+    res.status(200).json({ message: "Order list by user", data: order });
   },
 );

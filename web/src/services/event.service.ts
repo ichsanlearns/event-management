@@ -5,7 +5,12 @@ export const createEvent = async (data: any) => {
   return res.data;
 };
 
-export const getEventByOrganizer = async (organizerId: string, page: number, limit: number, search?: string) => {
+export const getEventByOrganizer = async (
+  organizerId: string,
+  page: number,
+  limit: number,
+  search?: string,
+) => {
   const res = await api.get(`/events/organizer/${organizerId}`, {
     params: {
       page,
