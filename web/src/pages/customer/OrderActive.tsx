@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getOrderByCustomer } from "../../services/order.service";
 import toast from "react-hot-toast";
+import type { Order } from "../../types/order.type";
 
 function OrderActive() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Order[]>();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -23,8 +24,9 @@ function OrderActive() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {events?.map((event: any) => (
+      {events?.map((event: Order) => (
         <article
+          key={event.id}
           className="bg-black rounded-[24px] overflow-hidden flex flex-col custom-shadow relative h-[500px]"
           data-purpose="event-card"
         >

@@ -1,9 +1,10 @@
 import toast from "react-hot-toast";
 import { getOrderByCustomer } from "../../services/order.service";
 import { useEffect, useState } from "react";
+import type { Order } from "../../types/order.type";
 
 function OrderFinished() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -23,8 +24,11 @@ function OrderFinished() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {events.map(() => (
-        <div className="bg-white dark:bg-card-dark rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800 flex flex-col transition-transform hover:translate-y-[-4px] duration-300">
+      {events.map((event: Order) => (
+        <div
+          key={event.id}
+          className="bg-white dark:bg-card-dark rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800 flex flex-col transition-transform hover:translate-y-[-4px] duration-300"
+        >
           <div className="relative h-48">
             <div className="absolute inset-0 bg-black/40 z-10 flex flex-col items-center justify-center backdrop-blur-[1px]">
               <span className="bg-green-500/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-2 flex items-center shadow-lg">
@@ -36,7 +40,7 @@ function OrderFinished() {
             </div>
             <img
               alt="Concert Crowd"
-              className="w-full h-full object-cover grayscale-[30%]"
+              className="w-full h-full object-cover grayscale-30"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZnRROcvjiC1AISHnN6DLwOirgEU4JBmsOGkPsDmkughWIecf3v_XPJjPyJYjdUHBpPtpY2qp93fVckUJkGcbWTqO5O8WD2wpsyeDsELld9SqJFUPzSf1rMYR3kFohOa0efTU7Yx8mdPDok6qsus0Sb4CbLFOC0DbRHUiRjgtst9yLKadDp0ro-6qSxyYSHBLzB6qKQmXA6fuACrRs1yJFoc1bqkupWp02IPgMMqadk3H9JJG3l2df5W-MJDhnOjJqjmzNQ1bu-Qs"
             />
             <div className="absolute top-4 right-4 z-20 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center animate-bounce">

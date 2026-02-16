@@ -141,6 +141,9 @@ export async function getByUserId(customerId: string, status: string) {
           using_point: true,
           total: true,
         },
+        orderBy: {
+          created_at: "desc",
+        },
       });
     }
   } else {

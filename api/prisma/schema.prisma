@@ -46,6 +46,7 @@ enum Types {
   DAILY_PASS
 }
 
+
 enum Status {
   WAITING_PAYMENT
   WAITING_CONFIRMATION
