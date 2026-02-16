@@ -89,20 +89,37 @@ export async function getAll() {
   return prisma.order.findMany();
 }
 
-export async function getByUserId(customerId: string) {
-  const orders = await prisma.order.findMany({
-    where: { customer_id: customerId },
-    select: {
-      id: true,
-      order_code: true,
-      ticket_id: true,
-      voucher_id: true,
-      status: true,
-      quantity: true,
-      using_point: true,
-      total: true,
-    },
-  });
+export async function getByUserId(customerId: string, status?: Status) {
+  let orders;
+  if (status) {
+    orders = await prisma.order.findMany({
+      where: { customer_id: customerId, status },
+      select: {
+        id: true,
+        order_code: true,
+        ticket_id: true,
+        voucher_id: true,
+        status: true,
+        quantity: true,
+        using_point: true,
+        total: true,
+      },
+    });
+  } else {
+    orders = await prisma.order.findMany({
+      where: { customer_id: customerId },
+      select: {
+        id: true,
+        order_code: true,
+        ticket_id: true,
+        voucher_id: true,
+        status: true,
+        quantity: true,
+        using_point: true,
+        total: true,
+      },
+    });
+  }
 
   const mapped = orders.map((order) => ({
     id: order.id,

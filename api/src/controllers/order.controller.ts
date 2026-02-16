@@ -7,6 +7,7 @@ import {
 } from "../services/order.service.js";
 import { transporter } from "../utils/email.util.js";
 import { catchAsync } from "../utils/catch-async.util.js";
+import type { Status } from "../generated/prisma/enums.js";
 
 export async function createOrder(req: Request, res: Response) {
   try {
@@ -70,9 +71,12 @@ export async function getAllOrders(req: Request, res: Response) {
 export const getOrdersByUserId = catchAsync(
   async (req: Request, res: Response) => {
     const userId = req.params.userid as string;
+    const status = req.query.status as Status;
 
-    const order = await getByUserId(userId);
+    const order = await getByUserId(userId, status);
 
-    res.status(200).json({ message: "Order list by user", data: order });
+    res
+      .status(200)
+      .json({ message: "Order list by user", data: order, status });
   },
 );

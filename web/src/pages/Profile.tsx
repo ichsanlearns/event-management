@@ -25,6 +25,8 @@ export default function Profile() {
   const [image, setImage] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
+  const [isActive, setIsActive] = useState("finished");
+
   /* =======================
      FETCH DATA
   ======================= */
@@ -53,7 +55,7 @@ export default function Profile() {
     async function getOrdersById() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/orders/customer/${user?.id}`,
+          `${import.meta.env.VITE_API_URL}/orders/customer/${user?.id}?status=${isActive}`,
         );
 
         const data = await response.json();
