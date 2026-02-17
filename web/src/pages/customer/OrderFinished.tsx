@@ -3,16 +3,19 @@ import { getOrderByCustomer } from "../../services/order.service";
 import { useEffect, useState } from "react";
 import type { Order } from "../../api/types";
 import { formatEventDate } from "../../utils/format.util";
+import Review from "../../components/order/Review";
 
 function OrderFinished() {
   const [events, setEvents] = useState<Order[]>([]);
+  const [isReview, setIsReview] = useState(false);
+  const [reviewing, setReviewing] = useState<Order | null>(null);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const res = await getOrderByCustomer(
           "54dbb77d-8ad0-4df0-981f-f9de9d1ef9fd",
-          "need_review",
+          "all",
         );
         setEvents(res.data);
         toast.success("Event fetched successfully");
@@ -91,7 +94,13 @@ function OrderFinished() {
               </div>
             </div>
             <div className="mt-auto">
-              <button className="w-full py-3 rounded-xl border-2 border-primary text-primary dark:text-primary-soft dark:border-primary font-semibold hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all duration-200 flex items-center justify-center group">
+              <button
+                onClick={() => {
+                  setIsReview(true);
+                  setReviewing(event);
+                }}
+                className="w-full py-3 rounded-xl border-2 border-primary text-primary dark:text-primary-soft dark:border-primary font-semibold hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all duration-200 flex items-center justify-center group"
+              >
                 <span className="material-icons-outlined mr-2 group-hover:animate-pulse">
                   rate_review
                 </span>
@@ -101,6 +110,9 @@ function OrderFinished() {
           </div>
         </div>
       ))}
+      {isReview && (
+        <Review onClick={() => setIsReview(false)} data={reviewing!} />
+      )}
     </div>
   );
 }

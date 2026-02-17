@@ -6,7 +6,7 @@ import OrderActive from "./OrderActive";
 type OrderTab = "active" | "need_review" | "all";
 
 function MyTicket() {
-  const [isActive, setIsActive] = useState<OrderTab>("all");
+  const [isActive, setIsActive] = useState<OrderTab>("need_review");
 
   return (
     <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-background-light dark:bg-background-dark">
