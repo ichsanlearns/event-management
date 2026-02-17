@@ -107,6 +107,23 @@ export async function getByUserId(customerId: string, status: string) {
           quantity: true,
           using_point: true,
           total: true,
+          Ticket: {
+            select: {
+              event_id: true,
+              type: true,
+              price: true,
+              EventName: {
+                select: {
+                  id: true,
+                  name: true,
+                  city: true,
+                  hero_image: true,
+                  venue: true,
+                  start_date: true,
+                },
+              },
+            },
+          },
         },
       });
     } else if (status === "need_review") {
@@ -124,6 +141,23 @@ export async function getByUserId(customerId: string, status: string) {
           quantity: true,
           using_point: true,
           total: true,
+          Ticket: {
+            select: {
+              event_id: true,
+              type: true,
+              price: true,
+              EventName: {
+                select: {
+                  id: true,
+                  name: true,
+                  city: true,
+                  hero_image: true,
+                  venue: true,
+                  start_date: true,
+                },
+              },
+            },
+          },
         },
       });
     } else {
@@ -140,6 +174,23 @@ export async function getByUserId(customerId: string, status: string) {
           quantity: true,
           using_point: true,
           total: true,
+          Ticket: {
+            select: {
+              event_id: true,
+              type: true,
+              price: true,
+              EventName: {
+                select: {
+                  id: true,
+                  name: true,
+                  city: true,
+                  hero_image: true,
+                  venue: true,
+                  start_date: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           created_at: "desc",
@@ -158,6 +209,23 @@ export async function getByUserId(customerId: string, status: string) {
         quantity: true,
         using_point: true,
         total: true,
+        Ticket: {
+          select: {
+            event_id: true,
+            type: true,
+            price: true,
+            EventName: {
+              select: {
+                id: true,
+                name: true,
+                city: true,
+                hero_image: true,
+                venue: true,
+                start_date: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -171,6 +239,19 @@ export async function getByUserId(customerId: string, status: string) {
     quantity: order.quantity,
     usingPoint: order.using_point,
     total: order.total,
+    ticket: {
+      eventId: order.Ticket.event_id,
+      type: order.Ticket.type,
+      price: order.Ticket.price,
+      eventName: {
+        id: order.Ticket.EventName.id,
+        name: order.Ticket.EventName.name,
+        city: order.Ticket.EventName.city,
+        heroImage: order.Ticket.EventName.hero_image,
+        venue: order.Ticket.EventName.venue,
+        startDate: order.Ticket.EventName.start_date,
+      },
+    },
   }));
 
   return mapped;

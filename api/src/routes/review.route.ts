@@ -7,6 +7,6 @@ import {
 const router = Router();
 
 router.post("/", createReview);
-router.get("/:eventId", getReviewByEventId);
+router.get("/event/:eventId", getReviewByEventId);
 
 export default router;

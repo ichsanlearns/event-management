@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
+
+body {
+  font-family: "Inter", sans-serif;
+}
+.glow-soft {
+  box-shadow: 0 0 20px gold;
+}
+.star-glow {
+  text-shadow: 0 0 10px gold;
+}

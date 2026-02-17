@@ -1,4 +1,6 @@
-function Rejected() {
+import type { Order } from "../../api/types";
+
+function Rejected({ data }: { data: Order }) {
   return (
     <div className="group bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 hover:border-red-300 dark:hover:border-red-800 transition-all cursor-pointer opacity-90 hover:opacity-100">
       <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700 relative grayscale">
