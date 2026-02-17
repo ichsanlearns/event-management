@@ -5,10 +5,23 @@ module.exports = {
     extend: {
       colors: {
         primary: "#1152d4",
+        "primary-hover": "#4338ca",
+        "background-light": "#F3F4F6",
+        "background-dark": "#111827",
+        "surface-light": "#FFFFFF",
+        "surface-dark": "#1F2937",
+        "border-light": "#E5E7EB",
+        "border-dark": "#374151",
+        "text-light": "#111827",
+        "text-dark": "#F9FAFB",
+        "text-secondary-light": "#6B7280",
+        "text-secondary-dark": "#9CA3AF",
+
         background: {
           light: "#f6f6f8",
           dark: "#101622",
         },
+
         surface: {
           light: "#ffffff",
           dark: "#1e2736",
