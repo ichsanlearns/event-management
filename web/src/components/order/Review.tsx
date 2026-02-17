@@ -1,6 +1,9 @@
+import { useState } from "react";
 import type { Order } from "../../api/types";
 
 function Review({ onClick, data }: { onClick: () => void; data: Order }) {
+  const [rating, setRating] = useState(1);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-white dark:bg-card-dark w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] relative animate-in fade-in zoom-in-95 duration-200">
@@ -32,31 +35,40 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
         <div className="overflow-y-auto p-6 space-y-8">
           <div className="flex flex-col items-center justify-center space-y-3">
             <div className="flex items-center space-x-2">
-              <button className="group focus:outline-none">
-                <span className="material-symbols-outlined text-4xl text-yellow-400 fill-1 transition-transform group-hover:scale-110">
-                  star
-                </span>
-              </button>
-              <button className="group focus:outline-none">
-                <span className="material-symbols-outlined text-4xl text-yellow-400 fill-1 transition-transform group-hover:scale-110">
-                  star
-                </span>
-              </button>
-              <button className="group focus:outline-none">
-                <span className="material-symbols-outlined text-4xl text-yellow-400 fill-1 transition-transform group-hover:scale-110">
-                  star
-                </span>
-              </button>
-              <button className="group focus:outline-none">
-                <span className="material-symbols-outlined text-4xl text-yellow-400 fill-1 transition-transform group-hover:scale-110">
-                  star
-                </span>
-              </button>
-              <button className="group focus:outline-none">
-                <span className="material-symbols-outlined text-4xl text-gray-300 dark:text-gray-600 hover:text-yellow-400 transition-colors group-hover:scale-110">
-                  star
-                </span>
-              </button>
+              {Array.from({ length: 5 }).map((_, index) => {
+                const starValue = index + 1;
+                const isFilled = starValue <= rating;
+                return (
+                  <button
+                    key={starValue}
+                    type="button"
+                    onClick={() => setRating(starValue)}
+                    className="group focus:outline-none"
+                  >
+                    <span
+                      className={`material-symbols-outlined text-4xl text-gray-300 dark:text-gray-600 hover:text-yellow-400 transition-colors group-hover:scale-110 ${isFilled ? "text-yellow-400" : ""}`}
+                    >
+                      star
+                    </span>
+                  </button>
+                );
+              })}
+              {/* {Array.from({ length: rating }).map((_, index) => (
+                <button key={index} className="group focus:outline-none">
+                  <span className="material-symbols-outlined text-4xl text-yellow-400 fill-1 transition-transform group-hover:scale-110">
+                    star
+                    {index}
+                  </span>
+                </button>
+              ))}
+              {Array.from({ length: 5 - rating }).map((_, index) => (
+                <button key={index} className="group focus:outline-none">
+                  <span className="material-symbols-outlined text-4xl text-gray-300 dark:text-gray-600 hover:text-yellow-400 transition-colors group-hover:scale-110">
+                    star
+                    {index}
+                  </span>
+                </button>
+              ))} */}
             </div>
             <span className="text-primary font-semibold text-lg">Amazing</span>
           </div>
