@@ -1,4 +1,6 @@
-function Done() {
+import type { Order } from "../../api/types";
+
+function Done({ data }: { data: Order }) {
   return (
     <div className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 hover:border-green-500/50 dark:hover:border-green-500/50 transition-all cursor-pointer shadow-sm hover:shadow-md">
       <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 dark:bg-gray-700 relative grayscale group-hover:grayscale-0 transition-all">

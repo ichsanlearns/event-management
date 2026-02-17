@@ -1,7 +1,8 @@
 import toast from "react-hot-toast";
 import { getOrderByCustomer } from "../../services/order.service";
 import { useEffect, useState } from "react";
-import type { Order } from "../../types/order.type";
+import type { Order } from "../../api/types";
+import { formatEventDate } from "../../utils/format.util";
 
 function OrderFinished() {
   const [events, setEvents] = useState<Order[]>([]);
@@ -41,7 +42,7 @@ function OrderFinished() {
             <img
               alt="Concert Crowd"
               className="w-full h-full object-cover grayscale-30"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZnRROcvjiC1AISHnN6DLwOirgEU4JBmsOGkPsDmkughWIecf3v_XPJjPyJYjdUHBpPtpY2qp93fVckUJkGcbWTqO5O8WD2wpsyeDsELld9SqJFUPzSf1rMYR3kFohOa0efTU7Yx8mdPDok6qsus0Sb4CbLFOC0DbRHUiRjgtst9yLKadDp0ro-6qSxyYSHBLzB6qKQmXA6fuACrRs1yJFoc1bqkupWp02IPgMMqadk3H9JJG3l2df5W-MJDhnOjJqjmzNQ1bu-Qs"
+              src={event.ticket.eventName.heroImage}
             />
             <div className="absolute top-4 right-4 z-20 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center animate-bounce">
               <span className="material-icons-outlined text-sm mr-1">
@@ -53,19 +54,19 @@ function OrderFinished() {
           <div className="p-6 flex flex-col flex-1">
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
-                Neon Nights Festival 2024
+                {event.ticket.eventName.name}
               </h3>
             </div>
             <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
               <span className="material-icons-outlined text-sm mr-1">
                 event
               </span>
-              Dec 15-17, 2024
+              {formatEventDate(event.ticket.eventName.startDate)}
               <span className="mx-2">•</span>
               <span className="material-icons-outlined text-sm mr-1">
                 place
               </span>
-              Gelora Bung Karno
+              {event.ticket.eventName.venue}
             </div>
             <div className="bg-primary-soft/50 dark:bg-gray-800 rounded-lg p-4 mb-6 flex flex-col items-center justify-center border border-dashed border-primary/30 dark:border-gray-600">
               <p className="text-sm text-gray-600 dark:text-gray-300 font-medium mb-2">

@@ -15,3 +15,15 @@ export function formatTime(ms: number) {
     seconds: String(seconds).padStart(2, "0"),
   };
 }
+
+export const formatEventDate = (iso: Date) =>
+  new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  })
+    .format(new Date(iso))
+    .replace(",", " •");

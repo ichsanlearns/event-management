@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getOrderByCustomer } from "../../services/order.service";
 import toast from "react-hot-toast";
-import type { Order } from "../../types/order.type";
+import type { Order } from "../../api/types";
 import Paid from "../../components/order/Paid";
 import Expired from "../../components/order/Expired";
 import Rejected from "../../components/order/Rejected";
@@ -32,15 +32,15 @@ function OrderAll() {
       <div className="flex flex-col gap-4">
         {events.map((event: Order) =>
           event.status.toLowerCase() === "paid" ? (
-            <Paid key={event.id} />
+            <Paid key={event.id} data={event} />
           ) : event.status.toLowerCase() === "expired" ? (
-            <Expired key={event.id} />
+            <Expired key={event.id} data={event} />
           ) : event.status.toLowerCase() === "rejected" ? (
-            <Rejected key={event.id} />
+            <Rejected key={event.id} data={event} />
           ) : event.status.toLowerCase() === "canceled" ? (
-            <Canceled key={event.id} />
+            <Canceled key={event.id} data={event} />
           ) : (
-            <Done key={event.id} />
+            <Done key={event.id} data={event} />
           ),
         )}
       </div>

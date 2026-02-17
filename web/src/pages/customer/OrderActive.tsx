@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getOrderByCustomer } from "../../services/order.service";
 import toast from "react-hot-toast";
-import type { Order } from "../../types/order.type";
+import type { Order } from "../../api/types";
+import { formatEventDate } from "../../utils/format.util";
 
 function OrderActive() {
   const [events, setEvents] = useState<Order[]>();
@@ -34,19 +35,22 @@ function OrderActive() {
             <img
               alt="Neon Nights Festival 2024"
               className="w-full h-full object-cover opacity-60"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBobXNSqtNyd5IKCPr3reMGw2gO3Unm6sCfrW-bEmuYOaSHnpPh-kKRkYXEWkIOdSAzqzCaS7d5tX1gyS_hOALWlBDkL81rVyGefV8R6bACNRF4PYbJi8n63MrDQm1LSpfch_zyNioPTAPVjfvFEwixFl6wkZ5InHARKom7ih9_C4CZQrKlMzlioOykCJM7NfR8p3iv8eTc7YD2eT9KLsK5o1GQfvP8Ysa6zikpbqNng2sOJVOlaOvkB7BcT_ofLbWYtTmrgzuMykM"
+              src={event.ticket.eventName.heroImage}
             />
             <div className="absolute inset-0 card-gradient-overlay"></div>
           </div>
           <div className="relative p-6 flex flex-col h-full justify-between">
             <div className="flex justify-end">
               <span className="bg-white/95 backdrop-blur text-gray-900 text-[10px] font-bold px-3 py-1.5 rounded-lg">
-                Starts in 2 days
+                Start in{" "}
+                {event
+                  ? formatEventDate(event.ticket.eventName.startDate)
+                  : "Event Started"}
               </span>
             </div>
             <div className="mt-auto">
               <h4 className="text-white text-2xl font-bold mb-4 leading-tight">
-                Neon Nights Festival 2024
+                {event.ticket.eventName.name}
               </h4>
               <div className="space-y-3 mb-6">
                 <div>
@@ -54,7 +58,7 @@ function OrderActive() {
                     ON
                   </p>
                   <p className="text-sm text-white font-medium">
-                    Dec 15-17, 2024
+                    {formatEventDate(event.ticket.eventName.startDate)}
                   </p>
                 </div>
                 <div>
@@ -73,7 +77,8 @@ function OrderActive() {
                         fill-rule="evenodd"
                       ></path>
                     </svg>
-                    Gelora Bung Karno, Jakarta
+                    {event.ticket.eventName.venue},{" "}
+                    {event.ticket.eventName.city}
                   </div>
                 </div>
               </div>
