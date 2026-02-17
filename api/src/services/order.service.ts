@@ -114,6 +114,7 @@ export async function getByUserId(customerId: string, status: string) {
               price: true,
               EventName: {
                 select: {
+                  id: true,
                   name: true,
                   city: true,
                   hero_image: true,
@@ -147,6 +148,7 @@ export async function getByUserId(customerId: string, status: string) {
               price: true,
               EventName: {
                 select: {
+                  id: true,
                   name: true,
                   city: true,
                   hero_image: true,
@@ -179,6 +181,7 @@ export async function getByUserId(customerId: string, status: string) {
               price: true,
               EventName: {
                 select: {
+                  id: true,
                   name: true,
                   city: true,
                   hero_image: true,
@@ -213,6 +216,7 @@ export async function getByUserId(customerId: string, status: string) {
             price: true,
             EventName: {
               select: {
+                id: true,
                 name: true,
                 city: true,
                 hero_image: true,
@@ -240,6 +244,7 @@ export async function getByUserId(customerId: string, status: string) {
       type: order.Ticket.type,
       price: order.Ticket.price,
       eventName: {
+        id: order.Ticket.EventName.id,
         name: order.Ticket.EventName.name,
         city: order.Ticket.EventName.city,
         heroImage: order.Ticket.EventName.hero_image,

@@ -43,3 +43,11 @@ export type Order = {
   total: number;
   ticket: ITicket;
 };
+
+export type ReviewPayload = {
+  userId: string;
+  eventId: string;
+  orderId: string;
+  comment: string;
+  rating: number;
+};
