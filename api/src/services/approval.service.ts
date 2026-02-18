@@ -1,6 +1,16 @@
 import { prisma } from "../lib/prisma.lib.js";
 import { Status } from "../generated/prisma/client.js";
 
+export async function getOrdersByStatus(status: Status) {
+  return prisma.order.findMany({
+    where: { status },
+    include: {
+      Customer: true,
+      Ticket: true,
+    },
+  });
+}
+
 export async function getApprovalQueue(organizerId: string) {
   return prisma.order.findMany({
     where: {
