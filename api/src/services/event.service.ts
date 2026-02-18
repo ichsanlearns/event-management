@@ -1,4 +1,3 @@
-import { start } from "node:repl";
 import { prisma } from "../lib/prisma.lib.js";
 import { type EventInput } from "../types/event.type.js";
 import { AppError } from "../utils/app-error.util.js";
@@ -78,6 +77,9 @@ export async function getAll(limit: number, query?: string) {
   const events = await prisma.event.findMany({
     include: { Tickets: true },
     take: limit,
+    orderBy: {
+      start_date: "desc",
+    },
   });
 
   const mapped = events.map((event: any) => {

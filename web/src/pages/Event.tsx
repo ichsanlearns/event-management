@@ -22,6 +22,8 @@ function Event() {
   const [event, setEvent] = useState<TEvent | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const user = JSON.parse(localStorage.getItem("user")!);
+
   const orderNumber = event?.tickets?.reduce(
     (total, ticket) => total + ticket.bought,
     0,
@@ -55,7 +57,7 @@ function Event() {
         event?.startDate!,
         orderNumber! + 1,
       ),
-      customerId: "54dbb77d-8ad0-4df0-981f-f9de9d1ef9fd",
+      customerId: user!.id,
       ticketId: selectedTicket!.id,
       quantity: quantity,
       status: "WAITING_PAYMENT",
@@ -226,62 +228,60 @@ function Event() {
                   className="space-y-4"
                 >
                   {event?.tickets!.map((ticket) => (
-                    <>
-                      <label
-                        key={ticket.id}
-                        className="relative block cursor-pointer group "
-                      >
-                        <input
-                          // defaultChecked
-                          className="peer sr-only"
-                          onClick={() => {
-                            setSelectedTicket(ticket);
-                          }}
-                          name="ticket_tier"
-                          type="radio"
-                          value={ticket.price}
-                        />
+                    <label
+                      key={ticket.id}
+                      className="relative block cursor-pointer group "
+                    >
+                      <input
+                        // defaultChecked
+                        className="peer sr-only"
+                        onClick={() => {
+                          setSelectedTicket(ticket);
+                        }}
+                        name="ticket_tier"
+                        type="radio"
+                        value={ticket.price}
+                      />
 
-                        <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden">
-                          {/* VIP badge */}
-                          {ticket.type === "VIP" ? (
-                            <>
-                              <div className="absolute -right-6 top-7 bg-yellow-400 text-[10px] font-bold px-8 py-1 rotate-45 text-black shadow-sm uppercase tracking-widest">
-                                Best Value
-                              </div>
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="font-bold text-lg text-slate-900">
-                              {ticket.type}
-                            </span>
-                            <div className="flex items-center justify-center size-6 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary">
-                              <div className="hidden peer-checked:block text-white">
-                                <span className="material-symbols-outlined text-[16px] font-bold">
-                                  check
-                                </span>
-                              </div>
+                      <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden">
+                        {/* VIP badge */}
+                        {ticket.type === "VIP" ? (
+                          <>
+                            <div className="absolute -right-6 top-7 bg-yellow-400 text-[10px] font-bold px-8 py-1 rotate-45 text-black shadow-sm uppercase tracking-widest">
+                              Best Value
+                            </div>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="font-bold text-lg text-slate-900">
+                            {ticket.type}
+                          </span>
+                          <div className="flex items-center justify-center size-6 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary">
+                            <div className="hidden peer-checked:block text-white">
+                              <span className="material-symbols-outlined text-[16px] font-bold">
+                                check
+                              </span>
                             </div>
                           </div>
-                          <div
-                            className={`text-2xl font-black ${ticket.type === "VIP" ? "text-primary" : "text-slate-900"}  mb-1`}
-                          >
-                            Rp. {formattedPrice(ticket.price)}
-                          </div>
-                          <p
-                            className={`text-sm ${ticket.type === "EARLYBIRD" ? "text-red-500" : "text-slate-500"} font-medium`}
-                          >
-                            {ticket.type === "EARLYBIRD"
-                              ? "Early entry before 15:00 · Limited quota"
-                              : ticket.type === "REGULER"
-                                ? "General admission · Standard entry"
-                                : "Priority entry · Best viewing area"}
-                          </p>
                         </div>
-                      </label>
-                    </>
+                        <div
+                          className={`text-2xl font-black ${ticket.type === "VIP" ? "text-primary" : "text-slate-900"}  mb-1`}
+                        >
+                          Rp. {formattedPrice(ticket.price)}
+                        </div>
+                        <p
+                          className={`text-sm ${ticket.type === "EARLYBIRD" ? "text-red-500" : "text-slate-500"} font-medium`}
+                        >
+                          {ticket.type === "EARLYBIRD"
+                            ? "Early entry before 15:00 · Limited quota"
+                            : ticket.type === "REGULER"
+                              ? "General admission · Standard entry"
+                              : "Priority entry · Best viewing area"}
+                        </p>
+                      </div>
+                    </label>
                   ))}
 
                   {/* Quantity Selector */}
