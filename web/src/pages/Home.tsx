@@ -69,7 +69,7 @@ function Home() {
   }, [query]);
 
   return (
-    <main className="w-screen h-screen">
+    <main className="w-full min-h-screen overflow-x-hidden">
       <div className="relative w-full h-175 lg:h-200 flex items-center justify-center ">
         <div className="absolute inset-0 z-0">
           <img
