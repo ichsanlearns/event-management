@@ -2,36 +2,33 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { CheckCircle2, Download, CheckCheck, Search, Filter, Calendar as CalendarIcon, Check, X, ChevronLeft, ChevronRight, Menu, Clock } from "lucide-react";
 
-import { approveOrderApi, rejectOrderApi, getPendingOrdersApi, getApprovedOrders, getPendingOrders, getRejectedOrders } from "../../services/approval.service";
+import { approveOrderApi, rejectOrderApi, getPendingOrdersApi, getOrdersByStatusApi } from "../../services/approval.service";
 
 import type { Order } from "../../types/order.type";
 
 function Approval() {
-  const [tab, setTab] = useState("pending");
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+  });
 
-  const loadData = async () => {
-    if (tab === "pending") {
-      const res = await getPendingOrders();
-      setOrders(res.data);
-    }
+  const loadStats = async () => {
+    try {
+      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([getOrdersByStatusApi("WAITING_CONFIRMATION"), getOrdersByStatusApi("DONE"), getOrdersByStatusApi("REJECTED")]);
 
-    if (tab === "approved") {
-      const res = await getApprovedOrders();
-      setOrders(res.data);
-    }
-
-    if (tab === "rejected") {
-      const res = await getRejectedOrders();
-      setOrders(res.data);
+      setStats({
+        pending: pendingRes.data.length,
+        approved: approvedRes.data.length,
+        rejected: rejectedRes.data.length,
+      });
+    } catch {
+      toast.error("Gagal load stats");
     }
   };
-
-  useEffect(() => {
-    loadData();
-  }, [tab]);
 
   const loadOrders = async () => {
     try {
@@ -45,6 +42,7 @@ function Approval() {
   };
 
   useEffect(() => {
+    loadStats();
     loadOrders();
   }, []);
 
@@ -53,6 +51,7 @@ function Approval() {
       await approveOrderApi(id);
       toast.success("Order approved");
       loadOrders();
+      loadStats();
     } catch {
       toast.error("Approve gagal");
     }
@@ -63,6 +62,7 @@ function Approval() {
       await rejectOrderApi(id);
       toast.success("Order rejected");
       loadOrders();
+      loadStats();
     } catch {
       toast.error("Reject gagal");
     }
@@ -112,9 +112,11 @@ function Approval() {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <StatsCard title="Pending Review" value="12" badge="High Priority" icon={<Clock />} color="text-orange-500" />
-              <StatsCard title="Approved Today" value="45" badge="+12% vs avg" icon={<CheckCircle2 />} color="text-emerald-500" />
-              <StatsCard title="Rejected" value="3" badge="Suspicious" icon={<X />} color="text-rose-500" />
+              <StatsCard title="Pending Review" value={stats.pending} badge="Need Action" icon={<Clock />} color="text-orange-500" />
+
+              <StatsCard title="Approved" value={stats.approved} badge="Confirmed" icon={<CheckCircle2 />} color="text-emerald-500" />
+
+              <StatsCard title="Rejected" value={stats.rejected} badge="Declined" icon={<X />} color="text-rose-500" />
             </div>
 
             {/* Search and Filters */}
@@ -193,7 +195,7 @@ function Approval() {
   );
 }
 
-// --- Komponen Pendukung (Sub-components) ---
+// komponen pendukung
 
 function StatsCard({ title, value, badge, icon, color }: any) {
   return (
