@@ -1,5 +1,7 @@
 import { prisma } from "../lib/prisma.lib.js";
 import { Status } from "../generated/prisma/client.js";
+import { sendEmail } from "../utils/email.util.js";
+import { approvedTemplate, rejectedTemplate } from "../utils/email-template.util.js";
 
 export async function getOrdersByStatus(status: Status) {
   return prisma.order.findMany({
@@ -41,6 +43,7 @@ export async function approveOrder(orderId: string, organizerId: string) {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
     include: {
+      Customer: true,
       Ticket: {
         include: {
           EventName: true,
@@ -55,24 +58,25 @@ export async function approveOrder(orderId: string, organizerId: string) {
     throw new Error("Forbidden");
   }
 
-  return prisma.order.update({
+  const updated = await prisma.order.update({
     where: { id: orderId },
     data: {
       status: Status.DONE,
     },
   });
+
+  await sendEmail(order.Customer.email, "Order Approved", approvedTemplate(order.Customer.name, order.order_code));
+
+  return updated;
 }
 
 export async function rejectOrder(orderId: string, organizerId: string) {
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     const order = await tx.order.findUnique({
       where: { id: orderId },
       include: {
-        Ticket: {
-          include: {
-            EventName: true,
-          },
-        },
+        Customer: true,
+        Ticket: { include: { EventName: true } },
         Voucher: true,
       },
     });
@@ -86,27 +90,21 @@ export async function rejectOrder(orderId: string, organizerId: string) {
     await tx.ticket.update({
       where: { id: order.ticket_id },
       data: {
-        bought: {
-          decrement: order.quantity,
-        },
+        bought: { decrement: order.quantity },
       },
     });
 
     await tx.event.update({
       where: { id: order.Ticket.event_id },
       data: {
-        available_seats: {
-          increment: order.quantity,
-        },
+        available_seats: { increment: order.quantity },
       },
     });
 
     if (order.voucher_id) {
       await tx.voucher.update({
         where: { id: order.voucher_id },
-        data: {
-          quota: { increment: 1 },
-        },
+        data: { quota: { increment: 1 } },
       });
     }
 
@@ -120,11 +118,20 @@ export async function rejectOrder(orderId: string, organizerId: string) {
       });
     }
 
-    return tx.order.update({
+    const updated = await tx.order.update({
       where: { id: orderId },
-      data: {
-        status: Status.REJECTED,
-      },
+      data: { status: Status.REJECTED },
     });
+
+    return {
+      updated,
+      customerEmail: order.Customer.email,
+      customerName: order.Customer.name,
+      orderCode: order.order_code,
+    };
   });
+
+  await sendEmail(result.customerEmail, "Order Rejected", rejectedTemplate(result.customerName, result.orderCode));
+
+  return result.updated;
 }
