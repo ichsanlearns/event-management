@@ -164,7 +164,7 @@ function Approval() {
                         date={t.created_at}
                         type={t.Ticket?.name}
                         amount={Number(t.total)}
-                        proof={t.Payments?.[0]?.proof_url}
+                        proof={t.proof_image}
                         onApprove={handleApprove}
                         onReject={handleReject}
                       />
@@ -210,7 +210,7 @@ function StatsCard({ title, value, badge, icon, color }: any) {
   );
 }
 
-function TransactionRow({ initial, name, id, date, type, amount, proof, onApprove, onReject }: any) {
+function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, onApprove, onReject }: any) {
   return (
     <tr className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
       <td className="px-6 py-4">
@@ -221,7 +221,7 @@ function TransactionRow({ initial, name, id, date, type, amount, proof, onApprov
           <div className="size-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 flex items-center justify-center text-[10px] font-black">{initial}</div>
           <div className="flex flex-col">
             <p className="text-sm font-bold text-slate-900 dark:text-white">{name}</p>
-            <p className="text-[11px] text-slate-500 font-medium">{id}</p>
+            <p className="text-[11px] text-slate-500 font-medium">{trxId}</p>
           </div>
         </div>
       </td>
