@@ -87,16 +87,11 @@ async function seed() {
     await prisma.event.deleteMany({});
     await prisma.user.deleteMany({});
 
-    console.log("🌱 Seeding started...");
+    console.info("🌱 Seeding started...");
 
     const tickets: Ticket[] = [];
     const vouchers: Voucher[] = [];
     const orders: Order[] = [];
-
-    const hashedPassword = bcrypt.hash(
-      await bcrypt.hash("password123", 10),
-      10,
-    );
 
     // =============================
     // USERS
@@ -107,7 +102,7 @@ async function seed() {
         id: "012e717a-2429-4757-945f-e24724bcd7ac",
         name: "PT Java Festival Production",
         email: "java.festivalproduction@mail.com",
-        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "AXCRYBLW",
       },
@@ -116,7 +111,7 @@ async function seed() {
         id: "17a6619c-f6b5-469a-adf4-66196a67d187",
         name: "Ismaya Live",
         email: "ismaya.live@mail.com",
-        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "BZXPLMKA",
       },
@@ -125,7 +120,7 @@ async function seed() {
         id: "1aab8418-5347-4d4a-8243-b4cc5cb02200",
         name: "Ravel Entertainment",
         email: "ravel.entertainment@mail.com",
-        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "CRTYMNQW",
       },
@@ -134,7 +129,7 @@ async function seed() {
         id: "1c7627d7-6582-4ec0-833c-46278a5b390b",
         name: "Rajawali Indonesia",
         email: "rajawali.indonesia@mail.com",
-        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "DLPOQWER",
       },
@@ -411,7 +406,7 @@ async function seed() {
     // (REST: vouchers, orders, reviews — unchanged)
     // =============================
 
-    console.log("✅ Seeding completed successfully");
+    console.info("✅ Seeding completed successfully");
   } catch (error) {
     console.error("❌ Seeding failed:", error);
     process.exit(1);

@@ -8,29 +8,15 @@ import {
 import { transporter } from "../utils/email.util.js";
 import { catchAsync } from "../utils/catch-async.util.js";
 import type { Status } from "../generated/prisma/enums.js";
+import { createOrderSchema } from "../validators/order.validator.js";
 
 export async function createOrder(req: Request, res: Response) {
   try {
-    const {
-      orderCode,
-      customerId,
-      ticketId,
-      quantity,
-      status,
-      usingPoint,
-      total,
-      email,
-    } = req.body;
+    const validatedData = createOrderSchema.parse({
+      ...req.body,
+    });
 
-    const order = await create(
-      orderCode,
-      customerId,
-      ticketId,
-      quantity,
-      status,
-      usingPoint,
-      total,
-    );
+    const order = await create({ ...validatedData });
 
     // await transporter.sendMail({
     //   from: `"Event App" <${process.env.EMAIL_USER}>`,

@@ -250,16 +250,6 @@ export default function Profile() {
             </button>
           </div>
         </div>
-        <div className="w-full h-full max-w-xl max-h-220 bg-white rounded-3xl shadow-xl p-8 flex flex-col gap-5 p-10">
-          {userOrders?.map((order) => (
-            <div
-              key={order.id}
-              className="border border-primary rounded-xl h-100 w-100"
-            >
-              {order.orderCode}
-            </div>
-          ))}
-        </div>
       </div>
     </main>
   );

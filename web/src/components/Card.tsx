@@ -19,7 +19,6 @@ function Card() {
         );
         const data = await response.json();
 
-        console.log(data.data);
         setEvents(data.data);
         if (data.length < limit) {
           setMax(true);

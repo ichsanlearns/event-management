@@ -133,9 +133,12 @@ function Payment() {
 
       await api.post("/payments", formData);
 
+      toast.dismiss();
       toast.success("Payment successful");
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 

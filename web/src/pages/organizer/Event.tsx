@@ -40,7 +40,7 @@ function Event() {
       setEvents(res.data || []);
       setTotalPages(res.meta?.totalPages || 1);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setEvents([]);
     } finally {
       setLoading(false);

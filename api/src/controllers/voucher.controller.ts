@@ -17,7 +17,7 @@ export async function createVoucher(req: Request, res: Response) {
 
     res.status(200).json({ message: "Voucher successfully created", voucher });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).json({ message: "Failed to create voucher" });
   }
 }
@@ -28,7 +28,7 @@ export async function getVoucher(req: Request, res: Response) {
 
     res.status(200).json({ message: "Event voucher fetched", data: voucher });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).json({ message: "Failed to fetch data" });
   }
 }
