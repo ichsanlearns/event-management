@@ -53,7 +53,9 @@ export async function createOrder(req: Request, res: Response) {
 export async function getOrderById(req: Request, res: Response) {
   try {
     const order = await getById(req.params.id as string);
-    res.status(200).json(order);
+    res
+      .status(200)
+      .json({ message: "Succesfully get order data", data: order });
   } catch (error) {
     res.status(500).json({ message: "Failed to get order" });
   }

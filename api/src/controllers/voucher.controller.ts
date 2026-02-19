@@ -1,5 +1,5 @@
-import { type Request, type Response } from "express";
-import { create, get, getById } from "../services/voucher.service.js";
+import { type NextFunction, type Request, type Response } from "express";
+import { create, get, getByCode } from "../services/voucher.service.js";
 
 export async function createVoucher(req: Request, res: Response) {
   try {
@@ -33,18 +33,28 @@ export async function getVoucher(req: Request, res: Response) {
   }
 }
 
-export async function getVoucherById(req: Request, res: Response) {
+export async function getVoucherByCode(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
-    const id = typeof req.body.id === "string" ? req.body.id : "";
+    const code = typeof req.body.code === "string" ? req.body.code : "";
+    const eventId =
+      typeof req.body.eventId === "string" ? req.body.eventId : "";
+    const orderId =
+      typeof req.body.orderId === "string" ? req.body.orderId : "";
 
-    const voucher = await getById(id);
+    const voucher = await getByCode({ code, eventId, orderId });
 
     if (!voucher) {
       return res.status(200).json({ message: "Voucher not found" });
     }
 
-    res.status(200).json(voucher);
+    res
+      .status(200)
+      .json({ message: "Successfully used voucher", data: voucher });
   } catch (error) {
-    res.json(error);
+    next(error);
   }
 }

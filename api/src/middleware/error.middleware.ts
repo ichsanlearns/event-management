@@ -17,6 +17,8 @@ export function error(
   let statusCode = 500;
   let message = "Internal server error. Good luck!";
 
+  console.log(error);
+
   if (error instanceof ZodError) {
     const flattened = z.flattenError(error) as flattenedZodErrors;
 

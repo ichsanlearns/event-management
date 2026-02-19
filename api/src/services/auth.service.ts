@@ -21,6 +21,14 @@ export async function createUser(
       },
     });
 
+    await tx.point.create({
+      data: {
+        user_id: newUser.id,
+        amount: 0,
+        expired_at: new Date(),
+      },
+    });
+
     // Jika pakai referral
     if (referredBy) {
       const referrer = await tx.user.findUnique({

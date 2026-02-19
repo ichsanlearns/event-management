@@ -25,6 +25,11 @@ export async function create(
       },
     });
 
+    await tx.point.update({
+      where: { user_id: customerId },
+      data: { amount: { decrement: usingPoint } },
+    });
+
     await tx.ticket.update({
       where: { id: ticketId },
       data: { bought: { increment: quantity } },
@@ -39,6 +44,7 @@ export async function getById(id: string) {
     where: { id },
     select: {
       id: true,
+      voucher_id: true,
       customer_id: true,
       status: true,
       total: true,
@@ -46,6 +52,9 @@ export async function getById(id: string) {
       quantity: true,
       using_point: true,
       expired_at: true,
+      Voucher: {
+        select: { id: true, code: true, discount_amount: true, quota: true },
+      },
       Ticket: {
         select: {
           event_id: true,
@@ -63,6 +72,7 @@ export async function getById(id: string) {
 
   const mapped = {
     id: order.id,
+    voucherId: order.voucher_id,
     customerId: order.customer_id,
     status: order.status,
     total: order.total,
@@ -70,6 +80,12 @@ export async function getById(id: string) {
     quantity: order.quantity,
     usingPoint: order.using_point,
     expiredAt: order.expired_at,
+    voucher: {
+      id: order.Voucher?.id,
+      code: order.Voucher?.code,
+      discountAmount: order.Voucher?.discount_amount,
+      quota: order.Voucher?.quota,
+    },
     ticket: {
       eventId: order.Ticket.event_id,
       type: order.Ticket.type,

@@ -31,8 +31,10 @@ function Payment() {
   const [isLoading, setIsLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [voucher, setVoucher] = useState<{
+    id: string;
     code: string;
-    discount: number;
+    discountAmount: number;
+    quota: number;
   } | null>();
 
   const [{ hoursState, minutesState, secondsState }, setTimer] = useState<{
@@ -49,12 +51,13 @@ function Payment() {
         );
         const data = await response.json();
 
-        setOrder(data);
+        setOrder(data.data);
+        setVoucher(data.data.voucher);
       }
 
       getOrder();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(error.message);
     }
   }, []);
 
@@ -71,26 +74,27 @@ function Payment() {
 
   async function submitPromo() {
     try {
-      const id = form.getValues("voucherCode");
+      const code = form.getValues("voucherCode");
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/vouchers/check`,
+
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({
+            code,
+            eventId: order?.ticket.eventId,
+            orderId: order?.id,
+          }),
         },
       );
 
       const data = await response.json();
 
-      if (!data.id) {
-        return console.log("voucher not found");
-      }
-
-      setVoucher({ code: data.id, discount: data.discount_amount });
+      setVoucher(data.data);
     } catch (error) {}
   }
 
@@ -554,22 +558,20 @@ function Payment() {
                             : 0}
                         </span>
                       </div>
-                      {order?.usingPoint ? (
-                        <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
-                          <span className="flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[14px]">
-                              loyalty
-                            </span>
-                            Points Redeemed
+
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px]">
+                            loyalty
                           </span>
-                          <span className="font-medium">
-                            - Rp {formattedPrice(order?.usingPoint)}
-                          </span>
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      {voucher ? (
+                          Points Redeemed
+                        </span>
+                        <span className="font-medium">
+                          - Rp {formattedPrice(order?.usingPoint || 0)}
+                        </span>
+                      </div>
+
+                      {voucher?.code ? (
                         <>
                           {/* Discounts */}
                           <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
@@ -577,10 +579,10 @@ function Payment() {
                               <span className="material-symbols-outlined text-[14px]">
                                 local_offer
                               </span>
-                              Promo (PROMOCODE)
+                              Promo ({voucher?.code})
                             </span>
                             <span className="font-medium">
-                              - Rp {formattedPrice(voucher.discount)}
+                              - Rp {formattedPrice(voucher?.discountAmount)}
                             </span>
                           </div>
                         </>
@@ -640,7 +642,7 @@ function Payment() {
                                       (order?.ticket.price * order.quantity) /
                                         10 -
                                       order.usingPoint -
-                                      voucher.discount,
+                                      (voucher.discountAmount | 0),
                                   )
                                 : ""}
                           </span>
