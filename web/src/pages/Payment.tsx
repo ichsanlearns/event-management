@@ -71,7 +71,7 @@ function Payment() {
 
   async function submitPromo() {
     try {
-      const id = form.getValues("voucherCode");
+      const code = form.getValues("voucherCode");
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/vouchers/check`,
@@ -80,7 +80,7 @@ function Payment() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({ code }),
         },
       );
 

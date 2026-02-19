@@ -2,13 +2,13 @@ import { Router } from "express";
 import {
   createVoucher,
   getVoucher,
-  getVoucherById,
+  getVoucherByCode,
 } from "../controllers/voucher.controller.js";
 
 const router = Router();
 
 router.get("/", getVoucher);
 router.post("/", createVoucher);
-router.post("/check", getVoucherById);
+router.post("/check", getVoucherByCode);
 
 export default router;
