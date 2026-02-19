@@ -1,12 +1,20 @@
 import { type Request, type Response } from "express";
 
-import { create, getAll, getById, getByOrganizerId, remove, updateById } from "../services/event.service.js";
+import {
+  create,
+  getAll,
+  getById,
+  getByOrganizerId,
+  remove,
+  updateById,
+} from "../services/event.service.js";
 
 import { redis } from "../lib/redis.lib.js";
 import { createEventSchema } from "../validators/event.validator.js";
 import { uploadSingleService } from "../services/image.service.js";
+import { catchAsync } from "../utils/catch-async.util.js";
 
-export async function createEvent(req: Request, res: Response) {
+export const createEvent = catchAsync(async (req: Request, res: Response) => {
   const file = req.file as Express.Multer.File;
 
   const validatedData = createEventSchema.parse({
@@ -22,10 +30,10 @@ export async function createEvent(req: Request, res: Response) {
     await redis.del(keys);
   }
 
-  res.status(200).json({ message: "Event 2 has been created", data: result });
-}
+  res.status(200).json({ message: "Event has been created", data: result });
+});
 
-export async function getAllEvent(req: Request, res: Response) {
+export const getAllEvent = catchAsync(async (req: Request, res: Response) => {
   const query = typeof req.query.search === "string" ? req.query.search : "";
   const limit = req.query.limit ? Number(req.query.limit) : 4;
 
@@ -51,9 +59,9 @@ export async function getAllEvent(req: Request, res: Response) {
     data: events,
     length: events.length,
   });
-}
+});
 
-export async function getEventById(req: Request, res: Response) {
+export const getEventById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
   if (!id || typeof id !== "string") {
@@ -69,32 +77,46 @@ export async function getEventById(req: Request, res: Response) {
   }
 
   res.status(200).json({ message: "Event berhasil diambil", data: event });
-}
+});
 
-export async function getEventByOrganizerId(req: Request, res: Response) {
-  const organizerIdParam = req.params.organizerId;
-  const organizerId = Array.isArray(organizerIdParam) ? organizerIdParam[0] : organizerIdParam;
+export const getEventByOrganizerId = catchAsync(
+  async (req: Request, res: Response) => {
+    const organizerIdParam = req.params.organizerId;
+    const organizerId = Array.isArray(organizerIdParam)
+      ? organizerIdParam[0]
+      : organizerIdParam;
 
-  if (!organizerId) {
-    return res.status(400).json({
-      message: "Organizer ID is required",
+    if (!organizerId) {
+      return res.status(400).json({
+        message: "Organizer ID is required",
+      });
+    }
+
+    const search =
+      typeof req.query.search === "string"
+        ? req.query.search.toLowerCase()
+        : "";
+
+    const events = await getByOrganizerId(organizerId);
+
+    const filtered = search
+      ? events.filter(
+          (e: any) =>
+            e.name.toLowerCase().includes(search) ||
+            e.city?.toLowerCase().includes(search) ||
+            e.venue?.toLowerCase().includes(search),
+        )
+      : events;
+
+    res.status(200).json({
+      message: "Events fetched by organizer",
+      data: filtered,
+      length: filtered.length,
     });
-  }
+  },
+);
 
-  const search = typeof req.query.search === "string" ? req.query.search.toLowerCase() : "";
-
-  const events = await getByOrganizerId(organizerId);
-
-  const filtered = search ? events.filter((e: any) => e.name.toLowerCase().includes(search) || e.city?.toLowerCase().includes(search) || e.venue?.toLowerCase().includes(search)) : events;
-
-  res.status(200).json({
-    message: "Events fetched by organizer",
-    data: filtered,
-    length: filtered.length,
-  });
-}
-
-export async function updateEvent(req: Request, res: Response) {
+export const updateEvent = catchAsync(async (req: Request, res: Response) => {
   const idParam = req.params.id;
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
 
@@ -115,9 +137,9 @@ export async function updateEvent(req: Request, res: Response) {
     message: "Event updated",
     data: result,
   });
-}
+});
 
-export async function deleteEvent(req: Request, res: Response) {
+export const deleteEvent = catchAsync(async (req: Request, res: Response) => {
   const idParam = req.params.id;
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
 
@@ -134,4 +156,4 @@ export async function deleteEvent(req: Request, res: Response) {
   }
 
   res.status(200).json({ message: "Event berhasil dihapus" });
-}
+});
