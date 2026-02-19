@@ -15,6 +15,13 @@ export interface ITicket {
   eventName: TEvent;
 }
 
+export interface IVoucher {
+  id: string;
+  code: string;
+  discountAmount: number;
+  quota: number;
+}
+
 export type TEvent = {
   id: string;
   name: string;
@@ -54,5 +61,6 @@ export interface IOrder {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  voucher: IVoucher;
   ticket: ITicket;
 }

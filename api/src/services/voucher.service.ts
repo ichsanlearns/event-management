@@ -28,9 +28,11 @@ export async function get() {
 export async function getByCode({
   code,
   eventId,
+  orderId,
 }: {
   code: string;
   eventId: string;
+  orderId: string;
 }) {
   const voucherPicked = await prisma.$transaction(async () => {
     const result = await prisma.voucher.updateMany({
@@ -39,10 +41,21 @@ export async function getByCode({
     });
 
     if (result.count === 1) {
-      return await prisma.voucher.findUnique({
+      const voucherPick = await prisma.voucher.findUnique({
         where: { code, event_id: eventId },
         select: { id: true, code: true, discount_amount: true, quota: true },
       });
+
+      if (!voucherPick) {
+        throw new AppError(400, "Voucher can't be found");
+      }
+
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { voucher_id: voucherPick?.id },
+      });
+
+      return voucherPick;
     }
 
     const voucherError = await prisma.voucher.findUnique({

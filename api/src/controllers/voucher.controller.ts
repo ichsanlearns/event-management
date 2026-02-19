@@ -42,8 +42,10 @@ export async function getVoucherByCode(
     const code = typeof req.body.code === "string" ? req.body.code : "";
     const eventId =
       typeof req.body.eventId === "string" ? req.body.eventId : "";
+    const orderId =
+      typeof req.body.orderId === "string" ? req.body.orderId : "";
 
-    const voucher = await getByCode({ code, eventId });
+    const voucher = await getByCode({ code, eventId, orderId });
 
     if (!voucher) {
       return res.status(200).json({ message: "Voucher not found" });

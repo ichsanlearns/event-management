@@ -31,8 +31,10 @@ function Payment() {
   const [isLoading, setIsLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [voucher, setVoucher] = useState<{
+    id: string;
     code: string;
-    discount: number;
+    discountAmount: number;
+    quota: number;
   } | null>();
 
   const [{ hoursState, minutesState, secondsState }, setTimer] = useState<{
@@ -53,8 +55,8 @@ function Payment() {
       }
 
       getOrder();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(error.message);
     }
   }, []);
 
@@ -75,22 +77,23 @@ function Payment() {
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/vouchers/check`,
+
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({
+            code,
+            eventId: order?.ticket.eventId,
+            orderId: order?.id,
+          }),
         },
       );
 
       const data = await response.json();
 
-      if (!data.id) {
-        return console.log("voucher not found");
-      }
-
-      setVoucher({ code: data.id, discount: data.discount_amount });
+      setVoucher(data.data);
     } catch (error) {}
   }
 
@@ -569,7 +572,7 @@ function Payment() {
                       ) : (
                         ""
                       )}
-                      {voucher ? (
+                      {order?.voucher || voucher ? (
                         <>
                           {/* Discounts */}
                           <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
@@ -577,10 +580,14 @@ function Payment() {
                               <span className="material-symbols-outlined text-[14px]">
                                 local_offer
                               </span>
-                              Promo (PROMOCODE)
+                              Promo (${order?.voucher.code ?? voucher?.code})
                             </span>
                             <span className="font-medium">
-                              - Rp {formattedPrice(voucher.discount)}
+                              - Rp{" "}
+                              {formattedPrice(
+                                order?.voucher.discountAmount! ??
+                                  voucher?.discountAmount!,
+                              )}
                             </span>
                           </div>
                         </>
@@ -640,7 +647,7 @@ function Payment() {
                                       (order?.ticket.price * order.quantity) /
                                         10 -
                                       order.usingPoint -
-                                      voucher.discount,
+                                      voucher.discountAmount,
                                   )
                                 : ""}
                           </span>
