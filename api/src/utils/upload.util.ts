@@ -10,8 +10,6 @@ async function uploadToCloudinary(filePath: string) {
   } catch (error) {
     throw new AppError(400, "Failed to upload image to Cloudinary");
   } finally {
-    console.log("uploaddone");
-
     await fs.unlink(filePath);
   }
 }

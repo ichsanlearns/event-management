@@ -91,7 +91,7 @@ async function seed() {
     await prisma.event.deleteMany({});
     await prisma.user.deleteMany({});
 
-    console.log("🌱 Seeding started...");
+    console.info("🌱 Seeding started...");
 
     const users: User[] = [];
     const events: Event[] = [];
@@ -256,7 +256,7 @@ async function seed() {
     // (REST: vouchers, orders, reviews — unchanged)
     // =============================
 
-    console.log("✅ Seeding completed successfully");
+    console.info("✅ Seeding completed successfully");
   } catch (error) {
     console.error("❌ Seeding failed:", error);
     process.exit(1);

@@ -10,7 +10,6 @@ export async function createPayment(req: Request, res: Response) {
     const proofImage = await uploadSingleService(file);
 
     const payment = await create(orderId, amount, method, status, proofImage);
-    console.log(payment);
 
     res.status(201).json({ message: "Payment created successfully", payment });
   } catch (error) {

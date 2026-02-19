@@ -6,8 +6,6 @@ export function useCountdown(expiredAt: string | undefined) {
   useEffect(() => {
     if (!expiredAt) return;
 
-    console.log(expiredAt);
-
     const calculate = () =>
       Math.max(new Date(expiredAt).getTime() - Date.now(), 0);
 

@@ -38,7 +38,6 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
         rating,
         comment: formData.comment,
       };
-      console.log(payload);
       await createReview(payload);
 
       toast.success("Review added successfully");
@@ -51,9 +50,7 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <form
-        onSubmit={form.handleSubmit(handleSubmit, (error) =>
-          console.log(error),
-        )}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="bg-white dark:bg-card-dark rounded-2xl w-full max-w-md shadow-2xl transform transition-all overflow-hidden flex flex-col max-h-[90vh]"
       >
         <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/30">

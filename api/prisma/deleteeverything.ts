@@ -16,7 +16,7 @@ async function deleteSeed() {
     await prisma.event.deleteMany({});
     await prisma.user.deleteMany({});
 
-    console.log("✅ Seeding completed successfully");
+    console.info("✅ Seeding completed successfully");
   } catch (error) {
     console.error("❌ Seeding failed:", error);
     process.exit(1);

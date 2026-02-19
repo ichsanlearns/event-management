@@ -78,7 +78,7 @@ export async function getAll(limit: number, query?: string) {
     include: { Tickets: true },
     take: limit,
     orderBy: {
-      start_date: "desc",
+      start_date: "asc",
     },
   });
 

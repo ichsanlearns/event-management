@@ -17,14 +17,19 @@ export async function uploadSingleService(file: Express.Multer.File) {
   return imageResult.url;
 }
 
-export const uploadToCloudinary = (buffer: Buffer, folder = "profile"): Promise<string> => {
+export const uploadToCloudinary = (
+  buffer: Buffer,
+  folder = "profile",
+): Promise<string> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
         {
           folder,
           resource_type: "image",
-          transformation: [{ width: 300, height: 300, crop: "fill", gravity: "face" }],
+          transformation: [
+            { width: 300, height: 300, crop: "fill", gravity: "face" },
+          ],
         },
         (error, result) => {
           if (error || !result) return reject(error);

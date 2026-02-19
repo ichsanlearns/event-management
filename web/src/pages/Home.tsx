@@ -21,9 +21,7 @@ function Home() {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/events`);
         const data = await response.json();
         setEvents(data.data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     }
     fetchEvents();
   }, []);
@@ -58,12 +56,9 @@ function Home() {
           const data = await response.json();
 
           setEvents(data.data);
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       }
       fetchSearchResults();
-      console.log("test");
     }, 300);
     return () => clearTimeout(id);
   }, [query]);
@@ -148,10 +143,7 @@ function Home() {
                   </div>
                   <div ref={locationRef} className="relative">
                     <button
-                      onClick={() => {
-                        console.log(city);
-                        setIsOpen("location");
-                      }}
+                      onClick={() => setIsOpen("location")}
                       className="h-full flex items-center justify-between gap-2 px-5 py-3 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors whitespace-nowrap border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
                       type="button"
                     >
@@ -170,7 +162,6 @@ function Home() {
                               <div
                                 onMouseDown={() => {
                                   setCity(c);
-                                  console.log(city);
                                 }}
                                 key={indx}
                                 className="block px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
