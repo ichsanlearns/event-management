@@ -162,9 +162,9 @@ function Approval() {
                         name={t.Customer.name}
                         trxId={t.order_code}
                         date={t.created_at}
-                        type={t.Ticket?.name}
+                        type={t.Ticket?.type}
                         amount={Number(t.total)}
-                        proof={t.proof_image}
+                        proof={t.Payments?.[0]?.proof_image}
                         onApprove={handleApprove}
                         onReject={handleReject}
                       />
@@ -226,14 +226,22 @@ function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, o
         </div>
       </td>
       <td className="px-6 py-4">
-        <p className="text-sm font-bold">{date}</p>
+        <p className="text-sm font-bold">{new Date(date).toLocaleString()}</p>
       </td>
       <td className="px-6 py-4">
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 uppercase">{type}</span>
       </td>
       <td className="px-6 py-4 text-right font-black text-sm">{amount}</td>
       <td className="px-6 py-4">
-        <button className="flex items-center gap-1.5 text-primary hover:text-blue-800 dark:hover:text-blue-400 text-xs font-bold transition-colors underline decoration-transparent hover:decoration-current">{proof}</button>
+        <button className="flex items-center gap-1.5 text-primary hover:text-blue-800 dark:hover:text-blue-400 text-xs font-bold transition-colors underline decoration-transparent hover:decoration-current">
+          {proof ? (
+            <a href={proof} target="_blank" className="underline">
+              View Proof
+            </a>
+          ) : (
+            "-"
+          )}
+        </button>
       </td>
       <td className="px-6 py-4">
         <div className="flex items-center justify-center gap-2">
