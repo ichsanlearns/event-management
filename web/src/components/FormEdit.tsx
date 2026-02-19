@@ -71,30 +71,32 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           {/* BODY */}
           <div className="p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            <div className="space-y-5">
               {/* Event Name */}
-              <div className="md:col-span-2">
+              <div>
                 <Label>Event Name</Label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Calendar size={18} />
                   </div>
-                  <input {...form.register("name")} className={`input-field pl-10 ${errors.name ? "border-red-500" : ""}`} placeholder="e.g. Summer Music Festival" />
+                  <input {...form.register("name")} className={`input-field w-full pl-10 ${errors.name ? "border-red-500" : ""}`} placeholder="e.g. Summer Music Festival" />
                 </div>
                 {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
               </div>
 
               {/* Tagline */}
-              <div className="md:col-span-2">
+              <div>
                 <Label>Tagline</Label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Sparkles size={18} />
                   </div>
-                  <input {...form.register("tagline")} className="input-field pl-10" placeholder="Short description for your event" />
+                  <input {...form.register("tagline")} className="input-field w-full pl-10" placeholder="Short description for your event" />
                 </div>
               </div>
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-6">
               {/* Price */}
               <div>
                 <Label>Price ($)</Label>
