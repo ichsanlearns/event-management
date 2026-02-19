@@ -65,7 +65,7 @@ export async function approveOrder(orderId: string, organizerId: string) {
     },
   });
 
-  await sendEmail(order.Customer.email, "Order Approved", approvedTemplate(order.Customer.name, order.order_code));
+  await sendEmail(order.Customer.email, "Payment Approved", approvedTemplate(order.Customer.name, order.order_code, order.Ticket.EventName.name, order.quantity, Number(order.total)));
 
   return updated;
 }
