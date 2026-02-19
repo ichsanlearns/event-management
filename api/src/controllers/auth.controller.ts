@@ -1,10 +1,6 @@
 import { type Request, type Response } from "express";
 import { Role } from "../generated/prisma/enums.js";
-import {
-  createUser,
-  findByEmail,
-  findByReferral,
-} from "../services/auth.service.js";
+import { createUser, findByEmail, findByReferral } from "../services/auth.service.js";
 import { generateReferralCode } from "../utils/referral.util.js";
 import { hashPassword, comparePassword } from "../utils/hash.util.js";
 import { generateToken } from "../utils/jwt.util.js";
@@ -69,14 +65,22 @@ export async function register(req: Request, res: Response) {
         expiredAt.setMonth(expiredAt.getMonth() + 3);
 
         // POINT UNTUK REFERRER
-        await tx.point.create({
-          data: {
+        await tx.point.upsert({
+          where: {
+            user_id: referrer.id,
+          },
+          update: {
+            amount: {
+              increment: 10000,
+            },
+            expired_at: expiredAt,
+          },
+          create: {
             user_id: referrer.id,
             amount: 10000,
             expired_at: expiredAt,
           },
         });
-
         // COUPON UNTUK USER BARU
         await tx.coupon.create({
           data: {
