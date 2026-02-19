@@ -15,6 +15,8 @@ import {
 import { prisma } from "../src/lib/prisma.lib.js";
 import { Faker, id_ID } from "@faker-js/faker";
 
+import bcrypt from "bcrypt";
+
 // 🇮🇩 Use Indonesian locale
 const faker = new Faker({ locale: [id_ID] });
 
@@ -91,6 +93,11 @@ async function seed() {
     const vouchers: Voucher[] = [];
     const orders: Order[] = [];
 
+    const hashedPassword = bcrypt.hash(
+      await bcrypt.hash("password123", 10),
+      10,
+    );
+
     // =============================
     // USERS
     // =============================
@@ -100,7 +107,7 @@ async function seed() {
         id: "012e717a-2429-4757-945f-e24724bcd7ac",
         name: "PT Java Festival Production",
         email: "java.festivalproduction@mail.com",
-        password: "password123",
+        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "AXCRYBLW",
       },
@@ -109,7 +116,7 @@ async function seed() {
         id: "17a6619c-f6b5-469a-adf4-66196a67d187",
         name: "Ismaya Live",
         email: "ismaya.live@mail.com",
-        password: "password123",
+        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "BZXPLMKA",
       },
@@ -118,7 +125,7 @@ async function seed() {
         id: "1aab8418-5347-4d4a-8243-b4cc5cb02200",
         name: "Ravel Entertainment",
         email: "ravel.entertainment@mail.com",
-        password: "password123",
+        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "CRTYMNQW",
       },
@@ -127,7 +134,7 @@ async function seed() {
         id: "1c7627d7-6582-4ec0-833c-46278a5b390b",
         name: "Rajawali Indonesia",
         email: "rajawali.indonesia@mail.com",
-        password: "password123",
+        password: await bcrypt.hash(await bcrypt.hash("password123", 10), 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "DLPOQWER",
       },
@@ -136,7 +143,7 @@ async function seed() {
         id: "2a340993-2618-4dc8-bd30-22bde8ff31ec",
         name: "BEM UI",
         email: "bem.ui@gmail.com",
-        password: "password123",
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "EMNVBXZA",
       },
@@ -145,7 +152,7 @@ async function seed() {
         id: "405aec92-d64d-46ed-9c01-aab197217fe1",
         name: "G Productions",
         email: "g.productions@mail.com",
-        password: "password123",
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "FJKLPOIU",
       },
@@ -154,7 +161,7 @@ async function seed() {
         id: "4af6aa73-3aea-48ea-8ecb-9507edfd4d9c",
         name: "Associated Production",
         email: "associated.production@mail.com",
-        password: "password123",
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "GHYTREWS",
       },
@@ -162,7 +169,7 @@ async function seed() {
         id: "1c92f1d5-7b6e-4b8a-9d33-2a6c7b1e5f10",
         name: "Putri Amelia",
         email: "putri.amelia@gmail.com",
-        password: "password123",
+        password: await bcrypt.hash("password123", 10),
         role: Role.CUSTOMER,
         referral_code: "HGFDSAQW",
       },
@@ -170,7 +177,7 @@ async function seed() {
         id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
         name: "Customer One",
         email: "customer.one@gmail.com",
-        password: "password123",
+        password: await bcrypt.hash("password123", 10),
         role: Role.CUSTOMER,
         referral_code: "IJNBVCXZ",
       },
@@ -179,7 +186,7 @@ async function seed() {
         id: "58c4a937-88c4-42ee-a99a-a5b6c32899cd",
         name: "Nihon No Matsuri Event Organizer",
         email: "nihonnomatsuri@mail.com",
-        password: "password123",
+        password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: "KLOPIUYT",
       },
@@ -389,17 +396,15 @@ async function seed() {
     // =============================
 
     for (const user of users) {
-      if (user.role === Role.CUSTOMER) {
-        await prisma.point.createMany({
-          data: [
-            {
-              user_id: user.id,
-              amount: 1000,
-              expired_at: new Date("2026-06-01"),
-            },
-          ],
-        });
-      }
+      await prisma.point.createMany({
+        data: [
+          {
+            user_id: user.id,
+            amount: 696,
+            expired_at: new Date("2026-06-01"),
+          },
+        ],
+      });
     }
 
     // =============================

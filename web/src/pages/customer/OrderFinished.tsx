@@ -76,21 +76,17 @@ function OrderFinished() {
                 How was your experience?
               </p>
               <div className="flex space-x-1">
-                <span className="material-icons-outlined text-gray-300 dark:text-gray-600 hover:text-yellow-400 cursor-pointer text-2xl transition-colors">
-                  star
-                </span>
-                <span className="material-icons-outlined text-gray-300 dark:text-gray-600 hover:text-yellow-400 cursor-pointer text-2xl transition-colors">
-                  star
-                </span>
-                <span className="material-icons-outlined text-gray-300 dark:text-gray-600 hover:text-yellow-400 cursor-pointer text-2xl transition-colors">
-                  star
-                </span>
-                <span className="material-icons-outlined text-gray-300 dark:text-gray-600 hover:text-yellow-400 cursor-pointer text-2xl transition-colors">
-                  star
-                </span>
-                <span className="material-icons-outlined text-gray-300 dark:text-gray-600 hover:text-yellow-400 cursor-pointer text-2xl transition-colors">
-                  star
-                </span>
+                {Array.from({ length: 5 }).map(() => (
+                  <span
+                    onClick={() => {
+                      setIsReview(true);
+                      setReviewing(event);
+                    }}
+                    className="material-icons-outlined text-gray-300 dark:text-gray-600 hover:text-yellow-400 cursor-pointer text-2xl transition-colors"
+                  >
+                    star
+                  </span>
+                ))}
               </div>
             </div>
             <div className="mt-auto">

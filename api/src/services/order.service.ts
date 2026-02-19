@@ -25,6 +25,11 @@ export async function create(
       },
     });
 
+    await tx.point.update({
+      where: { user_id: customerId },
+      data: { amount: { decrement: usingPoint } },
+    });
+
     await tx.ticket.update({
       where: { id: ticketId },
       data: { bought: { increment: quantity } },

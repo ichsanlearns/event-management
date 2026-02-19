@@ -226,7 +226,7 @@ model Voucher {
 
 model Point {
   id String @id @default(uuid())
-  user_id String
+  user_id String @unique
   amount Int
 
   expired_at DateTime

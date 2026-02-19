@@ -51,7 +51,8 @@ function Payment() {
         );
         const data = await response.json();
 
-        setOrder(data);
+        setOrder(data.data);
+        setVoucher(data.data.voucher);
       }
 
       getOrder();
@@ -557,22 +558,20 @@ function Payment() {
                             : 0}
                         </span>
                       </div>
-                      {order?.usingPoint ? (
-                        <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
-                          <span className="flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[14px]">
-                              loyalty
-                            </span>
-                            Points Redeemed
+
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px]">
+                            loyalty
                           </span>
-                          <span className="font-medium">
-                            - Rp {formattedPrice(order?.usingPoint)}
-                          </span>
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      {order?.voucher || voucher ? (
+                          Points Redeemed
+                        </span>
+                        <span className="font-medium">
+                          - Rp {formattedPrice(order?.usingPoint || 0)}
+                        </span>
+                      </div>
+
+                      {voucher?.code ? (
                         <>
                           {/* Discounts */}
                           <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
@@ -580,14 +579,10 @@ function Payment() {
                               <span className="material-symbols-outlined text-[14px]">
                                 local_offer
                               </span>
-                              Promo (${order?.voucher.code ?? voucher?.code})
+                              Promo ({voucher?.code})
                             </span>
                             <span className="font-medium">
-                              - Rp{" "}
-                              {formattedPrice(
-                                order?.voucher.discountAmount! ??
-                                  voucher?.discountAmount!,
-                              )}
+                              - Rp {formattedPrice(voucher?.discountAmount)}
                             </span>
                           </div>
                         </>
@@ -647,7 +642,7 @@ function Payment() {
                                       (order?.ticket.price * order.quantity) /
                                         10 -
                                       order.usingPoint -
-                                      voucher.discountAmount,
+                                      (voucher.discountAmount | 0),
                                   )
                                 : ""}
                           </span>
