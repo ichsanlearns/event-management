@@ -2,6 +2,8 @@ import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.lib.js";
 import { comparePassword, hashPassword } from "../utils/hash.util.js";
 import { uploadToCloudinary } from "../services/image.service.js";
+import { catchAsync } from "../utils/catch-async.util.js";
+import { getById } from "../services/user.service.js";
 
 export const getUserPointAndCoupon = async (req: Request, res: Response) => {
   try {
@@ -186,3 +188,14 @@ export async function changePassword(req: Request, res: Response) {
 
   res.status(200).json({ message: "Password berhasil diubah" });
 }
+
+export const getOrgById = catchAsync(async (req: Request, res: Response) => {
+  const orgId = req.params.id as string;
+
+  const org = await getById(orgId);
+
+  res.status(200).json({
+    message: "Get org by id success",
+    data: org,
+  });
+});

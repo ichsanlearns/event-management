@@ -4,7 +4,12 @@ import { useNavigate } from "react-router";
 import { useParams } from "react-router";
 
 import type { TEvent } from "../types/event.type";
-import { formattedPrice } from "../utils/format.util";
+import {
+  formatEventDetailDate,
+  formatEventDetailHour,
+  formattedPrice,
+  formatTime,
+} from "../utils/format.util";
 import { generateOrderId } from "../utils/order.util";
 import toast from "react-hot-toast";
 
@@ -30,6 +35,13 @@ function Event() {
     0,
   );
 
+  let day: string;
+  let month: string;
+  let year: string;
+  if (event) {
+    ({ day, month, year } = formatEventDetailDate(event?.startDate!));
+  }
+
   useEffect(() => {
     async function getEventById() {
       try {
@@ -49,8 +61,9 @@ function Event() {
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
-    setIsLoading(true);
     e.preventDefault();
+    setIsLoading(true);
+    toast.loading("Loading...");
 
     if (!user) {
       toast.error("Login first");
@@ -79,18 +92,18 @@ function Event() {
         },
         body: JSON.stringify(payload),
       });
+      const data = await response.json();
+      toast.dismiss();
 
       if (!response.ok) {
-        throw new Error("Failed to create order");
+        throw new Error(data.message);
       }
-
-      const data = await response.json();
-
-      setIsLoading(false);
+      toast.success("Order created successfully");
       navigate(`/payment/${data.id}`);
     } catch (error: any) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -159,7 +172,11 @@ function Event() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-400">Date</p>
-                  <p className="font-semibold text-white">Oct 24, 2024</p>
+                  <p className="font-semibold text-white whitespace-pre">
+                    {event
+                      ? `${month!}${"   "}${day!}${" "},${"   "} ${year!}`
+                      : "-"}
+                  </p>
                 </div>
               </div>
               <div className="w-px bg-white/10 hidden sm:block"></div>
@@ -170,7 +187,7 @@ function Event() {
                 <div>
                   <p className="text-sm text-gray-400">Time</p>
                   <p className="font-semibold text-white">
-                    19:00 PM - 23:00 PM
+                    {event ? formatEventDetailHour(event?.startDate) : "-"}
                   </p>
                 </div>
               </div>
@@ -249,7 +266,7 @@ function Event() {
                         value={ticket.price}
                       />
 
-                      <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden">
+                      <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden ">
                         {/* VIP badge */}
                         {ticket.type === "VIP" ? (
                           <>
@@ -264,8 +281,12 @@ function Event() {
                           <span className="font-bold text-lg text-slate-900">
                             {ticket.type}
                           </span>
-                          <div className="flex items-center justify-center size-6 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary">
-                            <div className="hidden peer-checked:block text-white">
+                          <div
+                            className={`flex items-center justify-center pt-1 size-6 rounded-full border-2 border-gray-300 ${selectedTicket?.id === ticket.id ? "border-primary bg-primary" : ""}`}
+                          >
+                            <div
+                              className={`text-white ${selectedTicket?.id === ticket.id ? "block" : "hidden"}`}
+                            >
                               <span className="material-symbols-outlined text-[16px] font-bold">
                                 check
                               </span>
@@ -341,12 +362,15 @@ function Event() {
                   </div>
                   <button
                     form="ticketForm"
-                    className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group"
+                    disabled={isLoading}
+                    className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group cursor-pointer"
                   >
-                    Buy Ticket
-                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-                      arrow_forward
-                    </span>
+                    {isLoading ? "Loading..." : "Buy Ticket"}
+                    {isLoading ? null : (
+                      <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+                        arrow_forward
+                      </span>
+                    )}
                   </button>
                   <p className="text-center text-xs text-gray-500 mt-2">
                     Secure payment powered by Stripe.

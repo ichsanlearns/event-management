@@ -27,3 +27,26 @@ export const formatEventDate = (iso: Date) =>
   })
     .format(new Date(iso))
     .replace(",", " •");
+
+export const formatEventDetailDate = (iso: Date) => {
+  const formatted = new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour12: false,
+  }).format(new Date(iso));
+
+  const [day, month, year] = formatted.split(" ");
+
+  return { day, month, year };
+};
+
+export const formatEventDetailHour = (iso: Date) => {
+  const formatted = new Intl.DateTimeFormat("en-GB", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  }).format(new Date(iso));
+
+  return formatted;
+};

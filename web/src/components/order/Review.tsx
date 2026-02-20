@@ -3,7 +3,6 @@ import type { Order, ReviewPayload } from "../../api/types";
 import { createReview } from "../../services/review.service";
 import toast from "react-hot-toast";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -13,6 +12,7 @@ import {
 
 function Review({ onClick, data }: { onClick: () => void; data: Order }) {
   const [rating, setRating] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -24,13 +24,13 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
   });
 
   const {
-    control,
     register,
     formState: { errors },
   } = form;
 
   const handleSubmit = async (formData: ReviewFormValues) => {
     try {
+      setIsSubmitting(true);
       const payload: ReviewPayload = {
         userId: user.id,
         eventId: data.ticket.eventName.id,
@@ -42,8 +42,10 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
 
       toast.success("Review added successfully");
       onClick();
-    } catch (error) {
-      toast.error("Failed to add review");
+    } catch (error: any) {
+      toast.error(error.response.data.message || error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -60,14 +62,14 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
           <button
             type="button"
             onClick={onClick}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors cursor-pointer"
           >
             <span className="material-icons-outlined">close</span>
           </button>
         </div>
         <div className="p-6 overflow-y-auto">
           <div className="flex items-center space-x-4 mb-6">
-            <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
+            <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0 shadow-sm">
               <img
                 alt="Neon Nights Festival 2024"
                 className="w-full h-full object-cover"
@@ -107,7 +109,22 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
                 );
               })}
             </div>
-            <p className="text-xs text-primary font-medium mt-2">Excellent!</p>
+            <p className="text-xs text-primary font-medium mt-2">
+              {(() => {
+                switch (rating) {
+                  case 1:
+                    return "Very Disappointing";
+                  case 2:
+                    return "Needs Improvement";
+                  case 3:
+                    return "Good";
+                  case 4:
+                    return "Great Experience";
+                  case 5:
+                    return "Outstanding";
+                }
+              })()}
+            </p>
           </div>
           <div className="mb-2">
             <label
@@ -133,7 +150,7 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
         <div className="p-6 pt-2 bg-white dark:bg-card-dark">
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary-dark hover:shadow-primary/40 transition-all duration-200 flex items-center justify-center group transform active:scale-[0.98]"
+            className="w-full py-3.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary-dark hover:shadow-primary/40 transition-all duration-200 flex items-center justify-center group transform active:scale-[0.98] cursor-pointer"
           >
             <span className="material-icons-outlined mr-2 animate-bounce">
               stars
@@ -143,7 +160,7 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
           <button
             type="button"
             onClick={onClick}
-            className="w-full mt-3 py-2 text-sm text-subtext-light dark:text-subtext-dark hover:text-gray-900 dark:hover:text-white transition-colors"
+            className="w-full mt-3 py-2 text-sm text-subtext-light dark:text-subtext-dark hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
           >
             Cancel
           </button>

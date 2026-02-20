@@ -120,7 +120,7 @@ function OrderActive() {
                       className="fixed inset-0 z-50 flex items-center justify-center"
                       role="dialog"
                     >
-                      <div className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
+                      <div className="fixed inset-0 bg-black/40 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
                       <div className="relative bg-white rounded-[20px] shadow-2xl w-full max-w-100 mx-4 transform transition-all overflow-hidden flex flex-col">
                         <div className="flex items-center justify-between p-5 border-b border-gray-100">
                           <h3 className="text-lg font-bold text-gray-900 leading-snug">
@@ -128,7 +128,7 @@ function OrderActive() {
                           </h3>
                           <button
                             onClick={() => setIsQrOpen(false)}
-                            className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                            className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100 cursor-pointer"
                             type="button"
                           >
                             <span className="sr-only">Close</span>
@@ -156,7 +156,7 @@ function OrderActive() {
                               Scan at Entrance
                             </p>
                             <p className="text-lg text-gray-700 font-medium">
-                              Ticket for:
+                              Ticket for:{" "}
                               <span className="text-gray-900 font-semibold">
                                 {user.name}
                               </span>
@@ -165,7 +165,8 @@ function OrderActive() {
                         </div>
                         <div className="p-5 pt-0">
                           <button
-                            className="w-full bg-brand-primary text-white font-semibold py-3 px-4 rounded-xl hover:bg-[#4E50DB] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary shadow-lg shadow-brand-primary/20"
+                            onClick={() => setIsQrOpen(false)}
+                            className="w-full bg-brand-primary text-white font-semibold py-3 px-4 rounded-xl hover:bg-[#4E50DB] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary shadow-lg shadow-brand-primary/20 cursor-pointer"
                             type="button"
                           >
                             Close
