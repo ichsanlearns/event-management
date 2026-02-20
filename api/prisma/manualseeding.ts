@@ -16,6 +16,7 @@ import { prisma } from "../src/lib/prisma.lib.js";
 import { Faker, id_ID } from "@faker-js/faker";
 
 import bcrypt from "bcrypt";
+import { generateReferralCode } from "../src/utils/referral.util.js";
 
 // 🇮🇩 Use Indonesian locale
 const faker = new Faker({ locale: [id_ID] });
@@ -78,8 +79,8 @@ async function seed() {
     // CLEAN DB
     // =============================
     await prisma.payment.deleteMany({});
-    await prisma.order.deleteMany({});
     await prisma.review.deleteMany({});
+    await prisma.order.deleteMany({});
     await prisma.ticket.deleteMany({});
     await prisma.voucher.deleteMany({});
     await prisma.point.deleteMany({});
@@ -104,7 +105,7 @@ async function seed() {
         email: "java.festivalproduction@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "AXCRYBLW",
+        referral_code: generateReferralCode(),
       },
       {
         // DWP
@@ -113,7 +114,7 @@ async function seed() {
         email: "ismaya.live@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "BZXPLMKA",
+        referral_code: generateReferralCode(),
       },
       {
         // Hammersonic Festival
@@ -122,7 +123,7 @@ async function seed() {
         email: "ravel.entertainment@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "CRTYMNQW",
+        referral_code: generateReferralCode(),
       },
       {
         // Synchronize Festival
@@ -131,16 +132,16 @@ async function seed() {
         email: "rajawali.indonesia@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "DLPOQWER",
+        referral_code: generateReferralCode(),
       },
       {
         // Jazz goes to Campus
         id: "2a340993-2618-4dc8-bd30-22bde8ff31ec",
         name: "BEM UI",
-        email: "bem.ui@gmail.com",
+        email: "bem.ui@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "EMNVBXZA",
+        referral_code: generateReferralCode(),
       },
       {
         // Djakarta Artmosphere
@@ -149,7 +150,7 @@ async function seed() {
         email: "g.productions@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "FJKLPOIU",
+        referral_code: generateReferralCode(),
       },
       {
         // Joyland Festival
@@ -158,23 +159,23 @@ async function seed() {
         email: "associated.production@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "GHYTREWS",
+        referral_code: generateReferralCode(),
       },
       {
         id: "1c92f1d5-7b6e-4b8a-9d33-2a6c7b1e5f10",
         name: "Putri Amelia",
-        email: "putri.amelia@gmail.com",
+        email: "putri.amelia@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.CUSTOMER,
-        referral_code: "HGFDSAQW",
+        referral_code: generateReferralCode(),
       },
       {
         id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
         name: "Customer One",
-        email: "customer.one@gmail.com",
+        email: "customer.one@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.CUSTOMER,
-        referral_code: "IJNBVCXZ",
+        referral_code: generateReferralCode(),
       },
       {
         // Nihon No Matsuri (Japanese cultural fest)
@@ -183,7 +184,15 @@ async function seed() {
         email: "nihonnomatsuri@mail.com",
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
-        referral_code: "KLOPIUYT",
+        referral_code: generateReferralCode(),
+      },
+      {
+        id: "a7c5e2d1-98f3-4b6a-82d4-1f7e3c9a5b20",
+        name: "ichsan",
+        email: "michsanudin03@gmail.com",
+        password: await bcrypt.hash("password123", 10),
+        role: Role.CUSTOMER,
+        referral_code: generateReferralCode(),
       },
     ];
 
@@ -385,6 +394,121 @@ async function seed() {
 
       tickets.push(...eventTickets);
     }
+    // =============================
+    // ORDERS
+    // =============================
+    const user = "a7c5e2d1-98f3-4b6a-82d4-1f7e3c9a5b20";
+    const dwp = "695145ee-242c-45ad-a192-dc05c9c6b8de";
+    const joyland = "7d2c367d-fe52-429e-8554-a26e2d092a18";
+
+    const eventJoylandTickets = await prisma.event.findUnique({
+      where: {
+        id: joyland,
+      },
+      select: {
+        Tickets: { select: { id: true } },
+      },
+    });
+
+    const eventDwpTickets = await prisma.event.findUnique({
+      where: {
+        id: dwp,
+      },
+      select: {
+        Tickets: { select: { id: true } },
+      },
+    });
+
+    const ticketDwpId = eventDwpTickets?.Tickets[1]!.id;
+    const ticketJoylandId = eventJoylandTickets?.Tickets[1]!.id;
+
+    await prisma.order.createMany({
+      data: [
+        {
+          order_code: "DWP-WP-000001",
+          customer_id: user,
+          ticket_id: ticketJoylandId!,
+          quantity: 1,
+          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+          status: "WAITING_PAYMENT",
+          using_point: 0,
+          total: 150000,
+        },
+        {
+          order_code: "DWP-WC-000001",
+          customer_id: user,
+          ticket_id: ticketJoylandId!,
+          quantity: 2,
+          expired_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+          status: "WAITING_CONFIRMATION",
+          using_point: 0,
+          total: 300000,
+        },
+        {
+          order_code: "DWP-P-000001",
+          customer_id: user,
+          ticket_id: ticketJoylandId!,
+          quantity: 3,
+          expired_at: new Date(Date.now()),
+          status: "PAID",
+          using_point: 0,
+          total: 450000,
+        },
+        {
+          order_code: "DWP-D-000001",
+          customer_id: user,
+          ticket_id: ticketJoylandId!,
+          quantity: 1,
+          expired_at: new Date(Date.now()),
+          status: "DONE",
+          using_point: 0,
+          total: 150000,
+        },
+        {
+          order_code: "DWP-R-000001",
+          customer_id: user,
+          ticket_id: ticketDwpId!,
+          quantity: 4,
+          expired_at: new Date(Date.now()),
+          status: "REVIEWED",
+          using_point: 0,
+          total: 800000,
+        },
+        {
+          order_code: "DWP-C-000001",
+          customer_id: user,
+          ticket_id: ticketDwpId!,
+          quantity: 2,
+          expired_at: new Date(Date.now()),
+          status: "CANCELED",
+          using_point: 0,
+          total: 400000,
+        },
+        {
+          order_code: "DWP-E-000001",
+          customer_id: user,
+          ticket_id: ticketDwpId!,
+          quantity: 2,
+          expired_at: new Date(Date.now()),
+          status: "EXPIRED",
+          using_point: 0,
+          total: 400000,
+        },
+      ],
+    });
+    // =============================
+    // VOUCHERS
+    // =============================
+    await prisma.voucher.create({
+      data: {
+        event_id: dwp,
+        code: "DWP-2000",
+        discount_amount: 20000,
+        quota: 50,
+        start_date: new Date("2025-02-06"),
+        end_date: new Date("2025-04-30"),
+      },
+    });
 
     // =============================
     // POINTS

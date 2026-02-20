@@ -5,13 +5,10 @@ import {
   getById,
   getByUserId,
 } from "../services/order.service.js";
-import { transporter } from "../utils/email.util.js";
 import { catchAsync } from "../utils/catch-async.util.js";
-import type { Status } from "../generated/prisma/enums.js";
 import { createOrderSchema } from "../validators/order.validator.js";
 
 export const createOrder = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.body);
   const validatedData = createOrderSchema.parse({
     ...req.body,
   });
