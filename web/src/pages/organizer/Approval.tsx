@@ -3,11 +3,15 @@ import toast from "react-hot-toast";
 import { CheckCircle2, Download, CheckCheck, Search, Filter, Calendar as CalendarIcon, Check, X, ChevronLeft, ChevronRight, Menu, Clock } from "lucide-react";
 
 import { approveOrderApi, rejectOrderApi, getPendingOrdersApi, getOrdersByStatusApi } from "../../services/approval.service";
-
+import PaymentVerificationModal from "../../components/PaymentVerificationModal";
+import type { OrderApproval } from "../../types/approval.type";
 import type { Order } from "../../types/order.type";
 
 function Approval() {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<OrderApproval | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -15,6 +19,16 @@ function Approval() {
     approved: 0,
     rejected: 0,
   });
+
+  const handleOpenModal = (order: any) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
+  };
 
   const loadStats = async () => {
     try {
@@ -47,24 +61,32 @@ function Approval() {
   }, []);
 
   const handleApprove = async (id: string) => {
+    setIsSubmitting(true);
     try {
       await approveOrderApi(id);
-      toast.success("Order approved");
+      toast.success("Order approved successfully");
+      handleCloseModal();
       loadOrders();
       loadStats();
     } catch {
       toast.error("Approve gagal");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleReject = async (id: string) => {
+    setIsSubmitting(true);
     try {
       await rejectOrderApi(id);
       toast.success("Order rejected");
+      handleCloseModal();
       loadOrders();
       loadStats();
     } catch {
       toast.error("Reject gagal");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -165,6 +187,7 @@ function Approval() {
                         type={t.Ticket?.type}
                         amount={Number(t.total)}
                         proof={t.Payments?.[0]?.proof_image}
+                        onViewProof={() => handleOpenModal(t)}
                         onApprove={handleApprove}
                         onReject={handleReject}
                       />
@@ -191,6 +214,8 @@ function Approval() {
           </div>
         </div>
       </main>
+
+      <PaymentVerificationModal open={isModalOpen} onClose={handleCloseModal} order={selectedOrder} onApprove={handleApprove} onReject={handleReject} loading={isSubmitting} />
     </div>
   );
 }
@@ -210,7 +235,7 @@ function StatsCard({ title, value, badge, icon, color }: any) {
   );
 }
 
-function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, onApprove, onReject }: any) {
+function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, onApprove, onReject, onViewProof }: any) {
   return (
     <tr className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
       <td className="px-6 py-4">
@@ -231,16 +256,10 @@ function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, o
       <td className="px-6 py-4">
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 uppercase">{type}</span>
       </td>
-      <td className="px-6 py-4 text-right font-black text-sm">{amount}</td>
+      <td className="px-6 py-4 text-right font-black text-sm">Rp {amount.toLocaleString()}</td>
       <td className="px-6 py-4">
-        <button className="flex items-center gap-1.5 text-primary hover:text-blue-800 dark:hover:text-blue-400 text-xs font-bold transition-colors underline decoration-transparent hover:decoration-current">
-          {proof ? (
-            <a href={proof} target="_blank" className="underline">
-              View Proof
-            </a>
-          ) : (
-            "-"
-          )}
+        <button onClick={onViewProof} className="flex items-center gap-1.5 text-primary hover:text-blue-800 dark:hover:text-blue-400 text-xs font-bold transition-colors underline decoration-transparent hover:decoration-current">
+          {proof ? "View Proof" : "-"}
         </button>
       </td>
       <td className="px-6 py-4">
