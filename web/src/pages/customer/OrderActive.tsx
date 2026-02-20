@@ -7,13 +7,12 @@ import { formatEventDate } from "../../utils/format.util";
 function OrderActive() {
   const [events, setEvents] = useState<Order[]>();
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await getOrderByCustomer(
-          "54dbb77d-8ad0-4df0-981f-f9de9d1ef9fd",
-          "active",
-        );
+        const res = await getOrderByCustomer(user?.id, "active");
         setEvents(res.data);
         toast.success("Event fetched successfully");
       } catch (error: any) {

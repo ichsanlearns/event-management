@@ -11,13 +11,12 @@ import Done from "../../components/order/Done";
 function OrderAll() {
   const [events, setEvents] = useState<Order[]>([]);
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await getOrderByCustomer(
-          "54dbb77d-8ad0-4df0-981f-f9de9d1ef9fd",
-          "all",
-        );
+        const res = await getOrderByCustomer(user?.id, "all");
         setEvents(res.data);
         toast.success("Event fetched successfully");
       } catch (error: any) {

@@ -10,13 +10,12 @@ function OrderFinished() {
   const [isReview, setIsReview] = useState(false);
   const [reviewing, setReviewing] = useState<Order | null>(null);
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await getOrderByCustomer(
-          "54dbb77d-8ad0-4df0-981f-f9de9d1ef9fd",
-          "need_review",
-        );
+        const res = await getOrderByCustomer(user?.id, "need_review");
         setEvents(res.data);
         toast.success("Event fetched successfully");
       } catch (error: any) {

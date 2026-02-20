@@ -1,5 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Calendar, Users, BarChart3, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  Calendar,
+  Users,
+  BarChart3,
+  LogOut,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "../types/user.type";
 
@@ -33,11 +39,18 @@ function SideBar() {
   return (
     <aside className="w-[20%] min-w-55 h-screen bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 hidden lg:flex flex-col">
       {/* Logo */}
-      <div className="p-6 text-xl font-bold text-indigo-600">EventFlow</div>
+      <div
+        onClick={() => navigate("/")}
+        className="p-6 text-xl font-bold text-indigo-600 cursor-pointer"
+      >
+        EventFlow
+      </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-1 text-xl">
-        <p className="px-3 py-2 text-xs text-slate-400 uppercase tracking-wide">Management</p>
+        <p className="px-3 py-2 text-xs text-slate-400 uppercase tracking-wide">
+          Management
+        </p>
 
         {menu.map((item) => {
           const Icon = item.icon;
@@ -63,19 +76,35 @@ function SideBar() {
       <div className="p-4 border-t border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-3">
           {/* Profile Link Area */}
-          <NavLink to="/profile" className="flex items-center gap-3 flex-1 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+          <NavLink
+            to="/profile"
+            className="flex items-center gap-3 flex-1 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+          >
             {/* Avatar */}
-            <img src={user?.profile_image || "/avatar-placeholder.png"} alt="User Avatar" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600" />
+            <img
+              src={user?.profile_image || "/avatar-placeholder.png"}
+              alt="User Avatar"
+              className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
+            />
 
             {/* User Info */}
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{user?.name || "User"}</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">{user?.role === "EVENT_ORGANIZER" ? "Organizer" : "Attendee"}</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                {user?.name || "User"}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {user?.role === "EVENT_ORGANIZER" ? "Organizer" : "Attendee"}
+              </p>
             </div>
           </NavLink>
 
           {/* Logout */}
-          <button onClick={handleLogout} className="text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition" aria-label="Logout" title="Logout">
+          <button
+            onClick={handleLogout}
+            className="text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"
+            aria-label="Logout"
+            title="Logout"
+          >
             <LogOut size={25} />
           </button>
         </div>
