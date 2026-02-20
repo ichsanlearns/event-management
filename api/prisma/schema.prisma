@@ -78,7 +78,7 @@ model User {
   Events Event[]
   Reviewed Review[]
   Ordered Order[]
-  Points Point[]
+  Points Point?
   Coupon Coupon[]
   Referring Coupon[] @relation("PointGiven")
   

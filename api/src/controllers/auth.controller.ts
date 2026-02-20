@@ -1,11 +1,10 @@
 import { type Request, type Response } from "express";
 import { Role } from "../generated/prisma/enums.js";
-import { createUser, findByEmail, findByReferral } from "../services/auth.service.js";
+import { findByEmail, findByReferral } from "../services/auth.service.js";
 import { generateReferralCode } from "../utils/referral.util.js";
 import { hashPassword, comparePassword } from "../utils/hash.util.js";
 import { generateToken } from "../utils/jwt.util.js";
 import { prisma } from "../lib/prisma.lib.js";
-import { access } from "node:fs";
 import crypto from "crypto";
 import { transporter } from "../utils/email.util.js";
 
@@ -155,6 +154,7 @@ export async function me(req: Request, res: Response) {
       role: true,
       referral_code: true,
       profile_image: true,
+      Points: { select: { amount: true } },
     },
   });
 

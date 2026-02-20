@@ -5,4 +5,7 @@ export const API_ENDPOINTS = {
   REVIEW: {
     CREATE: "/reviews",
   },
+  AUTH: {
+    ME: "/auth/me",
+  },
 };

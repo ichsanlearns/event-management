@@ -8,10 +8,11 @@ import {
   formatEventDetailDate,
   formatEventDetailHour,
   formattedPrice,
-  formatTime,
 } from "../utils/format.util";
 import { generateOrderId } from "../utils/order.util";
 import toast from "react-hot-toast";
+import { getProfile } from "../services/user.service";
+import type { TUser } from "../api/types";
 
 function Event() {
   const params = useParams();
@@ -22,13 +23,13 @@ function Event() {
     price: number;
   } | null>(null);
 
-  const currentPrice = selectedTicket?.price! * quantity;
+  const currentPrice = selectedTicket?.price! * quantity || 0;
   const navigate = useNavigate();
 
   const [event, setEvent] = useState<TEvent | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const user = JSON.parse(localStorage.getItem("user")!);
+  const [user, setUser] = useState<TUser | null>(null);
+  const [usePoint, setUsePoint] = useState(false);
 
   const orderNumber = event?.tickets?.reduce(
     (total, ticket) => total + ticket.bought,
@@ -43,6 +44,19 @@ function Event() {
   }
 
   useEffect(() => {
+    async function getUser() {
+      try {
+        const user = await getProfile();
+
+        setUser(user);
+      } catch (error: any) {
+        toast.error(error.response.data.message || "Failed to get profile");
+      }
+    }
+    getUser();
+  }, []);
+
+  useEffect(() => {
     async function getEventById() {
       try {
         const response = await fetch(
@@ -51,6 +65,7 @@ function Event() {
         const data = await response.json();
 
         setEvent(data.data);
+
         // setCurrentTicket(data.data.Tickets[0].price);
       } catch (error) {
         console.error(error);
@@ -81,7 +96,7 @@ function Event() {
       status: "WAITING_PAYMENT",
       usingPoint: 0,
       total: currentPrice,
-      email: user.email,
+      email: user?.email,
     };
 
     try {
@@ -349,33 +364,83 @@ function Event() {
                       </div>
                     </div>
                   </div>
-                </form>
-                {/* Total & Action */}
-                <div className="mt-6 space-y-4">
-                  <div className="flex justify-between items-end">
-                    <span className="text-gray-400 text-sm mb-1">
-                      Total Amount
-                    </span>
-                    <span className="text-3xl font-bold text-white">
-                      Rp. {currentPrice ? formattedPrice(currentPrice) : 0}
-                    </span>
+                  <div className="pt-4 mt-2">
+                    <div className="p-4 rounded-xl bg-[#171f2e] border border-white/5">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex flex-col">
+                          <span className="text-white font-semibold">
+                            Use {user ? user?.Points?.amount : 0} points
+                          </span>
+                          <span className="text-xs text-green-400 font-medium">
+                            Save IDR {user ? user?.Points?.amount : 0}
+                          </span>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            checked={usePoint}
+                            onChange={() => setUsePoint(!usePoint)}
+                            className="sr-only peer"
+                            type="checkbox"
+                            value=""
+                          />
+                          <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">
+                          info
+                        </span>
+                        All available points will be applied.
+                      </p>
+                    </div>
                   </div>
-                  <button
-                    form="ticketForm"
-                    disabled={isLoading}
-                    className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group cursor-pointer"
-                  >
-                    {isLoading ? "Loading..." : "Buy Ticket"}
-                    {isLoading ? null : (
-                      <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-                        arrow_forward
-                      </span>
-                    )}
-                  </button>
-                  <p className="text-center text-xs text-gray-500 mt-2">
-                    Secure payment powered by Stripe.
-                  </p>
-                </div>
+                  <div className="mt-4 space-y-4">
+                    <div className="space-y-2 border-t border-white/10 pt-4">
+                      <div className="flex justify-between items-center text-sm text-gray-400">
+                        <span>Subtotal</span>
+                        <span>
+                          IDR {currentPrice ? formattedPrice(currentPrice) : 0}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm text-[#a78bfa]">
+                        <span>Points Discount</span>
+                        <span>
+                          - IDR {user && usePoint ? user?.Points?.amount : 0}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-end pt-2">
+                        <span className="text-gray-300 font-medium">Total</span>
+                        <span className="text-3xl font-bold text-white">
+                          IDR{" "}
+                          {currentPrice && user && usePoint
+                            ? formattedPrice(
+                                currentPrice - user?.Points?.amount,
+                              )
+                            : !user
+                              ? formattedPrice(currentPrice)
+                              : !usePoint
+                                ? formattedPrice(currentPrice)
+                                : 0}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      form="ticketForm"
+                      disabled={isLoading}
+                      className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                    >
+                      {isLoading ? "Loading..." : "Buy Ticket"}
+                      {isLoading ? null : (
+                        <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+                          arrow_forward
+                        </span>
+                      )}
+                    </button>
+                    <p className="text-center text-xs text-gray-500 mt-2">
+                      Secure payment powered by Stripe.
+                    </p>
+                  </div>
+                </form>
               </div>
               {/* Mini Help Card */}
               <div className="bg-surface-dark/50 border border-white/5 rounded-xl p-4 flex gap-3 items-start backdrop-blur-sm">

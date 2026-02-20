@@ -51,3 +51,13 @@ export type ReviewPayload = {
   comment: string;
   rating: number;
 };
+
+export type TUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  referralCode: string;
+  profileImage: string;
+  Points: { amount: number };
+};
