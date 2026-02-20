@@ -1,12 +1,19 @@
-import { useState } from "react";
 import OrderFinished from "./OrderFinished";
 import OrderAll from "./OrderAll";
 import OrderActive from "./OrderActive";
-
-type OrderTab = "active" | "need_review" | "all";
+import { NavLink, useSearchParams } from "react-router";
 
 function MyTicket() {
-  const [isActive, setIsActive] = useState<OrderTab>("need_review");
+  const [searchParams] = useSearchParams();
+  const currentTab = searchParams.get("tab") || "active";
+
+  const baseClass =
+    "block flex-1 py-3 text-sm transition-colors relative text-center";
+
+  const activeClass = "font-bold bg-primary text-white rounded-lg shadow-md";
+
+  const inactiveClass =
+    "font-medium text-subtext-light dark:text-subtext-dark hover:text-primary";
 
   return (
     <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-background-light dark:bg-background-dark">
@@ -53,21 +60,38 @@ function MyTicket() {
         </button>
       </div>
       <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-1 mb-8 flex">
-        <button className="flex-1 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark hover:text-primary dark:hover:text-primary transition-colors relative">
+        <NavLink
+          to="?tab=active"
+          className={`${baseClass} ${currentTab === "active" ? activeClass : inactiveClass}`}
+        >
           Active
-        </button>
-        <button className="flex-1 py-3 text-sm font-bold bg-primary text-white rounded-lg shadow-md transition-colors relative">
+          {currentTab === "active" ? (
+            <span className="absolute top-2 right-4 w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
+          ) : null}
+        </NavLink>
+        <NavLink
+          to="?tab=need_review"
+          className={`${baseClass} ${currentTab === "need_review" ? activeClass : inactiveClass}`}
+        >
           Need Review
-          <span className="absolute top-2 right-4 w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
-        </button>
-        <button className="flex-1 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark hover:text-primary dark:hover:text-primary transition-colors">
+          {currentTab === "need_review" ? (
+            <span className="absolute top-2 right-4 w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
+          ) : null}
+        </NavLink>
+        <NavLink
+          to="?tab=all"
+          className={`${baseClass} ${currentTab === "all" ? activeClass : inactiveClass}`}
+        >
           All Orders
-        </button>
+          {currentTab === "all" ? (
+            <span className="absolute top-2 right-4 w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
+          ) : null}
+        </NavLink>
       </div>
       {/* Order list */}
-      {isActive === "active" && <OrderActive />}
-      {isActive === "need_review" && <OrderFinished />}
-      {isActive === "all" && <OrderAll />}
+      {currentTab === "active" && <OrderActive />}
+      {currentTab === "need_review" && <OrderFinished />}
+      {currentTab === "all" && <OrderAll />}
     </main>
   );
 }
