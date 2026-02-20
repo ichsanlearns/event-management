@@ -6,6 +6,7 @@ import { useParams } from "react-router";
 import type { TEvent } from "../types/event.type";
 import { formattedPrice } from "../utils/format.util";
 import { generateOrderId } from "../utils/order.util";
+import toast from "react-hot-toast";
 
 function Event() {
   const params = useParams();
@@ -51,6 +52,10 @@ function Event() {
     setIsLoading(true);
     e.preventDefault();
 
+    if (!user) {
+      toast.error("Login first");
+    }
+
     const payload = {
       orderCode: generateOrderId(
         event!.name,
@@ -63,6 +68,7 @@ function Event() {
       status: "WAITING_PAYMENT",
       usingPoint: 0,
       total: currentPrice,
+      email: user.email,
     };
 
     try {
@@ -82,7 +88,7 @@ function Event() {
 
       setIsLoading(false);
       navigate(`/payment/${data.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       alert("Something went wrong. Please try again.");
     }

@@ -2,7 +2,7 @@ function OrgProfile() {
   return (
     <>
       <main className="flex-1 flex flex-col items-center py-8 px-4 sm:px-8">
-        <div className="w-full max-w-[1120px] flex flex-col gap-8">
+        <div className="w-full max-w-280 flex flex-col gap-8">
           <section className="bg-white rounded-2xl p-8 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)] border border-[#e7e7f3]">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
               <div className="relative shrink-0">
