@@ -1,13 +1,8 @@
 import { type Request, type Response } from "express";
 
-import {
-  create,
-  getAll,
-  getById,
-  getByOrganizerId,
-  remove,
-  updateById,
-} from "../services/event.service.js";
+import { create, getAll, getById, getByOrganizerId, remove, updateById } from "../services/event.service.js";
+
+import { getAttendeesByEvent } from "../services/attendee.service.js";
 
 import { redis } from "../lib/redis.lib.js";
 import { createEventSchema } from "../validators/event.validator.js";
@@ -79,42 +74,28 @@ export const getEventById = catchAsync(async (req: Request, res: Response) => {
   res.status(200).json({ message: "Event berhasil diambil", data: event });
 });
 
-export const getEventByOrganizerId = catchAsync(
-  async (req: Request, res: Response) => {
-    const organizerIdParam = req.params.organizerId;
-    const organizerId = Array.isArray(organizerIdParam)
-      ? organizerIdParam[0]
-      : organizerIdParam;
+export const getEventByOrganizerId = catchAsync(async (req: Request, res: Response) => {
+  const organizerIdParam = req.params.organizerId;
+  const organizerId = Array.isArray(organizerIdParam) ? organizerIdParam[0] : organizerIdParam;
 
-    if (!organizerId) {
-      return res.status(400).json({
-        message: "Organizer ID is required",
-      });
-    }
-
-    const search =
-      typeof req.query.search === "string"
-        ? req.query.search.toLowerCase()
-        : "";
-
-    const events = await getByOrganizerId(organizerId);
-
-    const filtered = search
-      ? events.filter(
-          (e: any) =>
-            e.name.toLowerCase().includes(search) ||
-            e.city?.toLowerCase().includes(search) ||
-            e.venue?.toLowerCase().includes(search),
-        )
-      : events;
-
-    res.status(200).json({
-      message: "Events fetched by organizer",
-      data: filtered,
-      length: filtered.length,
+  if (!organizerId) {
+    return res.status(400).json({
+      message: "Organizer ID is required",
     });
-  },
-);
+  }
+
+  const search = typeof req.query.search === "string" ? req.query.search.toLowerCase() : "";
+
+  const events = await getByOrganizerId(organizerId);
+
+  const filtered = search ? events.filter((e: any) => e.name.toLowerCase().includes(search) || e.city?.toLowerCase().includes(search) || e.venue?.toLowerCase().includes(search)) : events;
+
+  res.status(200).json({
+    message: "Events fetched by organizer",
+    data: filtered,
+    length: filtered.length,
+  });
+});
 
 export const updateEvent = catchAsync(async (req: Request, res: Response) => {
   const idParam = req.params.id;
@@ -157,3 +138,20 @@ export const deleteEvent = catchAsync(async (req: Request, res: Response) => {
 
   res.status(200).json({ message: "Event berhasil dihapus" });
 });
+
+export async function getEventAttendees(req: Request, res: Response) {
+  const eventIdParam = req.params.eventId;
+  const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
+
+  if (!eventId || typeof eventId !== "string") {
+    return res.status(400).json({ message: "Event ID is required" });
+  }
+
+  const data = await getAttendeesByEvent(eventId);
+
+  res.json({
+    message: "Attendee list",
+    totalAttendees: data.length,
+    data,
+  });
+}

@@ -21,6 +21,7 @@ import EditProfile from "./pages/EditProfile";
 import { Toaster } from "react-hot-toast";
 import MyTicket from "./pages/customer/MyTicket";
 import OrgProfile from "./pages/OrgProfile";
+import AttendeePage from "./pages/organizer/Attendee";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -44,6 +45,8 @@ createRoot(document.getElementById("root")!).render(
         <Route path="organizer" element={<Organizer />}>
           <Route index element={<Dashboard />} />
           <Route path="events" element={<EventOrganizer />} />
+          <Route path="/organizer/attendees/:eventId" element={<AttendeePage />} />
+
           <Route path="approval" element={<Approval />} />
           <Route path="report" element={<Report />} />
           <Route path="myticket" element={<MyTicket />} />

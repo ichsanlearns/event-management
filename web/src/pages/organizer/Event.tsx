@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Search, SlidersHorizontal, ArrowUpDown, MapPin, Ticket, Eye, Pencil, Trash2, Plus, CalendarCheck2 } from "lucide-react";
 import type { TEvent } from "../../types/event.type";
 
@@ -16,6 +18,8 @@ function Event() {
   const [events, setEvents] = useState<TEvent[] | null>(null);
   const [voucherEvents, setVoucherEvents] = useState<TEvent | null>(null);
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -210,7 +214,8 @@ function Event() {
                         <div className="flex-1"></div>
 
                         <div className="flex items-center gap-1">
-                          <IconButton icon={<Eye size={18} />} label="View" />
+                          <IconButton icon={<Eye size={18} />} onClick={() => navigate(`/organizer/attendees/${event.id}`)} />
+
                           <IconButton
                             icon={<Pencil size={18} />}
                             label="Edit"
