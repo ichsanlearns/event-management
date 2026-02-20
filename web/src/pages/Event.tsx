@@ -61,8 +61,9 @@ function Event() {
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
-    setIsLoading(true);
     e.preventDefault();
+    setIsLoading(true);
+    toast.loading("Loading...");
 
     if (!user) {
       toast.error("Login first");
@@ -91,18 +92,18 @@ function Event() {
         },
         body: JSON.stringify(payload),
       });
+      const data = await response.json();
+      toast.dismiss();
 
       if (!response.ok) {
-        throw new Error("Failed to create order");
+        throw new Error(data.message);
       }
-
-      const data = await response.json();
-
-      setIsLoading(false);
+      toast.success("Order created successfully");
       navigate(`/payment/${data.id}`);
     } catch (error: any) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -361,12 +362,15 @@ function Event() {
                   </div>
                   <button
                     form="ticketForm"
-                    className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group"
+                    disabled={isLoading}
+                    className="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-900/50 transition-all flex items-center justify-center gap-2 group cursor-pointer"
                   >
-                    Buy Ticket
-                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-                      arrow_forward
-                    </span>
+                    {isLoading ? "Loading..." : "Buy Ticket"}
+                    {isLoading ? null : (
+                      <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+                        arrow_forward
+                      </span>
+                    )}
                   </button>
                   <p className="text-center text-xs text-gray-500 mt-2">
                     Secure payment powered by Stripe.
