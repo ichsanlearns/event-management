@@ -94,8 +94,14 @@ function Payment() {
 
       const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
+
       setVoucher(data.data);
-    } catch (error) {}
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   }
 
   async function handleSubmit(data: PaymentInput) {

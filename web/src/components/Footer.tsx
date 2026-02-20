@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 function Footer() {
   return (
-    <footer className="fixed bottom-0 left-0 right-0 border-t border-[#e7e7f3] bg-white py-3">
+    <footer className="fixed bottom-0 left-0 right-0 border-t border-[#e7e7f3] bg-white py-3 z-20">
       <div className=" max-w-screen mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-6 cursor-pointer">
         <Link to="/" className="flex items-center gap-2 text-[#0d0d1b]">
           <div className="size-6 text-primary">

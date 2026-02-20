@@ -10,31 +10,28 @@ import { catchAsync } from "../utils/catch-async.util.js";
 import type { Status } from "../generated/prisma/enums.js";
 import { createOrderSchema } from "../validators/order.validator.js";
 
-export async function createOrder(req: Request, res: Response) {
-  try {
-    const validatedData = createOrderSchema.parse({
-      ...req.body,
-    });
+export const createOrder = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.body);
+  const validatedData = createOrderSchema.parse({
+    ...req.body,
+  });
 
-    const order = await create({ ...validatedData });
+  const order = await create({ ...validatedData });
 
-    // await transporter.sendMail({
-    //   from: `"Event App" <${process.env.EMAIL_USER}>`,
-    //   to: email,
-    //   subject: "New order event app",
-    //   html: `
-    //       <h2>New Order event app</h2>
-    //       <p>Order code: ${orderCode}</p>
-    //       <p>Quantity: ${quantity}</p>
-    //       <p>total: ${total}</p>
-    //     `,
-    // });
+  // await transporter.sendMail({
+  //   from: `"Event App" <${process.env.EMAIL_USER}>`,
+  //   to: email,
+  //   subject: "New order event app",
+  //   html: `
+  //       <h2>New Order event app</h2>
+  //       <p>Order code: ${orderCode}</p>
+  //       <p>Quantity: ${quantity}</p>
+  //       <p>total: ${total}</p>
+  //     `,
+  // });
 
-    res.status(201).json(order);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to create order" });
-  }
-}
+  res.status(201).json(order);
+});
 
 export async function getOrderById(req: Request, res: Response) {
   try {
