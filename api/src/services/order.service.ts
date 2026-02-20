@@ -2,23 +2,7 @@ import type { Status } from "../generated/prisma/enums.js";
 import { prisma } from "../lib/prisma.lib.js";
 import { AppError } from "../utils/app-error.util.js";
 
-export async function create({
-  orderCode,
-  customerId,
-  ticketId,
-  quantity,
-  status,
-  usingPoint,
-  total,
-}: {
-  orderCode: string;
-  customerId: string;
-  ticketId: string;
-  quantity: number;
-  status: Status;
-  usingPoint: number;
-  total: number;
-}) {
+export async function create({ orderCode, customerId, ticketId, quantity, status, usingPoint, total }: { orderCode: string; customerId: string; ticketId: string; quantity: number; status: Status; usingPoint: number; total: number }) {
   return prisma.$transaction(async (tx) => {
     const newOrder = await tx.order.create({
       data: {
