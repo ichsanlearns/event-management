@@ -511,6 +511,32 @@ async function seed() {
     });
 
     // =============================
+    // COUPON
+    // =============================
+    await prisma.coupon.createMany({
+      data: [
+        {
+          user_id: user,
+          amount: 10000,
+          expired_at: new Date("2026-06-01"),
+          referrer_id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+        },
+        {
+          user_id: user,
+          amount: 20000,
+          expired_at: new Date("2026-06-01"),
+          referrer_id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+        },
+        {
+          user_id: user,
+          amount: 30000,
+          expired_at: new Date("2026-06-01"),
+          referrer_id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+        },
+      ],
+    });
+
+    // =============================
     // POINTS
     // =============================
 

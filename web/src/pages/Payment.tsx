@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 
 import { formattedPrice, formatTime } from "../utils/format.util";
 import { useCountdown } from "../utils/countdown.util";
-import type { IOrder } from "../types/event.type";
+import type { ICoupon, IOrder } from "../types/event.type";
 
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +34,8 @@ function Payment() {
     quota: number;
   } | null>();
 
+  const [coupon, setCoupon] = useState<ICoupon[] | null>();
+
   useEffect(() => {
     try {
       async function getOrder() {
@@ -42,6 +44,7 @@ function Payment() {
         setOrder(response.data);
         setVoucher(response.data.voucher);
         setOrderStatus(response.data.status);
+        setCoupon(response.data.coupon);
       }
 
       getOrder();
@@ -382,7 +385,7 @@ function Payment() {
           </form>
         </FormProvider>
       </div>
-      {openCoupon && <Coupon />}
+      {openCoupon && <Coupon data={coupon!} />}
     </main>
   );
 }

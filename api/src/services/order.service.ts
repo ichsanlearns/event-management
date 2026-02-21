@@ -2,7 +2,23 @@ import type { Status } from "../generated/prisma/enums.js";
 import { prisma } from "../lib/prisma.lib.js";
 import { AppError } from "../utils/app-error.util.js";
 
-export async function create({ orderCode, customerId, ticketId, quantity, status, usingPoint, total }: { orderCode: string; customerId: string; ticketId: string; quantity: number; status: Status; usingPoint: number; total: number }) {
+export async function create({
+  orderCode,
+  customerId,
+  ticketId,
+  quantity,
+  status,
+  usingPoint,
+  total,
+}: {
+  orderCode: string;
+  customerId: string;
+  ticketId: string;
+  quantity: number;
+  status: Status;
+  usingPoint: number;
+  total: number;
+}) {
   return prisma.$transaction(async (tx) => {
     const newOrder = await tx.order.create({
       data: {
@@ -55,6 +71,11 @@ export async function getById(id: string) {
           EventName: { select: { name: true, city: true, hero_image: true } },
         },
       },
+      Customer: {
+        select: {
+          Coupon: { select: { id: true, amount: true, expired_at: true } },
+        },
+      },
     },
   });
 
@@ -88,6 +109,11 @@ export async function getById(id: string) {
         heroImage: order.Ticket.EventName.hero_image,
       },
     },
+    coupon: order.Customer.Coupon.map((c) => ({
+      id: c.id,
+      amount: c.amount,
+      expiredAt: c.expired_at,
+    })),
   };
 
   return mapped;

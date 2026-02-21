@@ -1,4 +1,6 @@
-function Coupon() {
+import type { ICoupon } from "../../types/event.type";
+
+function Coupon({ data }: { data: ICoupon[] }) {
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
       <div className="w-full max-w-lg bg-white dark:bg-[#1a162e] rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[90vh]">
@@ -34,41 +36,43 @@ function Coupon() {
             </p>
             <div className="relative group cursor-pointer">
               <div className="absolute -inset-0.5 bg-linear-to-r from-primary to-purple-600 rounded-xl opacity-75 blur-sm"></div>
-              <div className="relative p-4 bg-white dark:bg-[#1e1a34] rounded-xl border-2 border-primary shadow-sm flex items-start gap-4">
-                <div className="shrink-0 size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                  <span className="material-symbols-outlined">
-                    local_activity
-                  </span>
-                </div>
-                <div className="grow">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-bold text-slate-900 dark:text-white text-lg">
-                        Rp 50.000 OFF
-                      </h3>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
-                        Min. spend Rp 500.000
-                      </p>
+              {data.map((item) => (
+                <div className="relative p-4 bg-white dark:bg-[#1e1a34] rounded-xl border-2 border-primary shadow-sm flex items-start gap-4 ">
+                  <div className="shrink-0 size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined">
+                      local_activity
+                    </span>
+                  </div>
+                  <div className="grow">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-bold text-slate-900 dark:text-white text-lg">
+                          Rp 50.000 OFF
+                        </h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Min. spend Rp 500.000
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center size-6 rounded-full bg-primary text-white">
+                        <span className="material-symbols-outlined text-sm font-bold">
+                          check
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-center size-6 rounded-full bg-primary text-white">
-                      <span className="material-symbols-outlined text-sm font-bold">
-                        check
+                    <div className="mt-3 flex items-center gap-2 flex-wrap">
+                      <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-mono font-bold rounded border border-slate-200 dark:border-slate-700">
+                        SUPERFAN50
+                      </span>
+                      <span className="text-xs text-slate-400 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">
+                          schedule
+                        </span>
+                        Expires in 2 days
                       </span>
                     </div>
                   </div>
-                  <div className="mt-3 flex items-center gap-2 flex-wrap">
-                    <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-mono font-bold rounded border border-slate-200 dark:border-slate-700">
-                      SUPERFAN50
-                    </span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[14px]">
-                        schedule
-                      </span>
-                      Expires in 2 days
-                    </span>
-                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
