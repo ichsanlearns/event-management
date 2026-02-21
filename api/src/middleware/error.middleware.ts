@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../utils/app-error.util.js";
-
+import jwt from "jsonwebtoken";
 import z, { ZodError } from "zod";
 
 interface flattenedZodErrors {
@@ -17,7 +17,11 @@ export function error(
   let statusCode = 500;
   let message = "Internal server error. Good luck!";
 
-  if (error instanceof ZodError) {
+  if (error instanceof jwt.TokenExpiredError) {
+    return res.status(401).json({ message: "Token expired" });
+  } else if (error instanceof jwt.JsonWebTokenError) {
+    return res.status(401).json({ message: "Invalid token" });
+  } else if (error instanceof ZodError) {
     const flattened = z.flattenError(error) as flattenedZodErrors;
 
     const formattedError: Record<string, string> = {};
@@ -29,11 +33,9 @@ export function error(
     }
 
     return res
-      .status(404)
+      .status(400)
       .json({ message: "Validation error", error: formattedError });
-  }
-
-  if (error instanceof AppError) {
+  } else if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;
   }

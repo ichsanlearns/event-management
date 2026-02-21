@@ -1,9 +1,11 @@
 import { type Request, type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { AppError } from "../utils/app-error.util.js";
 
 interface JwtPayload {
   id: string;
   role: string;
+  email: string;
 }
 
 export function authMiddleware(
@@ -13,13 +15,13 @@ export function authMiddleware(
 ) {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    return res.status(401).json({ message: "Token tidak ada" });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return next(new AppError(401, "Unauthorized"));
   }
 
   const token = authHeader.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ message: "Token invalid" });
+    return next(new AppError(401, "Unauthorized"));
   }
 
   try {
@@ -28,10 +30,11 @@ export function authMiddleware(
     req.user = {
       id: decoded.id,
       role: decoded.role,
+      email: decoded.email,
     };
 
     next();
-  } catch {
-    return res.status(401).json({ message: "Token tidak valid" });
+  } catch (error) {
+    next(error);
   }
 }
