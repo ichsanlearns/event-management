@@ -1,6 +1,7 @@
 export const API_ENDPOINTS = {
   ORDERS: {
     CUSTOMER: "/orders/customer",
+    CREATE: "/orders",
   },
   REVIEW: {
     CREATE: "/reviews",

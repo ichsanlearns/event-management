@@ -12,18 +12,22 @@ import {
 import { generateOrderId } from "../utils/order.util";
 import toast from "react-hot-toast";
 import { getProfile } from "../services/user.service";
-import type { TUser } from "../api/types";
+import type { CreateOrderPayload, TUser } from "../api/types";
+import { createOrder } from "../services/order.service";
+import { getEventById } from "../services/event.service";
+import { useForm } from "react-hook-form";
+import { orderSchema, type TOrderSchema } from "../schemas/order.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function Event() {
   const params = useParams();
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedTicket, setSelectedTicket] = useState<{
-    id: string;
-    type: string;
-    price: number;
-  } | null>(null);
+  // const [selectedTicket, setSelectedTicket] = useState<{
+  //   id: string;
+  //   type: string;
+  //   price: number;
+  // } | null>(null);
 
-  const currentPrice = selectedTicket?.price! * quantity || 0;
   const navigate = useNavigate();
 
   const [event, setEvent] = useState<TEvent | null>(null);
@@ -43,6 +47,23 @@ function Event() {
     ({ day, month, year } = formatEventDetailDate(event?.startDate!));
   }
 
+  const form = useForm<TOrderSchema>({
+    resolver: zodResolver(orderSchema),
+  });
+
+  const {
+    register,
+    formState: { errors },
+  } = form;
+
+  const selectedTicketId = form.watch("ticketId");
+
+  const selectedTicket = event?.tickets?.find(
+    (ticket) => ticket.id === selectedTicketId,
+  );
+
+  const currentPrice = selectedTicket ? selectedTicket.price * quantity : 0;
+
   useEffect(() => {
     async function getUser() {
       try {
@@ -57,34 +78,30 @@ function Event() {
   }, []);
 
   useEffect(() => {
-    async function getEventById() {
+    async function getEvent() {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/events/${params.id}`,
-        );
-        const data = await response.json();
+        const response = await getEventById(params.id!);
 
-        setEvent(data.data);
-
-        // setCurrentTicket(data.data.Tickets[0].price);
-      } catch (error) {
-        console.error(error);
+        setEvent(response.data.data);
+      } catch (error: any) {
+        toast.error(error.response.data.message || "Failed to get event");
       }
     }
 
-    getEventById();
+    getEvent();
   }, []);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(data: TOrderSchema) {
     setIsLoading(true);
     toast.loading("Loading...");
 
     if (!user) {
       toast.error("Login first");
+      navigate("/login");
+      return;
     }
 
-    const payload = {
+    const payload: CreateOrderPayload = {
       orderCode: generateOrderId(
         event!.name,
         event?.startDate!,
@@ -94,29 +111,20 @@ function Event() {
       ticketId: selectedTicket!.id,
       quantity: quantity,
       status: "WAITING_PAYMENT",
-      usingPoint: 0,
+      usingPoint: usePoint ? user.Points.amount : 0,
       total: currentPrice,
-      email: user?.email,
+      email: user.email,
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
+      const response = await createOrder(payload);
       toast.dismiss();
 
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-      toast.success("Order created successfully");
-      navigate(`/payment/${data.id}`);
+      toast.success(response.message);
+      navigate(`/payment/${response.data.id}`);
     } catch (error: any) {
-      toast.error(error.message);
+      toast.dismiss();
+      toast.error(error.response.message);
     } finally {
       setIsLoading(false);
     }
@@ -261,27 +269,31 @@ function Event() {
                 </h3>
                 {/* Ticket Selection Form */}
                 <form
-                  onSubmit={(e) => handleSubmit(e)}
+                  onSubmit={form.handleSubmit(handleSubmit)}
                   id="ticketForm"
-                  className="space-y-4"
+                  className={`space-y-4`}
                 >
                   {event?.tickets!.map((ticket) => (
                     <label
                       key={ticket.id}
-                      className="relative block cursor-pointer group "
+                      className="relative  block cursor-pointer group"
                     >
                       <input
                         // defaultChecked
                         className="peer sr-only"
+                        {...register("ticketId", {
+                          required: "Ticket ID is required",
+                        })}
                         onClick={() => {
-                          setSelectedTicket(ticket);
+                          form.clearErrors("ticketId");
                         }}
-                        name="ticket_tier"
                         type="radio"
-                        value={ticket.price}
+                        value={ticket.id}
                       />
 
-                      <div className="p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden ">
+                      <div
+                        className={`p-4 bg-white/90  rounded-xl transition-all peer-checked:ring-4 peer-checked:ring-primary/50 peer-checked:scale-[1.02] hover:bg-white relative overflow-hidden ${errors.ticketId ? "ring-2 ring-red-500/60" : ""}`}
+                      >
                         {/* VIP badge */}
                         {ticket.type === "VIP" ? (
                           <>
@@ -323,6 +335,11 @@ function Event() {
                               : "Priority entry · Best viewing area"}
                         </p>
                       </div>
+                      {errors.ticketId && (
+                        <p className="text-red-500 text-sm">
+                          {errors.ticketId.message}
+                        </p>
+                      )}
                     </label>
                   ))}
 

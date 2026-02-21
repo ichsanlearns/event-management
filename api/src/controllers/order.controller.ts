@@ -27,7 +27,7 @@ export const createOrder = catchAsync(async (req: Request, res: Response) => {
   //     `,
   // });
 
-  res.status(201).json(order);
+  res.status(201).json({ message: "Succesfully create order", data: order });
 });
 
 export async function getOrderById(req: Request, res: Response) {

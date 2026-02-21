@@ -1,3 +1,11 @@
+export const Status = {
+  WAITING_PAYMENT: "WAITING_PAYMENT",
+  PAID: "PAID",
+  CANCELLED: "CANCELLED",
+  FAILED: "FAILED",
+};
+export type Status = (typeof Status)[keyof typeof Status];
+
 const Category = {
   MUSIC: "MUSIC",
   SPORT: "SPORT",
@@ -60,4 +68,15 @@ export type TUser = {
   referralCode: string;
   profileImage: string;
   Points: { amount: number };
+};
+
+export type CreateOrderPayload = {
+  orderCode: string;
+  customerId: string;
+  ticketId: string;
+  quantity: number;
+  status: Status;
+  usingPoint: number;
+  total: number;
+  email: string;
 };
