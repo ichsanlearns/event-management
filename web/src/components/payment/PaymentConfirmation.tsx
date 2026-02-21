@@ -1,6 +1,6 @@
-function PaymentReview() {
+function PaymentConfirmation() {
   return (
-    <>
+    <div className="lg:col-span-8 space-y-6">
       <section className="bg-white dark:bg-[#1a162e] rounded-xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 text-center">
         <div className="inline-flex items-center justify-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-full mb-6 text-blue-600 dark:text-blue-400">
           <span className="material-symbols-outlined text-5xl">
@@ -53,8 +53,8 @@ function PaymentReview() {
           progress_activity
         </span>
       </button>
-    </>
+    </div>
   );
 }
 
-export default PaymentReview;
+export default PaymentConfirmation;
