@@ -16,6 +16,7 @@ import { getOrderById } from "../services/order.service";
 import Coupon from "../components/payment/Coupon";
 import PaymentConfirmation from "../components/payment/PaymentConfirmation";
 import PaymentPaid from "../components/payment/PaymentPaid";
+import PaymentRejected from "../components/payment/PaymentRejected";
 
 interface UploadedFile {
   id: string;
@@ -230,11 +231,12 @@ function Payment() {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Left Column: Payment Actions (Cards) */}
-            {order?.status === "WAITING_CONFIRMATION" ? (
+            {order?.status === "WAITING_CONFIRMATION" && (
               <PaymentConfirmation />
-            ) : (
-              <PaymentPaid />
             )}
+            {order?.status === "PAID" && <PaymentPaid />}
+            {order?.status === "REJECTED" && <PaymentRejected />}
+            <PaymentRejected />
 
             <div className="lg:col-span-4 relative">
               <div className="sticky top-24 space-y-6">
