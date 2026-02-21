@@ -1,6 +1,107 @@
-function PaymentWaiting() {
+import { useEffect, useState } from "react";
+import { v4 as uuidV4 } from "uuid";
+import { formatTime } from "../../utils/format.util";
+import { useCountdown } from "../../utils/countdown.util";
+import { useFormContext } from "react-hook-form";
+import type { IOrder } from "../../types/event.type";
+
+interface UploadedFile {
+  id: string;
+  preview: string;
+  name: string;
+  rawFile: File;
+}
+
+function PaymentWaiting({ order }: { order: IOrder }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [open, setOpen] = useState<"atm" | "banking" | null>(null);
+  const [file, setFile] = useState<UploadedFile | null>(null);
+  const [error, setError] = useState<String | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const { setValue } = useFormContext();
+
+  const [{ hoursState, minutesState, secondsState }, setTimer] = useState<{
+    hoursState: string;
+    minutesState: string;
+    secondsState: string;
+  }>({ hoursState: "", minutesState: "", secondsState: "" });
+
+  const timeLeft = useCountdown(order?.expiredAt.toString());
+
+  useEffect(() => {
+    const { hours, minutes, seconds } = formatTime(timeLeft);
+
+    setTimer({
+      hoursState: hours,
+      minutesState: minutes,
+      secondsState: seconds,
+    });
+  }, [order, timeLeft]);
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files?.[0]) {
+      setValue("proofImage", e.target.files?.[0]);
+      handleFileSelect(e.target.files?.[0]);
+    }
+  }
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText("8800 1234 5678 900");
+    setCopied(true);
+
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  function handleFileSelect(selectedFile: File) {
+    if (selectedFile) {
+      if (selectedFile.size > 5 * 1024 * 1024) {
+        setError("File size must be less than 5 MB");
+        return;
+      }
+
+      if (!selectedFile.type.startsWith("image/")) {
+        setError("Please select an image file");
+        return;
+      }
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const preview = e.target?.result as string;
+        setFile({
+          id: uuidV4(),
+          preview: preview,
+          name: selectedFile.name,
+          rawFile: selectedFile,
+        });
+      };
+
+      reader.readAsDataURL(selectedFile);
+    }
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave() {
+    setIsDragging(false);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files[0]);
+      setValue("proofImage", files[0]);
+    }
+  }
+
   return (
-    <div className="lg:col-span-8 space-y-6">
+    <>
       {/* Header & Timer Section */}
       <section className="bg-white dark:bg-[#1a162e] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -226,12 +327,7 @@ function PaymentWaiting() {
           </div>
         )}
       </section>
-
-      <button className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2">
-        Submit Payment
-        <span className="material-symbols-outlined">arrow_forward</span>
-      </button>
-    </div>
+    </>
   );
 }
 
