@@ -17,6 +17,7 @@ import Coupon from "../components/payment/Coupon";
 import PaymentConfirmation from "../components/payment/PaymentConfirmation";
 import PaymentPaid from "../components/payment/PaymentPaid";
 import PaymentRejected from "../components/payment/PaymentRejected";
+import PaymentExpired from "../components/payment/PaymentExpired";
 
 interface UploadedFile {
   id: string;
@@ -236,7 +237,7 @@ function Payment() {
             )}
             {order?.status === "PAID" && <PaymentPaid />}
             {order?.status === "REJECTED" && <PaymentRejected />}
-            <PaymentRejected />
+            {order?.status === "EXPIRED" && <PaymentExpired />}
 
             <div className="lg:col-span-4 relative">
               <div className="sticky top-24 space-y-6">
