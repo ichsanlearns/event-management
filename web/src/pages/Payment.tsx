@@ -12,6 +12,8 @@ import { paymentSchema, type PaymentInput } from "../schemas/payment.schema";
 import toast from "react-hot-toast";
 import { v4 as uuidV4 } from "uuid";
 import api from "../lib/api";
+import { getOrderById } from "../services/order.service";
+import Coupon from "../components/payment/Coupon";
 
 interface UploadedFile {
   id: string;
@@ -24,12 +26,14 @@ function Payment() {
   const { id } = useParams();
 
   const [open, setOpen] = useState<"atm" | "banking" | null>(null);
+  const [openCoupon, setOpenCoupon] = useState(false);
   const [copied, setCopied] = useState(false);
   const [file, setFile] = useState<UploadedFile | null>(null);
   const [order, setOrder] = useState<IOrder | null>(null);
   const [error, setError] = useState<String | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [orderStatus, setOrderStatus] = useState<string | null>(null);
   const [voucher, setVoucher] = useState<{
     id: string;
     code: string;
@@ -46,13 +50,12 @@ function Payment() {
   useEffect(() => {
     try {
       async function getOrder() {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/orders/${id}`,
-        );
-        const data = await response.json();
+        const response = await getOrderById(id!);
+        console.log(response);
 
-        setOrder(data.data);
-        setVoucher(data.data.voucher);
+        setOrder(response.data);
+        setVoucher(response.data.voucher);
+        setOrderStatus(response.data.status);
       }
 
       getOrder();
@@ -120,22 +123,6 @@ function Payment() {
       formData.append("status", "WAITING_CONFIRMATION");
 
       toast.loading("Processing payment...");
-      // const response = await fetch(`${import.meta.env.VITE_API_URL}/payments`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     ...data,
-      //     orderId: id,
-      //     amount: order?.total,
-      //     method: "MANUAL_TRANSFER",
-      //   }),
-      // });
-
-      // console.log(response);
-
-      // const result = await response.json();
 
       await api.post("/payments", formData);
 
@@ -216,7 +203,6 @@ function Payment() {
   return (
     <main className="max-w-full bg-background-dark p-30">
       <div className="grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
-        {/* Progress Steps */}
         <div className="mb-8 max-w-3xl">
           <div className="flex flex-col gap-2">
             <div className="flex justify-between items-end mb-1">
@@ -410,19 +396,12 @@ function Payment() {
                   </ol>
                 </div>
               </section>
-              {/* Upload Proof */}
+
               <section className="bg-white dark:bg-[#1a162e] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
                   Upload Payment Proof
                 </h3>
-                {/* <p className="text-sm text-slate-900 dark:text-white mb-4">
-                  (link to upload proof)
-                </p> */}
-                {/* <input
-                  {...form.register("proofImage")}
-                  placeholder="https://..."
-                  className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2"
-                /> */}
+
                 {!file ? (
                   <label
                     onDragOver={handleDragOver}
@@ -480,23 +459,16 @@ function Payment() {
                     </div>
                   </div>
                 )}
-
-                {/* {form.formState.errors.proofImage && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {form.formState.errors.proofImage.message}
-                  </p>
-                )} */}
               </section>
-              {/* CTA */}
+
               <button className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2">
                 Submit Payment
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>
             </div>
-            {/* Right Column: Order Summary (Sticky) */}
+
             <div className="lg:col-span-4 relative">
               <div className="sticky top-24 space-y-6">
-                {/* Order Summary Card */}
                 <div className="bg-white dark:bg-[#1a162e] rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                   <div
                     className="h-32 w-full bg-cover bg-center relative"
@@ -629,7 +601,21 @@ function Payment() {
                           </div>
                         </>
                       )}
-
+                      <div className="border-t border-slate-100 dark:border-slate-800" />
+                      <div className="flex justify-between items-center text-sm pt-2 pb-2">
+                        <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                          <span className="material-symbols-outlined text-[16px]">
+                            confirmation_number
+                          </span>
+                          No coupon applied
+                        </span>
+                        <button
+                          onClick={() => setOpenCoupon(true)}
+                          className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
+                        >
+                          View Available Coupons (2)
+                        </button>
+                      </div>
                       <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
                         <div className="flex justify-between items-end">
                           <span className="text-slate-500 dark:text-slate-400 font-medium">
@@ -639,19 +625,17 @@ function Payment() {
                             Rp{" "}
                             {order && !voucher
                               ? formattedPrice(
-                                  order?.total -
-                                    (order?.ticket.price * order.quantity) /
-                                      10 -
-                                    order.usingPoint -
+                                  Number(order?.total) +
+                                    Number(order.total) / 10 -
+                                    Number(order.usingPoint) -
                                     0,
                                 )
                               : order && voucher
                                 ? formattedPrice(
-                                    order?.total -
-                                      (order?.ticket.price * order.quantity) /
-                                        10 -
+                                    Number(order?.total) +
+                                      Number(order?.total) / 10 -
                                       order.usingPoint -
-                                      (voucher.discountAmount | 0),
+                                      (voucher.discountAmount ?? 0),
                                   )
                                 : ""}
                           </span>
@@ -695,6 +679,7 @@ function Payment() {
           </div>
         </form>
       </div>
+      {openCoupon && <Coupon />}
     </main>
   );
 }

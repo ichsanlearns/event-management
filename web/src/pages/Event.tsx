@@ -91,7 +91,7 @@ function Event() {
     getEvent();
   }, []);
 
-  async function handleSubmit(data: TOrderSchema) {
+  async function handleSubmit() {
     setIsLoading(true);
     toast.loading("Loading...");
 
