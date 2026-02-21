@@ -43,9 +43,11 @@ type OrderStatus =
   | "WAITING_PAYMENT"
   | "WAITING_CONFIRMATION"
   | "DONE"
+  | "PAID"
+  | "REVIEWED"
   | "REJECTED"
   | "EXPIRED"
-  | "CANCELLED";
+  | "CANCELED";
 
 export interface IOrder {
   id: string;

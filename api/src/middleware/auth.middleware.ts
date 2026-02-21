@@ -6,7 +6,11 @@ interface JwtPayload {
   role: string;
 }
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
