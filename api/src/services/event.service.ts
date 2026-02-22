@@ -35,28 +35,40 @@ export async function create({
       },
     });
 
-    await prisma.ticket.createMany({
-      data: [
-        {
-          event_id: event.id,
-          type: Types.EARLYBIRD,
-          price: Math.floor(Number(event.price) * 0.7),
-          quota: 50,
-        },
-        {
-          event_id: event.id,
-          type: Types.REGULER,
-          price: Number(event.price),
-          quota: 200,
-        },
-        {
+    if (price !== 0) {
+      await prisma.ticket.createMany({
+        data: [
+          {
+            event_id: event.id,
+            type: Types.EARLYBIRD,
+            price: Math.floor(Number(event.price) * 0.7),
+            quota: Math.floor(availableSeats * (1 / 4)),
+          },
+          {
+            event_id: event.id,
+            type: Types.REGULER,
+            price: Number(event.price),
+            quota: Math.floor(availableSeats * (2 / 4)),
+          },
+          {
+            event_id: event.id,
+            type: Types.VIP,
+            price: Math.floor(Number(event.price) * 1.8),
+            quota: Math.floor(availableSeats * (1 / 4)),
+          },
+        ],
+      });
+    } else {
+      await prisma.ticket.create({
+        data: {
           event_id: event.id,
           type: Types.VIP,
-          price: Math.floor(Number(event.price) * 1.8),
-          quota: 30,
+          price: 0,
+          quota: availableSeats,
         },
-      ],
-    });
+      });
+    }
+
     return event;
   });
 }

@@ -26,6 +26,7 @@ function FormEvent({ onClose }: { onClose: () => void }) {
   const [file, setFile] = useState<UploadedFile | null>(null);
   const [error, setError] = useState<String | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
 
   const {
     formState: { errors: errorsEvent },
@@ -115,6 +116,11 @@ function FormEvent({ onClose }: { onClose: () => void }) {
 
       reader.readAsDataURL(selectedFile);
     }
+  }
+
+  function handleFree() {
+    setIsPaid(false);
+    form.setValue("price", 0);
   }
 
   return (
@@ -253,25 +259,60 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                      Price
-                    </label>
-                    <div className="mt-1 relative rounded-md shadow-sm">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-slate-500 sm:text-sm">Rp. </span>
-                      </div>
-                      <input
-                        {...form.register("price", {
-                          valueAsNumber: true,
-                        })}
-                        className="block w-full pl-10 pr-12 rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary sm:text-sm py-2.5"
-                        placeholder="0.00"
-                        type="number"
-                      />
-                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                        <span className="text-slate-500 sm:text-sm">IDR</span>
+                    <div className="flex justify-between items-center mb-1">
+                      <label
+                        className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        htmlFor="price"
+                      >
+                        Price
+                      </label>
+                      <div
+                        className="inline-flex rounded-lg bg-slate-100 dark:bg-slate-900/50 p-0.5 border border-border-light dark:border-border-dark"
+                        role="group"
+                      >
+                        <button
+                          onClick={() => setIsPaid(true)}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${isPaid ? "bg-white dark:bg-slate-700 text-primary shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}
+                          type="button"
+                        >
+                          Paid
+                        </button>
+                        <button
+                          onClick={handleFree}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${!isPaid ? "bg-white text-primary shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}
+                          type="button"
+                        >
+                          Free
+                        </button>
                       </div>
                     </div>
+                    {isPaid && (
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="text-slate-500 sm:text-sm">
+                            Rp.{" "}
+                          </span>
+                        </div>
+                        <input
+                          {...form.register("price", {
+                            valueAsNumber: true,
+                          })}
+                          className="block w-full pl-10 pr-12 rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-primary focus:ring-primary sm:text-sm py-2.5"
+                          placeholder="0.00"
+                          type="number"
+                        />
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                          <span className="text-slate-500 sm:text-sm">IDR</span>
+                        </div>
+                      </div>
+                    )}
+                    {!isPaid && (
+                      <div className="mt-1 relative rounded-md h-[42px] flex items-center">
+                        <p className="text-sm text-slate-400 italic">
+                          This event will be listed as Free.
+                        </p>
+                      </div>
+                    )}
                     {errorsEvent.price && (
                       <p className="text-red-500 text-sm mt-1">
                         {errorsEvent.price.message}

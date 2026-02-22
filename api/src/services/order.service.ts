@@ -20,30 +20,52 @@ export async function create({
   total: number;
 }) {
   return prisma.$transaction(async (tx) => {
-    const newOrder = await tx.order.create({
-      data: {
-        order_code: orderCode,
-        customer_id: customerId,
-        ticket_id: ticketId,
-        quantity,
-        expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
-        status,
-        using_point: usingPoint,
-        total: total - usingPoint,
-      },
-    });
+    if (total > 0) {
+      const newOrder = await tx.order.create({
+        data: {
+          order_code: orderCode,
+          customer_id: customerId,
+          ticket_id: ticketId,
+          quantity,
+          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+          status,
+          using_point: usingPoint,
+          total: total - usingPoint,
+        },
+      });
 
-    await tx.point.update({
-      where: { user_id: customerId },
-      data: { amount: { decrement: usingPoint } },
-    });
+      await tx.point.update({
+        where: { user_id: customerId },
+        data: { amount: { decrement: usingPoint } },
+      });
 
-    await tx.ticket.update({
-      where: { id: ticketId },
-      data: { bought: { increment: quantity } },
-    });
+      await tx.ticket.update({
+        where: { id: ticketId },
+        data: { bought: { increment: quantity } },
+      });
 
-    return newOrder;
+      return newOrder;
+    } else {
+      const newOrder = await tx.order.create({
+        data: {
+          order_code: orderCode,
+          customer_id: customerId,
+          ticket_id: ticketId,
+          quantity,
+          expired_at: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+          status: "DONE",
+          using_point: usingPoint,
+          total: total - usingPoint,
+        },
+      });
+
+      await tx.ticket.update({
+        where: { id: ticketId },
+        data: { bought: { increment: quantity } },
+      });
+
+      return newOrder;
+    }
   });
 }
 

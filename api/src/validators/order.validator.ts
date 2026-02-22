@@ -8,6 +8,6 @@ export const createOrderSchema = z.object({
   quantity: z.number().positive("Quantity need to be greater than 0"),
   status: z.enum(Status),
   usingPoint: z.number(),
-  total: z.number().positive("Total cant be negative"),
-  email: z.email(),
+  total: z.number(),
+  email: z.string(),
 });

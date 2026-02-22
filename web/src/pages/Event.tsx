@@ -81,6 +81,7 @@ function Event() {
     async function getEvent() {
       try {
         const response = await getEventById(params.id!);
+        console.log(response.data.data);
 
         setEvent(response.data.data);
       } catch (error: any) {
@@ -118,6 +119,7 @@ function Event() {
 
     try {
       const response = await createOrder(payload);
+
       toast.dismiss();
 
       toast.success(response.message);
@@ -315,7 +317,9 @@ function Event() {
                         {ticket.type === "VIP" ? (
                           <>
                             <div className="absolute -right-6 top-7 bg-yellow-400 text-[10px] font-bold px-8 py-1 rotate-45 text-black shadow-sm uppercase tracking-widest">
-                              Best Value
+                              {Number(ticket.price) !== 0
+                                ? "Best Value"
+                                : "Free"}
                             </div>
                           </>
                         ) : (
@@ -345,11 +349,13 @@ function Event() {
                         <p
                           className={`text-sm ${ticket.type === "EARLYBIRD" ? "text-red-500" : "text-slate-500"} font-medium`}
                         >
-                          {ticket.type === "EARLYBIRD"
-                            ? "Early entry before 15:00 · Limited quota"
-                            : ticket.type === "REGULER"
-                              ? "General admission · Standard entry"
-                              : "Priority entry · Best viewing area"}
+                          {ticket.type === "VIP" && ticket.price === 0
+                            ? "Free Entry"
+                            : ticket.type === "EARLYBIRD"
+                              ? "Early entry before 15:00 · Limited quota"
+                              : ticket.type === "REGULER"
+                                ? "General admission · Standard entry"
+                                : "Priority entry · Best viewing area"}
                         </p>
                       </div>
                       {errors.ticketId && (
@@ -398,36 +404,38 @@ function Event() {
                       </div>
                     </div>
                   </div>
-                  <div className="pt-4 mt-2">
-                    <div className="p-4 rounded-xl bg-[#171f2e] border border-white/5">
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex flex-col">
-                          <span className="text-white font-semibold">
-                            Use {user ? user?.Points?.amount : 0} points
-                          </span>
-                          <span className="text-xs text-green-400 font-medium">
-                            Save IDR {user ? user?.Points?.amount : 0}
-                          </span>
+                  {Number(event?.price) !== 0 && (
+                    <div className="pt-4 mt-2">
+                      <div className="p-4 rounded-xl bg-[#171f2e] border border-white/5">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex flex-col">
+                            <span className="text-white font-semibold">
+                              Use {user ? user?.Points?.amount : 0} points
+                            </span>
+                            <span className="text-xs text-green-400 font-medium">
+                              Save IDR {user ? user?.Points?.amount : 0}
+                            </span>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              checked={usePoint}
+                              onChange={() => setUsePoint(!usePoint)}
+                              className="sr-only peer"
+                              type="checkbox"
+                              value=""
+                            />
+                            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                          </label>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input
-                            checked={usePoint}
-                            onChange={() => setUsePoint(!usePoint)}
-                            className="sr-only peer"
-                            type="checkbox"
-                            value=""
-                          />
-                          <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                        </label>
+                        <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px]">
+                            info
+                          </span>
+                          All available points will be applied.
+                        </p>
                       </div>
-                      <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[14px]">
-                          info
-                        </span>
-                        All available points will be applied.
-                      </p>
                     </div>
-                  </div>
+                  )}
                   <div className="mt-4 space-y-4">
                     <div className="space-y-2 border-t border-white/10 pt-4">
                       <div className="flex justify-between items-center text-sm text-gray-400">
