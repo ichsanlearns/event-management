@@ -4,9 +4,11 @@ import { Link, useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 
 import { login as loginApi } from "../../services/auth.service";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,6 +52,7 @@ function Login() {
 
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
+      setUser(res.user);
 
       toast.success("Login berhasil 🎉", { id: toastId });
 

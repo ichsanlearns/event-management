@@ -22,36 +22,39 @@ import { Toaster } from "react-hot-toast";
 import MyTicket from "./pages/customer/MyTicket";
 import OrgProfile from "./pages/OrgProfile";
 import AttendeePage from "./pages/organizer/Attendee";
+import { AuthProvider } from "./context/AuthContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Toaster position="top-center" />
-      <Routes>
-        <Route path="register" element={<Register />} />
-        <Route path="login" element={<Login />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password" element={<ResetPassword />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Toaster position="top-center" />
+        <Routes>
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password" element={<ResetPassword />} />
 
-        <Route path="/" element={<Root />}>
-          <Route index element={<Home />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="profile/edit" element={<EditProfile />} />
-          <Route path="event/:id" element={<Event />} />
+          <Route path="/" element={<Root />}>
+            <Route index element={<Home />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="profile/edit" element={<EditProfile />} />
+            <Route path="event/:id" element={<Event />} />
 
-          <Route path="payment/:id" element={<Payment />} />
-          <Route path="profile/organizer/:id" element={<OrgProfile />} />
-        </Route>
-        <Route path="organizer" element={<Organizer />}>
-          <Route index element={<Dashboard />} />
-          <Route path="events" element={<EventOrganizer />} />
-          <Route path="/organizer/attendees/:eventId" element={<AttendeePage />} />
+            <Route path="payment/:id" element={<Payment />} />
+            <Route path="profile/organizer/:id" element={<OrgProfile />} />
+          </Route>
+          <Route path="organizer" element={<Organizer />}>
+            <Route index element={<Dashboard />} />
+            <Route path="events" element={<EventOrganizer />} />
+            <Route path="/organizer/attendees/:eventId" element={<AttendeePage />} />
 
-          <Route path="approval" element={<Approval />} />
-          <Route path="report" element={<Report />} />
-          <Route path="myticket" element={<MyTicket />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            <Route path="approval" element={<Approval />} />
+            <Route path="report" element={<Report />} />
+            <Route path="myticket" element={<MyTicket />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 );

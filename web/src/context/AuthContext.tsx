@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type User = {
   id: string;
@@ -31,6 +32,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+
+    toast.success("Berhasil logout 👋");
   };
 
   return <AuthContext.Provider value={{ user, setUser, logout }}>{children}</AuthContext.Provider>;
