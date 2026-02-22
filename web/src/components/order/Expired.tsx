@@ -23,7 +23,7 @@ function Expired({ data }: { data: Order }) {
             </h4>
             <div className="flex items-center gap-2 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
               <span className="material-icons text-[14px]">event</span>
-              {formatEventDate(data.ticket.eventName.startDate)}
+              {formatEventDate(data.createdAt)}
               <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
               <span className="material-icons text-[14px]">location_on</span>
               {data.ticket.eventName.venue}

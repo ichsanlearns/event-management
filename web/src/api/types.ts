@@ -50,6 +50,7 @@ export type Order = {
   usingPoint: number;
   total: number;
   expiredAt: Date;
+  createdAt: Date;
   ticket: ITicket;
 };
 

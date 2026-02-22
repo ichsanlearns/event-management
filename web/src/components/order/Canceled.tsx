@@ -17,7 +17,7 @@ function Canceled({ data }: { data: Order }) {
               {data.ticket.eventName.name}
             </h4>
             <div className="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-0.5">
-              {formatEventDateYear(data.ticket.eventName.startDate)}
+              {formatEventDateYear(data.createdAt)}
             </div>
           </div>
           <div className="flex flex-col items-end gap-1">

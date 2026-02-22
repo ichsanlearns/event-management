@@ -24,7 +24,7 @@ function Rejected({ data }: { data: Order }) {
             </h4>
             <div className="flex items-center gap-2 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
               <span className="material-icons text-[14px]">event</span>
-              {formatEventDateYear(data.ticket.eventName.startDate)}
+              {formatEventDateYear(data.createdAt)}
             </div>
           </div>
           <div className="flex flex-col items-end gap-1">

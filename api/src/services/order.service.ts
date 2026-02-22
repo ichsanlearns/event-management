@@ -156,6 +156,7 @@ export async function getByUserId(customerId: string, status: string) {
           quantity: true,
           using_point: true,
           total: true,
+          created_at: true,
           Ticket: {
             select: {
               event_id: true,
@@ -190,6 +191,7 @@ export async function getByUserId(customerId: string, status: string) {
           quantity: true,
           using_point: true,
           total: true,
+          created_at: true,
           Ticket: {
             select: {
               event_id: true,
@@ -223,6 +225,7 @@ export async function getByUserId(customerId: string, status: string) {
           quantity: true,
           using_point: true,
           total: true,
+          created_at: true,
           Ticket: {
             select: {
               event_id: true,
@@ -258,6 +261,7 @@ export async function getByUserId(customerId: string, status: string) {
         quantity: true,
         using_point: true,
         total: true,
+        created_at: true,
         Ticket: {
           select: {
             event_id: true,
@@ -288,6 +292,7 @@ export async function getByUserId(customerId: string, status: string) {
     quantity: order.quantity,
     usingPoint: order.using_point,
     total: order.total,
+    createdAt: order.created_at,
     ticket: {
       eventId: order.Ticket.event_id,
       type: order.Ticket.type,
@@ -363,6 +368,7 @@ export const patchCouponId = async ({
         quantity: true,
         using_point: true,
         expired_at: true,
+        created_at: true,
         Voucher: {
           select: { id: true, code: true, discount_amount: true, quota: true },
         },
@@ -399,6 +405,7 @@ export const patchCouponId = async ({
     usingPoint: updatedOrder.using_point,
     total: updatedOrder.total,
     expiredAt: updatedOrder.expired_at,
+    createdAt: updatedOrder.created_at,
     voucher: {
       id: updatedOrder.Voucher?.id,
       code: updatedOrder.Voucher?.code,
