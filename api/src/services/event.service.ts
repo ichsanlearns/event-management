@@ -112,6 +112,74 @@ export async function getAll(limit: number, query?: string) {
   return mapped;
 }
 
+export async function getSearch({
+  query,
+  category,
+  location,
+}: {
+  query?: string;
+  category?: string;
+  location?: string;
+}) {
+  const where: any = {
+    AND: [],
+  };
+
+  if (query) {
+    where.AND.push({
+      OR: [
+        { name: { startsWith: query, mode: "insensitive" } },
+        { name: { contains: query, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  if (category) {
+    where.AND.push({
+      category: category.toUpperCase(),
+    });
+  }
+
+  if (location) {
+    where.AND.push({
+      city: {
+        equals: location,
+        mode: "insensitive",
+      },
+    });
+  }
+
+  const events = await prisma.event.findMany({
+    where: where.AND.length ? where : undefined,
+    select: {
+      id: true,
+      name: true,
+      venue: true,
+      city: true,
+      start_date: true,
+      category: true,
+      hero_image: true,
+      Tickets: {
+        select: { price: true },
+        orderBy: { price: "asc" },
+      },
+    },
+  });
+
+  const mapped = events.map((event) => ({
+    id: event.id,
+    name: event.name,
+    venue: event.venue,
+    city: event.city,
+    startDate: event.start_date,
+    category: event.category,
+    heroImage: event.hero_image,
+    lowestPrice: event.Tickets.length ? event.Tickets[0]?.price : null,
+  }));
+
+  return mapped;
+}
+
 export async function getById(id: string) {
   const event = await prisma.event.findUnique({
     where: { id },
@@ -121,6 +189,10 @@ export async function getById(id: string) {
   if (!event) {
     throw new AppError(404, "Event not found");
   }
+
+  const orderCounts = await prisma.order.findMany({
+    where: { Ticket: { event_id: id }, deleted_at: { not: null } },
+  });
 
   const mapped = {
     id: event.id,
@@ -145,6 +217,7 @@ export async function getById(id: string) {
         bought: ticket.bought,
       };
     }),
+    orderCancelled: orderCounts.length,
   };
 
   return mapped;

@@ -22,6 +22,15 @@ export interface IVoucher {
   quota: number;
 }
 
+export interface ICoupon {
+  id: string;
+  amount: number;
+  expiredAt: Date;
+  referrerId: string;
+}
+
+export type TUserCoupon = ICoupon[];
+
 export type TEvent = {
   id: string;
   name: string;
@@ -37,6 +46,8 @@ export type TEvent = {
   startDate: Date;
   endDate?: Date;
   tickets?: ITicket[];
+  orderCancelled: number;
+  lowestPrice: number;
 };
 
 type OrderStatus =
@@ -55,6 +66,7 @@ export interface IOrder {
   customerId: string;
   ticketId: string;
   voucherId: string;
+  couponId: string;
   status: OrderStatus;
   quantity: number;
   usingPoint: number;
@@ -64,5 +76,7 @@ export interface IOrder {
   updatedAt: string;
   deletedAt: string | null;
   voucher: IVoucher;
+  coupon: ICoupon;
   ticket: ITicket;
+  userCoupons: TUserCoupon;
 }

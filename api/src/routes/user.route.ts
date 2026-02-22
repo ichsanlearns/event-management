@@ -22,6 +22,6 @@ router.put(
   uploadCloud.single("image"),
   uploadProfileImage,
 );
-router.get("/profile/:id", getOrgById);
+router.get("/organizer/:id", getOrgById);
 
 export default router;

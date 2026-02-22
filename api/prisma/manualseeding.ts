@@ -106,6 +106,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
       },
       {
         // DWP
@@ -115,6 +117,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
       },
       {
         // Hammersonic Festival
@@ -124,6 +128,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1506157786151-b8491531f063",
       },
       {
         // Synchronize Festival
@@ -133,6 +139,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1497032205916-ac775f0649ae",
       },
       {
         // Jazz goes to Campus
@@ -142,6 +150,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4",
       },
       {
         // Djakarta Artmosphere
@@ -151,6 +161,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
       },
       {
         // Joyland Festival
@@ -160,6 +172,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1464375117522-1311dd6d0cd7",
       },
       {
         id: "1c92f1d5-7b6e-4b8a-9d33-2a6c7b1e5f10",
@@ -185,6 +199,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.EVENT_ORGANIZER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1526481280691-3c4696d3f5b1",
       },
       {
         id: "a7c5e2d1-98f3-4b6a-82d4-1f7e3c9a5b20",
@@ -193,6 +209,8 @@ async function seed() {
         password: await bcrypt.hash("password123", 10),
         role: Role.CUSTOMER,
         referral_code: generateReferralCode(),
+        profile_image:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
       },
     ];
 
@@ -494,6 +512,16 @@ async function seed() {
           using_point: 0,
           total: 400000,
         },
+        {
+          order_code: "DWP-RJ-000001",
+          customer_id: user,
+          ticket_id: ticketDwpId!,
+          quantity: 3,
+          expired_at: new Date(Date.now()),
+          status: "REJECTED",
+          using_point: 0,
+          total: 600000,
+        },
       ],
     });
     // =============================
@@ -508,6 +536,32 @@ async function seed() {
         start_date: new Date("2025-02-06"),
         end_date: new Date("2025-04-30"),
       },
+    });
+
+    // =============================
+    // COUPON
+    // =============================
+    await prisma.coupon.createMany({
+      data: [
+        {
+          user_id: user,
+          amount: 10000,
+          expired_at: new Date("2026-06-01"),
+          referrer_id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+        },
+        {
+          user_id: user,
+          amount: 20000,
+          expired_at: new Date("2026-06-01"),
+          referrer_id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+        },
+        {
+          user_id: user,
+          amount: 30000,
+          expired_at: new Date("2026-06-01"),
+          referrer_id: "9e8c2d44-5b71-4d6f-b2e9-cc3a8a7f21d4",
+        },
+      ],
     });
 
     // =============================

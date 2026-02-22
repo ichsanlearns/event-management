@@ -105,7 +105,7 @@ function Event() {
       orderCode: generateOrderId(
         event!.name,
         event?.startDate!,
-        orderNumber! + 1,
+        orderNumber! + event!.orderCancelled + 1,
       ),
       customerId: user!.id,
       ticketId: selectedTicket!.id,
@@ -124,7 +124,7 @@ function Event() {
       navigate(`/payment/${response.data.id}`);
     } catch (error: any) {
       toast.dismiss();
-      toast.error(error.response.message);
+      toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }

@@ -16,10 +16,13 @@ function PaymentWaiting({ order }: { order: IOrder }) {
   const [isDragging, setIsDragging] = useState(false);
   const [open, setOpen] = useState<"atm" | "banking" | null>(null);
   const [file, setFile] = useState<UploadedFile | null>(null);
-  const [error, setError] = useState<String | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const { setValue } = useFormContext();
+  const {
+    setValue,
+    formState: { errors },
+    clearErrors,
+  } = useFormContext();
 
   const [{ hoursState, minutesState, secondsState }, setTimer] = useState<{
     hoursState: string;
@@ -43,6 +46,7 @@ function PaymentWaiting({ order }: { order: IOrder }) {
     if (e.target.files?.[0]) {
       setValue("proofImage", e.target.files?.[0]);
       handleFileSelect(e.target.files?.[0]);
+      clearErrors("proofImage");
     }
   }
 
@@ -55,15 +59,6 @@ function PaymentWaiting({ order }: { order: IOrder }) {
 
   function handleFileSelect(selectedFile: File) {
     if (selectedFile) {
-      if (selectedFile.size > 5 * 1024 * 1024) {
-        setError("File size must be less than 5 MB");
-        return;
-      }
-
-      if (!selectedFile.type.startsWith("image/")) {
-        setError("Please select an image file");
-        return;
-      }
       const reader = new FileReader();
 
       reader.onload = (e) => {
@@ -92,6 +87,7 @@ function PaymentWaiting({ order }: { order: IOrder }) {
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setIsDragging(false);
+    clearErrors("proofImage");
 
     const files = e.dataTransfer.files;
     if (files.length > 0) {
@@ -181,6 +177,7 @@ function PaymentWaiting({ order }: { order: IOrder }) {
             </div>
             <button
               onClick={handleCopy}
+              type="button"
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${copied ? "text-primary bg-primary/10" : "bg-blue-100 text-blue-700"} hover:bg-primary/20 rounded-lg transition-colors`}
             >
               <span className="material-symbols-outlined text-[18px]">
@@ -264,42 +261,51 @@ function PaymentWaiting({ order }: { order: IOrder }) {
         </div>
       </section>
 
-      <section className="bg-white dark:bg-[#1a162e] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+      <section
+        className={`bg-white dark:bg-[#1a162e] rounded-xl p-6 shadow-sm border  dark:border-slate-800 ${errors.proofImage ? "border-red-500 " : "border-slate-100"}`}
+      >
         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
           Upload Payment Proof
         </h3>
 
         {!file ? (
-          <label
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            htmlFor="proofImage"
-            className={`block relative border-2 border-dashed  dark:border-slate-600 rounded-xl p-8 transition-colors hover:border-primary hover:bg-slate-50 dark:hover:bg-[#25203b] group cursor-pointer text-center ${isDragging ? "border-primary bg-slate-50" : " border-slate-300"}`}
-          >
-            <input
-              id="proofImage"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              type="file"
-              onChange={handleInputChange}
-              accept="image/*"
-            />
-            <div className="flex flex-col items-center justify-center gap-3">
-              <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-2xl">
-                  cloud_upload
-                </span>
+          <>
+            <label
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              htmlFor="proofImage"
+              className={`block relative border-2 border-dashed  dark:border-slate-600 rounded-xl p-8 transition-colors hover:border-primary hover:bg-slate-50 dark:hover:bg-[#25203b] group cursor-pointer text-center ${isDragging ? "border-primary bg-slate-50" : " border-slate-300"}`}
+            >
+              <input
+                id="proofImage"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                type="file"
+                onChange={handleInputChange}
+                accept="image/*"
+              />
+              <div className="flex flex-col items-center justify-center gap-3">
+                <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">
+                    cloud_upload
+                  </span>
+                </div>
+                <div>
+                  <p className="text-slate-900 dark:text-white font-medium">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-sm text-slate-500 mt-1">
+                    SVG, PNG, JPG or GIF (max. 2MB)
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-slate-900 dark:text-white font-medium">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-sm text-slate-500 mt-1">
-                  SVG, PNG, JPG or GIF (max. 2MB)
-                </p>
-              </div>
-            </div>
-          </label>
+            </label>
+            {typeof errors.proofImage?.message === "string" && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.proofImage.message}
+              </p>
+            )}
+          </>
         ) : (
           <div className="space-y-4">
             <div className="relative">
@@ -311,7 +317,6 @@ function PaymentWaiting({ order }: { order: IOrder }) {
               <button
                 onClick={() => {
                   setFile(null);
-                  setError(null);
                 }}
                 type="button"
                 className="absolute flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 hover:scale-110 text-white rounded-full p-1 min-h-7 min-w-7"

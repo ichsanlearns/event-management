@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "../api/endpoints";
 import api from "../lib/api";
 
 export const createEvent = async (data: any) => {
@@ -38,5 +39,12 @@ export const updateEventApi = async (id: string, data: any) => {
 
 export const deleteEvent = async (id: string) => {
   const res = await api.delete(`/events/${id}`);
+  return res.data;
+};
+
+export const getSearchEvents = async (params: { search?: string }) => {
+  const res = await api.get(`${API_ENDPOINTS.EVENT.SEARCH}`, {
+    params,
+  });
   return res.data;
 };

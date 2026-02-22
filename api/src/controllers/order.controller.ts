@@ -1,12 +1,15 @@
 import { type Request, type Response } from "express";
 import {
   create,
+  deleteById,
   getAll,
   getById,
   getByUserId,
+  patchCouponId,
 } from "../services/order.service.js";
 import { catchAsync } from "../utils/catch-async.util.js";
 import { createOrderSchema } from "../validators/order.validator.js";
+import { AppError } from "../utils/app-error.util.js";
 
 export const createOrder = catchAsync(async (req: Request, res: Response) => {
   const validatedData = createOrderSchema.parse({
@@ -58,5 +61,43 @@ export const getOrdersByUserId = catchAsync(
     const order = await getByUserId(userId, status);
 
     res.status(200).json({ message: "Order list by user", data: order });
+  },
+);
+
+export const patchCouponByOrderId = catchAsync(
+  async (req: Request, res: Response) => {
+    const orderId = req.params.id as string;
+    const couponId = req.body.couponId;
+
+    if (!orderId || !couponId) {
+      throw new AppError(400, "Missing order ID or coupon ID");
+    }
+
+    const coupon = await patchCouponId({
+      couponId,
+      orderId,
+    });
+
+    res.status(200).json({
+      message: "Coupon applied successfully",
+      data: coupon,
+    });
+  },
+);
+
+export const deleteOrderById = catchAsync(
+  async (req: Request, res: Response) => {
+    const orderId = req.params.id as string;
+
+    if (!orderId) {
+      throw new AppError(400, "Missing order ID");
+    }
+
+    const order = await deleteById(orderId);
+
+    res.status(200).json({
+      message: "Order deleted successfully",
+      data: order,
+    });
   },
 );

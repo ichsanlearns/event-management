@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-import { formattedPrice, formatTime } from "../utils/format.util";
-import { useCountdown } from "../utils/countdown.util";
-import type { IOrder } from "../types/event.type";
+import { formattedPrice } from "../utils/format.util";
+import type { ICoupon, IOrder, TUserCoupon } from "../types/event.type";
 
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { paymentSchema, type PaymentInput } from "../schemas/payment.schema";
 import toast from "react-hot-toast";
 import api from "../lib/api";
-import { getOrderById } from "../services/order.service";
+import {
+  deleteOrder,
+  getOrderById,
+  patchOrderVoucher,
+} from "../services/order.service";
 import Coupon from "../components/payment/Coupon";
 import PaymentConfirmation from "../components/payment/PaymentConfirmation";
 import PaymentPaid from "../components/payment/PaymentPaid";
@@ -20,6 +23,7 @@ import PaymentExpired from "../components/payment/PaymentExpired";
 import PaymentWaiting from "../components/payment/PaymentWaiting";
 
 function Payment() {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [openCoupon, setOpenCoupon] = useState(false);
@@ -34,14 +38,30 @@ function Payment() {
     quota: number;
   } | null>();
 
+  const [coupon, setCoupon] = useState<ICoupon | null>();
+  const [userCoupons, setUserCoupons] = useState<TUserCoupon | null>();
+
+  const hasVoucher = !!voucher?.code;
+  const canApplyVoucher =
+    !hasVoucher &&
+    (order?.status === "WAITING_PAYMENT" || order?.status === "REJECTED");
+
+  const hasCoupon = !!coupon?.id;
+  const canApplyCoupon =
+    !hasCoupon &&
+    (order?.status === "WAITING_PAYMENT" || order?.status === "REJECTED");
+
   useEffect(() => {
     try {
       async function getOrder() {
         const response = await getOrderById(id!);
+        console.log(response);
 
         setOrder(response.data);
         setVoucher(response.data.voucher);
         setOrderStatus(response.data.status);
+        setUserCoupons(response.data.userCoupons);
+        setCoupon(response.data.coupon);
       }
 
       getOrder();
@@ -58,31 +78,16 @@ function Payment() {
     try {
       const code = form.getValues("voucherCode");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/vouchers/check`,
+      const response = await patchOrderVoucher({
+        voucherCode: code!,
+        orderId: order?.id!,
+        eventId: order?.ticket.eventId!,
+      });
 
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            code,
-            eventId: order?.ticket.eventId,
-            orderId: order?.id,
-          }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      setVoucher(data.data);
+      setOrder(response.data.data);
+      setVoucher(response.data.data.voucher);
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   }
 
@@ -120,12 +125,22 @@ function Payment() {
 
   const processingFee = order ? (order.ticket.price * order.quantity) / 10 : 0;
 
-  const finalAmount = order
-    ? Number(order.total) +
-      processingFee -
-      Number(order.usingPoint || 0) -
-      (voucher?.discountAmount ?? 0)
-    : 0;
+  const finalAmount = order ? Number(order.total) + processingFee : 0;
+
+  const handleOnApplyCoupon = (order: IOrder) => {
+    setOrder(order);
+    setCoupon(order.coupon);
+  };
+
+  const handleCancelOrder = async () => {
+    try {
+      const response = await deleteOrder(id!);
+      toast.success(response.data.message);
+      navigate("/");
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   return (
     <main className="max-w-full bg-background-dark p-30">
@@ -170,8 +185,16 @@ function Payment() {
                 {order?.status === "WAITING_PAYMENT" && (
                   <PaymentWaiting order={order} />
                 )}
-                {order?.status === "WAITING_PAYMENT" ||
-                  (order?.status === "REJECTED" && (
+                {(order?.status === "WAITING_PAYMENT" ||
+                  order?.status === "REJECTED") && (
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleCancelOrder}
+                      className=" bg-red-500 hover:bg-red-600 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer w-[28%]"
+                    >
+                      Cancel Order
+                    </button>
                     <button
                       type="submit"
                       className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
@@ -181,7 +204,8 @@ function Payment() {
                         arrow_forward
                       </span>
                     </button>
-                  ))}
+                  </div>
+                )}
               </div>
 
               <div className="lg:col-span-4 relative">
@@ -231,16 +255,21 @@ function Payment() {
                             {order?.ticket.type} Access
                           </span>
                           <span className="font-medium text-slate-900 dark:text-white">
-                            Rp {order?.ticket.price}
+                            Rp {order ? formattedPrice(order?.ticket.price) : 0}
                           </span>
                         </div>
-                        <div className="border-slate-300 border-t" />
+                        <div className="border-t border-slate-100 dark:border-slate-800 mt-3" />
                         <div className="flex justify-between text-sm">
                           <span className="text-slate-600 dark:text-slate-300">
                             Subtotal Produk ({order?.quantity}x)
                           </span>
                           <span className="font-medium text-slate-900 dark:text-white">
-                            Rp {order?.total}
+                            Rp{" "}
+                            {order
+                              ? formattedPrice(
+                                  order?.ticket.price * order?.quantity,
+                                )
+                              : 0}
                           </span>
                         </div>
                         <div className="flex justify-between text-sm">
@@ -265,11 +294,12 @@ function Payment() {
                             Points Redeemed
                           </span>
                           <span className="font-medium">
-                            - Rp {formattedPrice(order?.usingPoint || 0)}
+                            - Rp{" "}
+                            {order ? formattedPrice(order?.usingPoint || 0) : 0}
                           </span>
                         </div>
 
-                        {voucher?.code ? (
+                        {hasVoucher && (
                           <>
                             {/* Discounts */}
                             <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
@@ -280,11 +310,15 @@ function Payment() {
                                 Promo ({voucher?.code})
                               </span>
                               <span className="font-medium">
-                                - Rp {formattedPrice(voucher?.discountAmount)}
+                                - Rp{" "}
+                                {order
+                                  ? formattedPrice(voucher?.discountAmount)
+                                  : 0}
                               </span>
                             </div>
                           </>
-                        ) : (
+                        )}
+                        {canApplyVoucher && (
                           <>
                             {/* Promo Code Input */}
                             <div className="flex items-center gap-2">
@@ -318,30 +352,53 @@ function Payment() {
                             </div>
                           </>
                         )}
-                        <div className="border-t border-slate-100 dark:border-slate-800" />
-                        <div className="flex justify-between items-center text-sm pt-2 pb-2">
-                          <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                            <span className="material-symbols-outlined text-[16px]">
-                              confirmation_number
-                            </span>
-                            No coupon applied
-                          </span>
-                          <button
-                            onClick={() => setOpenCoupon(true)}
-                            className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
-                          >
-                            View Available Coupons (2)
-                          </button>
-                        </div>
-                        <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
-                          <div className="flex justify-between items-end">
-                            <span className="text-slate-500 dark:text-slate-400 font-medium">
-                              Total Amount
-                            </span>
-                            <span className="text-2xl font-black text-primary">
-                              Rp {order ? formattedPrice(finalAmount) : 0}
-                            </span>
+
+                        {canApplyCoupon && (
+                          <>
+                            <div className="border-t border-slate-100 dark:border-slate-800" />
+                            <div className="flex justify-between items-center text-sm pt-2 pb-2">
+                              <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                                <span className="material-symbols-outlined text-[16px]">
+                                  confirmation_number
+                                </span>
+                                No coupon applied
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setOpenCoupon(true)}
+                                className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
+                              >
+                                View Available Coupons (2)
+                              </button>
+                            </div>
+                          </>
+                        )}
+                        {hasCoupon && (
+                          <div className="flex flex-col gap-1.5 p-3 bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30 rounded-lg">
+                            <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                              <span className="flex items-center gap-1 font-medium">
+                                <span className="material-symbols-outlined text-[16px]">
+                                  confirmation_number
+                                </span>
+                                Coupon
+                              </span>
+                              <span className="font-bold">
+                                - Rp{" "}
+                                {coupon ? formattedPrice(coupon?.amount) : 0}
+                              </span>
+                            </div>
                           </div>
+                        )}
+
+                        <div className="border-slate-300 border-t" />
+
+                        <div className="flex justify-between items-end">
+                          <span className="text-slate-500 dark:text-slate-400 font-medium">
+                            Total Amount
+                          </span>
+                          <span className="text-2xl font-black text-primary">
+                            Rp {order ? formattedPrice(finalAmount) : 0}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -356,7 +413,7 @@ function Payment() {
                     </div>
                   </div>
                   {/* Help Card */}
-                  <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 flex items-start gap-3">
+                  {/* <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 flex items-start gap-3">
                     <span className="material-symbols-outlined text-primary mt-1">
                       support_agent
                     </span>
@@ -375,14 +432,21 @@ function Payment() {
                         Chat with Support
                       </a>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
           </form>
         </FormProvider>
       </div>
-      {openCoupon && <Coupon />}
+      {openCoupon && (
+        <Coupon
+          data={userCoupons!}
+          orderId={order?.id!}
+          onClose={() => setOpenCoupon(false)}
+          onApply={handleOnApplyCoupon}
+        />
+      )}
     </main>
   );
 }

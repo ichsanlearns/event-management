@@ -7,6 +7,9 @@ import Expired from "../../components/order/Expired";
 import Rejected from "../../components/order/Rejected";
 import Canceled from "../../components/order/Canceled";
 import Done from "../../components/order/Done";
+import WaitingPayment from "../../components/order/WaitingPayment";
+import WaitingConfirmation from "../../components/order/WaitingConfirmation";
+import Reviewed from "../../components/order/Reviewed";
 
 function OrderAll() {
   const [events, setEvents] = useState<Order[]>([]);
@@ -18,7 +21,6 @@ function OrderAll() {
       try {
         const res = await getOrderByCustomer(user?.id, "all");
         setEvents(res.data);
-        toast.success("Event fetched successfully");
       } catch (error: any) {
         toast.error(error.message || "Failed to fetch event");
       }
@@ -38,6 +40,12 @@ function OrderAll() {
             <Rejected key={event.id} data={event} />
           ) : event.status.toLowerCase() === "canceled" ? (
             <Canceled key={event.id} data={event} />
+          ) : event.status.toLowerCase() === "waiting_payment" ? (
+            <WaitingPayment key={event.id} data={event} />
+          ) : event.status.toLowerCase() === "waiting_confirmation" ? (
+            <WaitingConfirmation key={event.id} data={event} />
+          ) : event.status.toLowerCase() === "reviewed" ? (
+            <Reviewed key={event.id} data={event} />
           ) : (
             <Done key={event.id} data={event} />
           ),

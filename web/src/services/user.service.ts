@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "../api/endpoints";
 import api from "../lib/api";
 
 export function getProfile() {
@@ -13,4 +14,8 @@ export function changePassword(payload: {
   confirmPassword: string;
 }) {
   return api.put("/user/change-password", payload);
+}
+
+export function getOrganizerProfile(organizerId: string) {
+  return api.get(`${API_ENDPOINTS.PROFILE.ORGANIZER}/${organizerId}`);
 }

@@ -1,4 +1,5 @@
 import type { Order } from "../../api/types";
+import { formatEventDateYear } from "../../utils/format.util";
 
 function Canceled({ data }: { data: Order }) {
   return (
@@ -13,10 +14,10 @@ function Canceled({ data }: { data: Order }) {
         <div className="flex justify-between items-center">
           <div>
             <h4 className="font-medium text-gray-500 dark:text-gray-500 truncate pr-4 text-base line-through">
-              Startup Weekend
+              {data.ticket.eventName.name}
             </h4>
             <div className="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-0.5">
-              Oct 15, 2023
+              {formatEventDateYear(data.createdAt)}
             </div>
           </div>
           <div className="flex flex-col items-end gap-1">

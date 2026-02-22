@@ -19,7 +19,6 @@ function OrderActive() {
         const res = await getOrderByCustomer(user?.id, "active");
 
         setEvents(res.data);
-        toast.success("Event fetched successfully");
       } catch (error: any) {
         toast.error(error.message || "Failed to fetch event");
       }

@@ -24,3 +24,37 @@ export const getOrderById = async (orderId: string) => {
   const res = await api.get(`${API_ENDPOINTS.ORDERS.GET}/${orderId}`);
   return res.data;
 };
+
+export const patchOrderCoupon = async ({
+  couponId,
+  orderId,
+}: {
+  couponId: string;
+  orderId: string;
+}) => {
+  const endpoint = API_ENDPOINTS.ORDERS.COUPON.replace(":id", orderId);
+  return api.patch(endpoint, {
+    couponId,
+  });
+};
+
+export const patchOrderVoucher = async ({
+  voucherCode,
+  orderId,
+  eventId,
+}: {
+  voucherCode: string;
+  orderId: string;
+  eventId: string;
+}) => {
+  return api.patch(API_ENDPOINTS.ORDERS.VOUCHER, {
+    code: voucherCode,
+    orderId,
+    eventId,
+  });
+};
+
+export const deleteOrder = async (orderId: string) => {
+  const endpoint = API_ENDPOINTS.ORDERS.DELETE.replace(":orderId", orderId);
+  return api.delete(endpoint);
+};

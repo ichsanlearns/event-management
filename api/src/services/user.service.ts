@@ -60,6 +60,7 @@ export async function getById(orgId: string) {
           start_date: true,
           GotReviewed: {
             select: {
+              id: true,
               comment: true,
               rating: true,
               created_at: true,
@@ -89,6 +90,7 @@ export async function getById(orgId: string) {
         startDate: event.start_date,
         review: event.GotReviewed.map((review) => {
           return {
+            id: review.id,
             comment: review.comment,
             rating: review.rating,
             createdAt: review.created_at,

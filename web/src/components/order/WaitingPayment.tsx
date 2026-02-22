@@ -1,17 +1,17 @@
-import { Link } from "react-router";
 import type { Order } from "../../api/types";
+import { Link } from "react-router";
 import { formatEventDateYear, formattedPrice } from "../../utils/format.util";
 
-function Paid({ data }: { data: Order }) {
+function WaitingPayment({ data }: { data: Order }) {
   return (
     <Link
       to={`/payment/${data.id}`}
-      className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 hover:border-primary dark:hover:border-primary transition-all cursor-pointer shadow-sm hover:shadow-md"
+      className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-amber-200 dark:border-amber-800/50 p-4 flex gap-4 hover:border-amber-400 dark:hover:border-amber-600 transition-all cursor-pointer shadow-sm hover:shadow-md ring-1 ring-amber-50 dark:ring-amber-900/10"
     >
       <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 dark:bg-gray-700 relative">
         <img
-          alt="Neon Nights Festival"
-          className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+          alt="Summer Vibes Concert"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           src={data.ticket.eventName.heroImage}
         />
       </div>
@@ -30,11 +30,14 @@ function Paid({ data }: { data: Order }) {
             </div>
           </div>
           <div className="flex flex-col items-end gap-1">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
-              PAID
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+              WAITING PAYMENT
             </span>
             <span className="text-xs font-bold text-text-light dark:text-text-dark mt-1">
               IDR {formattedPrice(data.total)}
+            </span>
+            <span className="text-[10px] font-medium text-red-600 dark:text-red-400">
+              Expires in 01:23:45
             </span>
           </div>
         </div>
@@ -42,14 +45,14 @@ function Paid({ data }: { data: Order }) {
           <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate">
             {data.ticket.type} • {data.quantity} Tickets
           </p>
-          <div className="text-xs font-medium text-primary hover:text-primary-hover dark:text-primary dark:hover:text-indigo-400 flex items-center gap-1 transition-colors">
-            View Details
-            <span className="material-icons text-[14px]">arrow_forward</span>
-          </div>
+          <button className="px-3 py-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-medium rounded-lg shadow-sm shadow-indigo-200 dark:shadow-none transition-colors flex items-center gap-1">
+            Pay Now
+            <span className="material-icons text-[14px]">payment</span>
+          </button>
         </div>
       </div>
     </Link>
   );
 }
 
-export default Paid;
+export default WaitingPayment;
