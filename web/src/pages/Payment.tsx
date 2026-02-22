@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 
 import { formattedPrice, formatTime } from "../utils/format.util";
 import { useCountdown } from "../utils/countdown.util";
-import type { ICoupon, IOrder } from "../types/event.type";
+import type { ICoupon, IOrder, TUserCoupon } from "../types/event.type";
 
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,16 +34,19 @@ function Payment() {
     quota: number;
   } | null>();
 
-  const [coupon, setCoupon] = useState<ICoupon[] | null>();
+  const [coupon, setCoupon] = useState<ICoupon | null>();
+  const [userCoupons, setUserCoupons] = useState<TUserCoupon | null>();
 
   useEffect(() => {
     try {
       async function getOrder() {
         const response = await getOrderById(id!);
+        console.log(response);
 
         setOrder(response.data);
         setVoucher(response.data.voucher);
         setOrderStatus(response.data.status);
+        setUserCoupons(response.data.userCoupons);
         setCoupon(response.data.coupon);
       }
 
@@ -109,6 +112,11 @@ function Payment() {
   const processingFee = order ? (order.ticket.price * order.quantity) / 10 : 0;
 
   const finalAmount = order ? Number(order.total) + processingFee : 0;
+
+  const handleOnApplyCoupon = (order: IOrder) => {
+    setOrder(order);
+    setCoupon(order.coupon);
+  };
 
   return (
     <main className="max-w-full bg-background-dark p-30">
@@ -214,7 +222,7 @@ function Payment() {
                             {order?.ticket.type} Access
                           </span>
                           <span className="font-medium text-slate-900 dark:text-white">
-                            Rp {order?.ticket.price}
+                            Rp {order ? formattedPrice(order?.ticket.price) : 0}
                           </span>
                         </div>
                         <div className="border-slate-300 border-t" />
@@ -223,7 +231,12 @@ function Payment() {
                             Subtotal Produk ({order?.quantity}x)
                           </span>
                           <span className="font-medium text-slate-900 dark:text-white">
-                            Rp {order?.total}
+                            Rp{" "}
+                            {order
+                              ? formattedPrice(
+                                  order?.ticket.price * order?.quantity,
+                                )
+                              : 0}
                           </span>
                         </div>
                         <div className="flex justify-between text-sm">
@@ -248,7 +261,8 @@ function Payment() {
                             Points Redeemed
                           </span>
                           <span className="font-medium">
-                            - Rp {formattedPrice(order?.usingPoint || 0)}
+                            - Rp{" "}
+                            {order ? formattedPrice(order?.usingPoint || 0) : 0}
                           </span>
                         </div>
 
@@ -263,7 +277,10 @@ function Payment() {
                                 Promo ({voucher?.code})
                               </span>
                               <span className="font-medium">
-                                - Rp {formattedPrice(voucher?.discountAmount)}
+                                - Rp{" "}
+                                {order
+                                  ? formattedPrice(voucher?.discountAmount)
+                                  : 0}
                               </span>
                             </div>
                           </>
@@ -302,20 +319,38 @@ function Payment() {
                           </>
                         )}
                         <div className="border-t border-slate-100 dark:border-slate-800" />
-                        <div className="flex justify-between items-center text-sm pt-2 pb-2">
-                          <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                            <span className="material-symbols-outlined text-[16px]">
-                              confirmation_number
+                        {!coupon?.id ? (
+                          <div className="flex justify-between items-center text-sm pt-2 pb-2">
+                            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                              <span className="material-symbols-outlined text-[16px]">
+                                confirmation_number
+                              </span>
+                              No coupon applied
                             </span>
-                            No coupon applied
-                          </span>
-                          <button
-                            onClick={() => setOpenCoupon(true)}
-                            className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
-                          >
-                            View Available Coupons (2)
-                          </button>
-                        </div>
+                            <button
+                              onClick={() => setOpenCoupon(true)}
+                              className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
+                            >
+                              View Available Coupons (2)
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-1.5 p-3 bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30 rounded-lg">
+                            <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                              <span className="flex items-center gap-1 font-medium">
+                                <span className="material-symbols-outlined text-[16px]">
+                                  confirmation_number
+                                </span>
+                                Coupon
+                              </span>
+                              <span className="font-bold">
+                                - Rp{" "}
+                                {coupon ? formattedPrice(coupon?.amount) : 0}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
                         <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
                           <div className="flex justify-between items-end">
                             <span className="text-slate-500 dark:text-slate-400 font-medium">
@@ -339,7 +374,7 @@ function Payment() {
                     </div>
                   </div>
                   {/* Help Card */}
-                  <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 flex items-start gap-3">
+                  {/* <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 flex items-start gap-3">
                     <span className="material-symbols-outlined text-primary mt-1">
                       support_agent
                     </span>
@@ -358,14 +393,21 @@ function Payment() {
                         Chat with Support
                       </a>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
           </form>
         </FormProvider>
       </div>
-      {openCoupon && <Coupon data={coupon!} />}
+      {openCoupon && (
+        <Coupon
+          data={userCoupons!}
+          orderId={order?.id!}
+          onClose={() => setOpenCoupon(false)}
+          onApply={handleOnApplyCoupon}
+        />
+      )}
     </main>
   );
 }

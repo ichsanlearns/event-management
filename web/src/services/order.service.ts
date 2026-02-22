@@ -32,9 +32,9 @@ export const patchOrderCoupon = async ({
   couponId: string;
   orderId: string;
 }) => {
-  return api.patch(API_ENDPOINTS.ORDERS.COUPON, {
+  const endpoint = API_ENDPOINTS.ORDERS.COUPON.replace(":id", orderId);
+  return api.patch(endpoint, {
     couponId,
-    orderId,
   });
 };
 

@@ -29,6 +29,8 @@ export interface ICoupon {
   referrerId: string;
 }
 
+export type TUserCoupon = ICoupon[];
+
 export type TEvent = {
   id: string;
   name: string;
@@ -62,6 +64,7 @@ export interface IOrder {
   customerId: string;
   ticketId: string;
   voucherId: string;
+  couponId: string;
   status: OrderStatus;
   quantity: number;
   usingPoint: number;
@@ -71,6 +74,7 @@ export interface IOrder {
   updatedAt: string;
   deletedAt: string | null;
   voucher: IVoucher;
-  ticket: ITicket;
   coupon: ICoupon;
+  ticket: ITicket;
+  userCoupons: TUserCoupon;
 }

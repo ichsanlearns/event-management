@@ -22,16 +22,3 @@ export const getByUserId = async (userId: string) => {
 
   return mapped;
 };
-
-export const updateByOrderId = async ({
-  couponId,
-  orderId,
-}: {
-  couponId: string;
-  orderId: string;
-}) => {
-  return prisma.order.update({
-    where: { id: orderId },
-    data: { coupon_id: couponId },
-  });
-};

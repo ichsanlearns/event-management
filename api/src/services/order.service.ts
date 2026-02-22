@@ -29,7 +29,7 @@ export async function create({
         expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
         status,
         using_point: usingPoint,
-        total,
+        total: total - usingPoint,
       },
     });
 
@@ -53,7 +53,9 @@ export async function getById(id: string) {
     select: {
       id: true,
       voucher_id: true,
+      coupon_id: true,
       customer_id: true,
+      ticket_id: true,
       status: true,
       total: true,
       order_code: true,
@@ -62,6 +64,9 @@ export async function getById(id: string) {
       expired_at: true,
       Voucher: {
         select: { id: true, code: true, discount_amount: true, quota: true },
+      },
+      Coupon: {
+        select: { id: true, amount: true, expired_at: true },
       },
       Ticket: {
         select: {
@@ -73,7 +78,10 @@ export async function getById(id: string) {
       },
       Customer: {
         select: {
-          Coupon: { select: { id: true, amount: true, expired_at: true } },
+          Coupon: {
+            where: { deleted_at: null },
+            select: { id: true, amount: true, expired_at: true },
+          },
         },
       },
     },
@@ -85,19 +93,26 @@ export async function getById(id: string) {
 
   const mapped = {
     id: order.id,
-    voucherId: order.voucher_id,
-    customerId: order.customer_id,
-    status: order.status,
-    total: order.total,
     orderCode: order.order_code,
+    customerId: order.customer_id,
+    ticketId: order.ticket_id,
+    voucherId: order.voucher_id,
+    couponId: order.coupon_id,
+    status: order.status,
     quantity: order.quantity,
     usingPoint: order.using_point,
+    total: order.total,
     expiredAt: order.expired_at,
     voucher: {
       id: order.Voucher?.id,
       code: order.Voucher?.code,
       discountAmount: order.Voucher?.discount_amount,
       quota: order.Voucher?.quota,
+    },
+    coupon: {
+      id: order.Coupon?.id,
+      amount: order.Coupon?.amount,
+      expiredAt: order.Coupon?.expired_at,
     },
     ticket: {
       eventId: order.Ticket.event_id,
@@ -109,7 +124,7 @@ export async function getById(id: string) {
         heroImage: order.Ticket.EventName.hero_image,
       },
     },
-    coupon: order.Customer.Coupon.map((c) => ({
+    userCoupons: order.Customer.Coupon.map((c) => ({
       id: c.id,
       amount: c.amount,
       expiredAt: c.expired_at,
@@ -298,7 +313,7 @@ export const patchCouponId = async ({
   couponId: string;
   orderId: string;
 }) => {
-  return prisma.$transaction(async (tx) => {
+  const updatedOrder = await prisma.$transaction(async (tx) => {
     const order = await tx.order.findUnique({
       where: { id: orderId },
     });
@@ -315,16 +330,33 @@ export const patchCouponId = async ({
       throw new AppError(404, "Coupon not found");
     }
 
+    const deletedCoupon = await tx.coupon.findUnique({
+      where: { id: couponId, deleted_at: { not: null } },
+    });
+
+    if (deletedCoupon) {
+      throw new AppError(400, "Coupon is already used");
+    }
+
+    await tx.coupon.update({
+      where: { id: couponId },
+      data: {
+        deleted_at: new Date(),
+      },
+    });
+
     const updatedOrder = await tx.order.update({
       where: { id: orderId },
       data: {
-        voucher_id: couponId,
+        coupon_id: couponId,
         total: { decrement: coupon.amount },
       },
       select: {
         id: true,
         voucher_id: true,
+        coupon_id: true,
         customer_id: true,
+        ticket_id: true,
         status: true,
         total: true,
         order_code: true,
@@ -333,6 +365,9 @@ export const patchCouponId = async ({
         expired_at: true,
         Voucher: {
           select: { id: true, code: true, discount_amount: true, quota: true },
+        },
+        Coupon: {
+          select: { id: true, amount: true, expired_at: true },
         },
         Ticket: {
           select: {
@@ -350,39 +385,47 @@ export const patchCouponId = async ({
       },
     });
 
-    const mapped = {
-      id: updatedOrder.id,
-      voucherId: updatedOrder.voucher_id,
-      customerId: updatedOrder.customer_id,
-      status: updatedOrder.status,
-      total: updatedOrder.total,
-      orderCode: updatedOrder.order_code,
-      quantity: updatedOrder.quantity,
-      usingPoint: updatedOrder.using_point,
-      expiredAt: updatedOrder.expired_at,
-      voucher: {
-        id: updatedOrder.Voucher?.id,
-        code: updatedOrder.Voucher?.code,
-        discountAmount: updatedOrder.Voucher?.discount_amount,
-        quota: updatedOrder.Voucher?.quota,
-      },
-      ticket: {
-        eventId: updatedOrder.Ticket.event_id,
-        type: updatedOrder.Ticket.type,
-        price: updatedOrder.Ticket.price,
-        eventName: {
-          name: updatedOrder.Ticket.EventName.name,
-          city: updatedOrder.Ticket.EventName.city,
-          heroImage: updatedOrder.Ticket.EventName.hero_image,
-        },
-      },
-      coupon: updatedOrder.Customer.Coupon.map((c) => ({
-        id: c.id,
-        amount: c.amount,
-        expiredAt: c.expired_at,
-      })),
-    };
-
-    return mapped;
+    return updatedOrder;
   });
+  const mapped = {
+    id: updatedOrder.id,
+    orderCode: updatedOrder.order_code,
+    customerId: updatedOrder.customer_id,
+    ticketId: updatedOrder.ticket_id,
+    voucherId: updatedOrder.voucher_id,
+    couponId: updatedOrder.coupon_id,
+    status: updatedOrder.status,
+    quantity: updatedOrder.quantity,
+    usingPoint: updatedOrder.using_point,
+    total: updatedOrder.total,
+    expiredAt: updatedOrder.expired_at,
+    voucher: {
+      id: updatedOrder.Voucher?.id,
+      code: updatedOrder.Voucher?.code,
+      discountAmount: updatedOrder.Voucher?.discount_amount,
+      quota: updatedOrder.Voucher?.quota,
+    },
+    coupon: {
+      id: updatedOrder.Coupon?.id,
+      amount: updatedOrder.Coupon?.amount,
+      expiredAt: updatedOrder.Coupon?.expired_at,
+    },
+    ticket: {
+      eventId: updatedOrder.Ticket.event_id,
+      type: updatedOrder.Ticket.type,
+      price: updatedOrder.Ticket.price,
+      eventName: {
+        name: updatedOrder.Ticket.EventName.name,
+        city: updatedOrder.Ticket.EventName.city,
+        heroImage: updatedOrder.Ticket.EventName.hero_image,
+      },
+    },
+    userCoupons: updatedOrder.Customer.Coupon.map((c) => ({
+      id: c.id,
+      amount: c.amount,
+      expiredAt: c.expired_at,
+    })),
+  };
+
+  return mapped;
 };
