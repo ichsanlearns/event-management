@@ -136,7 +136,7 @@ export async function getSearch({
 
   if (category) {
     where.AND.push({
-      category: category,
+      category: category.toUpperCase(),
     });
   }
 

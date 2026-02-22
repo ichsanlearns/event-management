@@ -1,4 +1,5 @@
 export const cityArray = [
+  "Location",
   "Jakarta",
   "Bali",
   "Bandung",

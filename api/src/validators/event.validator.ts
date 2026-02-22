@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Category } from "../generated/prisma/enums.js";
+import { Category } from "../types/event.type.js";
 
 export const createEventSchema = z.object({
   name: z.string().min(3, "Event must be at least 3 characters"),

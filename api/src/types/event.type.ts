@@ -1,4 +1,14 @@
-import type { Category } from "../generated/prisma/enums.js";
+export const Category = [
+  "Music",
+  "Theatre",
+  "Sport",
+  "Art",
+  "Food",
+  "Fashion",
+  "Travel",
+];
+
+type Category = (typeof Category)[number];
 
 export type EventInput = {
   name: string;

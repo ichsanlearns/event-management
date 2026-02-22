@@ -6,12 +6,14 @@ import { cityArray } from "../constants/city.constant";
 import { getSearchEvents } from "../services/event.service";
 import toast from "react-hot-toast";
 import { formatEventDate } from "../utils/format.util";
+import { categoryArray } from "../constants/category,constant";
 
 function Home() {
   const [events, setEvents] = useState<TEvent[] | null>(null);
   const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState<"search" | null>(null);
-  const [city, setCity] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<
+    "search" | "location" | "category" | null
+  >(null);
   const [category, setCategory] = useState<string | null>(null);
   const [location, setLocation] = useState<string | null>(null);
 
@@ -148,6 +150,7 @@ function Home() {
                   placeholder="Search events, artists, or venues..."
                   type="text"
                 />
+
                 {isOpen === "search" && query && (
                   <div className="absolute top-full left-0 right-0 mt-3 bg-white dark:bg-[#1E1B2E] rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50 transform origin-top transition-all duration-200 opacity-100 visible">
                     <div className="flex gap-2 p-3 border-b border-gray-100 dark:border-gray-800 overflow-x-auto no-scrollbar">
@@ -183,10 +186,10 @@ function Home() {
                     {/* Event List */}
                     <div className="py-2">
                       {events?.map((event) => (
-                        <a
+                        <Link
+                          to={`/event/${event.id}`}
                           key={event.id}
                           className="flex items-center gap-4 px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary"
-                          href="#"
                         >
                           <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
                             <img
@@ -217,10 +220,10 @@ function Home() {
                               Starting from
                             </div>
                             <div className="text-sm font-bold text-primary">
-                              IDR {event.minPrice}
+                              IDR {event.lowestPrice}
                             </div>
                           </div>
-                        </a>
+                        </Link>
                       ))}
                       {/* <a
                         className="flex items-center gap-4 px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary"
@@ -327,7 +330,80 @@ function Home() {
                   </div>
                 )}
               </div>
-
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex gap-2 no-scrollbar py-1 sm:py-0">
+                  <div className="relative h-full">
+                    <button
+                      onClick={() => setIsOpen("category")}
+                      className="h-full flex items-center justify-between gap-2 px-5 py-3 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors whitespace-nowrap border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                      type="button"
+                    >
+                      <span>{category || "Category"}</span>
+                      <span className="material-symbols-outlined text-lg text-gray-400">
+                        keyboard_arrow_down
+                      </span>
+                    </button>
+                    {isOpen === "category" && (
+                      <>
+                        {/* dropdown */}
+                        <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  rounded-b-xl shadow-xl z-50">
+                          {/* scroll area */}
+                          <div className="max-h-72 overflow-y-auto overscroll-contain">
+                            {categoryArray.map((category, indx) => (
+                              <div
+                                onMouseDown={() => {
+                                  setCategory(
+                                    category === "Category" ? null : category,
+                                  );
+                                  setIsOpen(null);
+                                }}
+                                key={indx}
+                                className="block px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                              >
+                                {category}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <div ref={locationRef} className="relative">
+                    <button
+                      onClick={() => setIsOpen("location")}
+                      className="w-40 h-full flex items-center justify-between gap-2 px-5 py-3 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors whitespace-nowrap border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                      type="button"
+                    >
+                      <span>{location || "Location"}</span>
+                      <span className="material-symbols-outlined text-lg text-gray-400">
+                        keyboard_arrow_down
+                      </span>
+                    </button>
+                    {isOpen === "location" && (
+                      <>
+                        {/* dropdown */}
+                        <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  rounded-b-xl shadow-xl z-50">
+                          {/* scroll area */}
+                          <div className="max-h-72 overflow-y-auto overscroll-contain">
+                            {cityArray.map((c, indx) => (
+                              <div
+                                onMouseDown={() => {
+                                  setLocation(c === "Location" ? null : c);
+                                  setIsOpen(null);
+                                }}
+                                key={indx}
+                                className="block px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                              >
+                                {c}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
               {/* Form */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button

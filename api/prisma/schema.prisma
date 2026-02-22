@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -13,6 +7,193 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id                 String    @id @default(uuid())
+  name               String
+  email              String    @unique
+  password           String
+  role               Role
+  referral_code      String    @unique
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  deleted_at         DateTime?
+  reset_token        String?
+  reset_token_expiry DateTime?
+  profile_image      String?
+  Referring          Coupon[]  @relation("PointGiven")
+  Coupon             Coupon[]
+  Events             Event[]
+  Ordered            Order[]
+  Points             Point?
+  Reviewed           Review[]
+
+  @@map("users")
+}
+
+model Event {
+  id              String        @id @default(uuid())
+  name            String
+  price           Decimal
+  description     String?
+  category        String
+  city            String
+  available_seats Int
+  organizer_id    String
+  start_date      DateTime
+  end_date        DateTime?
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  deleted_at      DateTime?
+  about           String?
+  venue           String?
+  tagline         String?
+  hero_image      String?
+  ImageEvents     ImagesEvent[]
+  eventOrganizer  User          @relation(fields: [organizer_id], references: [id])
+  GotReviewed     Review[]
+  Tickets         Ticket[]
+  Vouchers        Voucher[]
+
+  @@map("events")
+}
+
+model Review {
+  id         String    @id @default(uuid())
+  user_id    String
+  event_id   String
+  comment    String
+  rating     Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  order_id   String
+  Event      Event     @relation(fields: [event_id], references: [id])
+  Order      Order     @relation(fields: [order_id], references: [id])
+  Customer   User      @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, event_id])
+  @@map("reviews")
+}
+
+model Ticket {
+  id         String    @id @default(uuid())
+  event_id   String
+  type       Types
+  price      Decimal
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  bought     Int       @default(0)
+  quota      Int
+  Events     Order[]
+  EventName  Event     @relation(fields: [event_id], references: [id])
+
+  @@map("tickets")
+}
+
+model Order {
+  id          String    @id @default(uuid())
+  customer_id String
+  status      Status
+  total       Decimal
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  deleted_at  DateTime?
+  ticket_id   String
+  order_code  String    @unique
+  quantity    Int
+  using_point Int
+  expired_at  DateTime?
+  voucher_id  String?
+  coupon_id   String?
+  Coupon      Coupon?   @relation(fields: [coupon_id], references: [id])
+  Customer    User      @relation(fields: [customer_id], references: [id])
+  Ticket      Ticket    @relation(fields: [ticket_id], references: [id])
+  Voucher     Voucher?  @relation(fields: [voucher_id], references: [id])
+  Payments    Payment[]
+  Reviews     Review[]
+
+  @@map("orders")
+}
+
+model Payment {
+  id           String        @id @default(uuid())
+  order_id     String
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  amount       Decimal
+  confirmed_at DateTime?
+  method       PaymentMethod
+  paid_at      DateTime?
+  proof_image  String?
+  status       PaymentStatus
+  Order        Order         @relation(fields: [order_id], references: [id])
+
+  @@map("payments")
+}
+
+model Voucher {
+  id              String    @id @default(uuid())
+  event_id        String
+  code            String    @unique
+  discount_amount Int
+  start_date      DateTime
+  end_date        DateTime
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleted_at      DateTime?
+  quota           Int
+  Orders          Order[]
+  Events          Event     @relation(fields: [event_id], references: [id])
+
+  @@map("vouchers")
+}
+
+model Point {
+  id         String    @id @default(uuid())
+  user_id    String    @unique
+  amount     Int
+  expired_at DateTime
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
+  updated_at DateTime  @updatedAt
+  User       User      @relation(fields: [user_id], references: [id])
+
+  @@map("points")
+}
+
+model Coupon {
+  id          String    @id @default(uuid())
+  user_id     String
+  amount      Int
+  expired_at  DateTime
+  referrer_id String
+  created_at  DateTime  @default(now())
+  deleted_at  DateTime?
+  updated_at  DateTime  @updatedAt
+  Referrer    User      @relation("PointGiven", fields: [referrer_id], references: [id])
+  User        User      @relation(fields: [user_id], references: [id])
+  Order       Order[]
+
+  @@map("coupons")
+}
+
+model ImagesEvent {
+  id       String @id @default(uuid())
+  event_id String
+  image_id String
+  Event    Event  @relation(fields: [event_id], references: [id])
+  Image    Image  @relation(fields: [image_id], references: [id])
+}
+
+model Image {
+  id          String        @id @default(uuid())
+  url         String
+  ImageEvents ImagesEvent[]
+
+  @@map("images")
+}
+
 enum PaymentMethod {
   MANUAL_TRANSFER
   E_WALLET
@@ -20,17 +201,11 @@ enum PaymentMethod {
 }
 
 enum PaymentStatus {
-  PENDING  
-  WAITING_CONFIRMATION  
-  APPROVED  
-  REJECTED  
-  FAILED  
-}
-
-enum Category {
-  MUSIC
-  SPORT
-  THEATRE
+  PENDING
+  WAITING_CONFIRMATION
+  APPROVED
+  REJECTED
+  FAILED
 }
 
 enum Role {
@@ -46,237 +221,19 @@ enum Types {
   DAILY_PASS
 }
 
-
 enum Status {
   WAITING_PAYMENT
   WAITING_CONFIRMATION
   DONE
-  PAID
-  REVIEWED
   REJECTED
   EXPIRED
   CANCELED
+  PAID
+  REVIEWED
 }
 
-model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  role Role
-  referral_code String @unique
-
-  profile_image String?
-
-  reset_token String?
-  reset_token_expiry DateTime?
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  Events Event[]
-  Reviewed Review[]
-  Ordered Order[]
-  Points Point?
-  Coupon Coupon[]
-  Referring Coupon[] @relation("PointGiven")
-  
-
-  @@map("users")
+enum Category {
+  MUSIC
+  SPORT
+  THEATRE
 }
-
-
-model Event {
-  id String @id @default(uuid())
-  name String
-  price Decimal
-  description String?
-  tagline String?
-  category Category
-  venue String?
-  city String
-  available_seats Int
-  organizer_id String
-  hero_image String?
-  about String?
-
-  start_date DateTime
-  end_date DateTime?
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  eventOrganizer User @relation(fields: [organizer_id], references: [id])
-
-  ImageEvents ImagesEvent[]
-  Tickets Ticket[]
-  Vouchers Voucher[]
-  GotReviewed Review[]
-
-  @@map("events")
-}
-
-model Review {
-  id String @id @default(uuid())
-  user_id String
-  event_id String
-  order_id String
-  
-  comment String
-  rating Int
-
-  created_at DateTime @default(now()) 
-  updated_at DateTime @updatedAt 
-  deleted_at DateTime?
-
-  Customer User @relation(fields: [user_id], references: [id])
-  Event Event @relation(fields: [event_id], references: [id])
-  Order Order @relation(fields: [order_id], references: [id])
-
-  @@unique([user_id, event_id])
-  @@map("reviews")
-}
-
-  model Ticket {
-  id String @id @default(uuid())
-  event_id String
-  type Types
-  price Decimal
-  quota Int
-  bought Int @default(0)
-
-  created_at DateTime @default(now()) 
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  EventName Event @relation(fields: [event_id], references: [id])
-  Events Order[]
-
-  @@map("tickets")
-}
-
-
-model Order {
-  id String @id @default(uuid())
-  order_code String @unique
-  customer_id String
-  ticket_id String
-  voucher_id String?
-  coupon_id String?
-  status Status
-  quantity Int
-  using_point Int
-  total Decimal
-  
-  expired_at DateTime?
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  Voucher Voucher? @relation(fields: [voucher_id], references: [id])
-  Coupon Coupon? @relation(fields: [coupon_id], references: [id])
-  Ticket Ticket @relation(fields: [ticket_id], references: [id])
-  Customer User @relation(fields: [customer_id], references: [id])
-
-  Payments Payment[]
-  Reviews Review[]
-
-  @@map("orders")
-}
-
-model Payment {
-  id String @id @default(uuid()) 
-  order_id String 
-  amount Decimal 
-  method PaymentMethod 
-  status PaymentStatus 
-  proof_image String? 
-
-  paid_at DateTime? 
-  confirmed_at DateTime? 
-
-  created_at DateTime @default(now()) 
-  updated_at DateTime @updatedAt 
-  
-  Order Order @relation(fields: [order_id], references: [id])
-
-  @@map("payments")
-}
-
-model Voucher {
-  id String @id @default(uuid())
-  event_id String
-  code String @unique
-  discount_amount Int
-  quota Int
-
-  start_date DateTime
-  end_date DateTime
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  Events Event @relation(fields: [event_id], references: [id])
-  Orders Order[]
-
-  @@map("vouchers")
-}
-
-model Point {
-  id String @id @default(uuid())
-  user_id String @unique
-  amount Int
-
-  expired_at DateTime
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  User User @relation(fields: [user_id], references: [id])
-  
-  
-  @@map("points")
-}
-
-model Coupon {
-  id String @id @default(uuid())
-  user_id String
-  amount Int
-  expired_at DateTime
-  referrer_id String
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime?
-
-  User User @relation(fields: [user_id], references: [id])
-  Referrer User @relation("PointGiven",fields: [referrer_id], references: [id])
-  Order Order[]
-
-  @@map("coupons")
-
-}
-
-model ImagesEvent{
-  id String @id @default(uuid())
-  event_id String
-  image_id String
-
-  Event Event @relation(fields: [event_id], references: [id])
-  Image Image @relation(fields: [image_id], references: [id])
-}
-
-model Image {
-  id String @id @default(uuid())
-  url String
-
-  ImageEvents ImagesEvent[]
-
-  @@map("images")
-}
-

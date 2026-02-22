@@ -47,6 +47,7 @@ export type TEvent = {
   endDate?: Date;
   tickets?: ITicket[];
   orderCancelled: number;
+  lowestPrice: number;
 };
 
 type OrderStatus =
