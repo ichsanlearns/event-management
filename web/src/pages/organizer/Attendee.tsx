@@ -6,7 +6,16 @@ import type { Attendee } from "../../types/attendee.type";
 function AttendeePage() {
   const { eventId } = useParams();
   const [attendees, setAttendees] = useState<Attendee[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const filteredAttendees = attendees.filter((attendee) => {
+    const name = attendee.Customer.name.toLowerCase();
+    const email = attendee.Customer.email.toLowerCase();
+    const keyword = searchTerm.toLowerCase();
+
+    return name.includes(keyword) || email.includes(keyword);
+  });
 
   useEffect(() => {
     async function fetchData() {
@@ -82,7 +91,12 @@ function AttendeePage() {
         <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative w-full sm:w-96">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-            <input className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border-none focus:ring-2 focus:ring-primary rounded-lg text-sm transition-all" placeholder="Search attendee..." />
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border-none focus:ring-2 focus:ring-primary rounded-lg text-sm transition-all"
+              placeholder="Search attendee..."
+            />
           </div>
         </div>
 
@@ -98,8 +112,8 @@ function AttendeePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
-              {attendees.length > 0 ? (
-                attendees.map((attendee, index) => (
+              {filteredAttendees.length > 0 ? (
+                filteredAttendees.map((attendee, index) => (
                   <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -127,7 +141,7 @@ function AttendeePage() {
               ) : (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-slate-500 italic">
-                    No attendees found for this event.
+                    {searchTerm ? "No matching attendees found." : "No attendees found for this event."}
                   </td>
                 </tr>
               )}

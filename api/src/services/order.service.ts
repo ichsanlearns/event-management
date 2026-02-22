@@ -2,23 +2,7 @@ import type { Status } from "../generated/prisma/enums.js";
 import { prisma } from "../lib/prisma.lib.js";
 import { AppError } from "../utils/app-error.util.js";
 
-export async function create({
-  orderCode,
-  customerId,
-  ticketId,
-  quantity,
-  status,
-  usingPoint,
-  total,
-}: {
-  orderCode: string;
-  customerId: string;
-  ticketId: string;
-  quantity: number;
-  status: Status;
-  usingPoint: number;
-  total: number;
-}) {
+export async function create({ orderCode, customerId, ticketId, quantity, status, usingPoint, total }: { orderCode: string; customerId: string; ticketId: string; quantity: number; status: Status; usingPoint: number; total: number }) {
   return prisma.$transaction(async (tx) => {
     if (total > 0) {
       const newOrder = await tx.order.create({
@@ -34,10 +18,30 @@ export async function create({
         },
       });
 
+
+    if (usingPoint > 0) {
+      const point = await tx.point.findUnique({
+        where: { user_id: customerId },
+      });
+
+      if (!point) {
+        throw new AppError(400, "User point record not found");
+      }
+
+      if (point.amount < usingPoint) {
+        throw new AppError(400, "Point not enough");
+      }
+
       await tx.point.update({
         where: { user_id: customerId },
-        data: { amount: { decrement: usingPoint } },
+        data: {
+          amount: {
+            decrement: usingPoint,
+          },
+        },
       });
+    }
+
 
       await tx.ticket.update({
         where: { id: ticketId },
@@ -355,13 +359,7 @@ export async function getByUserId(customerId: string, status: string) {
   return mapped;
 }
 
-export const patchCouponId = async ({
-  couponId,
-  orderId,
-}: {
-  couponId: string;
-  orderId: string;
-}) => {
+export const patchCouponId = async ({ couponId, orderId }: { couponId: string; orderId: string }) => {
   const updatedOrder = await prisma.$transaction(async (tx) => {
     const order = await tx.order.findUnique({
       where: { id: orderId },
