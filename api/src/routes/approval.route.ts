@@ -6,8 +6,6 @@ import { listApprovals, approval, reject, getByStatus } from "../controllers/app
 
 const router = Router();
 
-/* Organizer approval menu */
-
 router.get("/orders/pending", authMiddleware, organizerOnly, listApprovals);
 router.get("/orders/status/:status", authMiddleware, organizerOnly, getByStatus);
 

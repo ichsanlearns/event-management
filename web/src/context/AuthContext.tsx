@@ -1,24 +1,17 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: "CUSTOMER" | "EVENT_ORGANIZER";
-  referral_code?: string;
-  points?: number;
-};
+import toast from "react-hot-toast";
+import type { UserProfile } from "../types/user.type";
 
 type AuthContextType = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: UserProfile | null;
+  setUser: (user: UserProfile | null) => void;
   logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,6 +24,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+
+    toast.success("Berhasil logout 👋");
   };
 
   return <AuthContext.Provider value={{ user, setUser, logout }}>{children}</AuthContext.Provider>;

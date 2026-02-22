@@ -16,13 +16,23 @@ import { uploadLocal } from "../middleware/upload.middleware.js";
 
 const router = express.Router();
 
-router.post("/", uploadLocal.single("heroImage"), createEvent);
+/* PUBLIC */
 router.get("/", getAllEvent);
 router.get("/search", getSearchEvent);
 router.get("/:id", getEventById);
+
+/* ORGANIZER ONLY */
+
+router.post("/", authMiddleware, organizerOnly, uploadLocal.single("heroImage"), createEvent);
+router.patch("/:id", authMiddleware, organizerOnly, updateEvent);
+router.patch("/:id", authMiddleware, organizerOnly, updateEvent);
+
 router.get("/organizer/:organizerId", getEventByOrganizerId);
+
 router.delete("/:id", deleteEvent);
 router.patch("/:id", updateEvent);
-router.get("/:eventId/attendees", getEventAttendees);
+
+router.get("/:eventId/attendees", authMiddleware, organizerOnly, getEventAttendees);
+
 
 export default router;

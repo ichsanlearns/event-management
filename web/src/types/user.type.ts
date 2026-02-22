@@ -7,4 +7,5 @@ export interface UserProfile {
   role: UserRole;
   referral_code?: string;
   profile_image?: string;
+  points?: number;
 }
