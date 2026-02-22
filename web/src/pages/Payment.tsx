@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { paymentSchema, type PaymentInput } from "../schemas/payment.schema";
 import toast from "react-hot-toast";
 import api from "../lib/api";
-import { getOrderById } from "../services/order.service";
+import { getOrderById, patchOrderVoucher } from "../services/order.service";
 import Coupon from "../components/payment/Coupon";
 import PaymentConfirmation from "../components/payment/PaymentConfirmation";
 import PaymentPaid from "../components/payment/PaymentPaid";
@@ -61,31 +61,16 @@ function Payment() {
     try {
       const code = form.getValues("voucherCode");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/vouchers/check`,
+      const response = await patchOrderVoucher({
+        voucherCode: code!,
+        orderId: order?.id!,
+        eventId: order?.ticket.eventId!,
+      });
 
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            code,
-            eventId: order?.ticket.eventId,
-            orderId: order?.id,
-          }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      setVoucher(data.data);
+      setOrder(response.data.data);
+      setVoucher(response.data.data.voucher);
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   }
 
@@ -123,12 +108,7 @@ function Payment() {
 
   const processingFee = order ? (order.ticket.price * order.quantity) / 10 : 0;
 
-  const finalAmount = order
-    ? Number(order.total) +
-      processingFee -
-      Number(order.usingPoint || 0) -
-      (voucher?.discountAmount ?? 0)
-    : 0;
+  const finalAmount = order ? Number(order.total) + processingFee : 0;
 
   return (
     <main className="max-w-full bg-background-dark p-30">
@@ -173,18 +153,18 @@ function Payment() {
                 {order?.status === "WAITING_PAYMENT" && (
                   <PaymentWaiting order={order} />
                 )}
-                {order?.status === "WAITING_PAYMENT" ||
-                  (order?.status === "REJECTED" && (
-                    <button
-                      type="submit"
-                      className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      Submit Payment
-                      <span className="material-symbols-outlined">
-                        arrow_forward
-                      </span>
-                    </button>
-                  ))}
+                {(order?.status === "WAITING_PAYMENT" ||
+                  order?.status === "REJECTED") && (
+                  <button
+                    type="submit"
+                    className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    Submit Payment
+                    <span className="material-symbols-outlined">
+                      arrow_forward
+                    </span>
+                  </button>
+                )}
               </div>
 
               <div className="lg:col-span-4 relative">

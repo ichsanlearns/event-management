@@ -164,6 +164,7 @@ model Order {
   customer_id String
   ticket_id String
   voucher_id String?
+  coupon_id String?
   status Status
   quantity Int
   using_point Int
@@ -176,6 +177,7 @@ model Order {
   deleted_at DateTime?
 
   Voucher Voucher? @relation(fields: [voucher_id], references: [id])
+  Coupon Coupon? @relation(fields: [coupon_id], references: [id])
   Ticket Ticket @relation(fields: [ticket_id], references: [id])
   Customer User @relation(fields: [customer_id], references: [id])
 
@@ -254,6 +256,7 @@ model Coupon {
 
   User User @relation(fields: [user_id], references: [id])
   Referrer User @relation("PointGiven",fields: [referrer_id], references: [id])
+  Order Order[]
 
   @@map("coupons")
 

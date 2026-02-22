@@ -3,6 +3,8 @@ export const API_ENDPOINTS = {
     GET: "/orders",
     CUSTOMER: "/orders/customer",
     CREATE: "/orders",
+    COUPON: "/orders/:id/coupon",
+    VOUCHER: "/vouchers/check",
   },
   REVIEW: {
     CREATE: "/reviews",

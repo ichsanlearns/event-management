@@ -9,6 +9,6 @@ const router = Router();
 
 router.get("/", getVoucher);
 router.post("/", createVoucher);
-router.post("/check", getVoucherByCode);
+router.patch("/check", getVoucherByCode);
 
 export default router;

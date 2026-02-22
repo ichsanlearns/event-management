@@ -1,6 +1,11 @@
 import type { ICoupon } from "../../types/event.type";
 
 function Coupon({ data }: { data: ICoupon[] }) {
+  const submitCoupon = () => {
+    try {
+    } catch (error) {}
+  };
+
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
       <div className="w-full max-w-lg bg-white dark:bg-[#1a162e] rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[90vh]">

@@ -1,5 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express";
 import { create, get, getByCode } from "../services/voucher.service.js";
+import { catchAsync } from "../utils/catch-async.util.js";
 
 export async function createVoucher(req: Request, res: Response) {
   try {
@@ -33,28 +34,22 @@ export async function getVoucher(req: Request, res: Response) {
   }
 }
 
-export async function getVoucherByCode(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
+export const getVoucherByCode = catchAsync(
+  async (req: Request, res: Response) => {
     const code = typeof req.body.code === "string" ? req.body.code : "";
     const eventId =
       typeof req.body.eventId === "string" ? req.body.eventId : "";
     const orderId =
       typeof req.body.orderId === "string" ? req.body.orderId : "";
 
-    const voucher = await getByCode({ code, eventId, orderId });
+    const updatedOrder = await getByCode({ code, eventId, orderId });
 
-    if (!voucher) {
+    if (!updatedOrder) {
       return res.status(200).json({ message: "Voucher not found" });
     }
 
     res
       .status(200)
-      .json({ message: "Successfully used voucher", data: voucher });
-  } catch (error) {
-    next(error);
-  }
-}
+      .json({ message: "Successfully used voucher", data: updatedOrder });
+  },
+);

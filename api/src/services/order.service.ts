@@ -290,3 +290,99 @@ export async function getByUserId(customerId: string, status: string) {
 
   return mapped;
 }
+
+export const patchCouponId = async ({
+  couponId,
+  orderId,
+}: {
+  couponId: string;
+  orderId: string;
+}) => {
+  return prisma.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      throw new AppError(404, "Order not found");
+    }
+
+    const coupon = await tx.coupon.findUnique({
+      where: { id: couponId },
+    });
+
+    if (!coupon) {
+      throw new AppError(404, "Coupon not found");
+    }
+
+    const updatedOrder = await tx.order.update({
+      where: { id: orderId },
+      data: {
+        voucher_id: couponId,
+        total: { decrement: coupon.amount },
+      },
+      select: {
+        id: true,
+        voucher_id: true,
+        customer_id: true,
+        status: true,
+        total: true,
+        order_code: true,
+        quantity: true,
+        using_point: true,
+        expired_at: true,
+        Voucher: {
+          select: { id: true, code: true, discount_amount: true, quota: true },
+        },
+        Ticket: {
+          select: {
+            event_id: true,
+            type: true,
+            price: true,
+            EventName: { select: { name: true, city: true, hero_image: true } },
+          },
+        },
+        Customer: {
+          select: {
+            Coupon: { select: { id: true, amount: true, expired_at: true } },
+          },
+        },
+      },
+    });
+
+    const mapped = {
+      id: updatedOrder.id,
+      voucherId: updatedOrder.voucher_id,
+      customerId: updatedOrder.customer_id,
+      status: updatedOrder.status,
+      total: updatedOrder.total,
+      orderCode: updatedOrder.order_code,
+      quantity: updatedOrder.quantity,
+      usingPoint: updatedOrder.using_point,
+      expiredAt: updatedOrder.expired_at,
+      voucher: {
+        id: updatedOrder.Voucher?.id,
+        code: updatedOrder.Voucher?.code,
+        discountAmount: updatedOrder.Voucher?.discount_amount,
+        quota: updatedOrder.Voucher?.quota,
+      },
+      ticket: {
+        eventId: updatedOrder.Ticket.event_id,
+        type: updatedOrder.Ticket.type,
+        price: updatedOrder.Ticket.price,
+        eventName: {
+          name: updatedOrder.Ticket.EventName.name,
+          city: updatedOrder.Ticket.EventName.city,
+          heroImage: updatedOrder.Ticket.EventName.hero_image,
+        },
+      },
+      coupon: updatedOrder.Customer.Coupon.map((c) => ({
+        id: c.id,
+        amount: c.amount,
+        expiredAt: c.expired_at,
+      })),
+    };
+
+    return mapped;
+  });
+};
