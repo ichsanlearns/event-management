@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useParams } from "react-router";
 
 import type { TEvent } from "../types/event.type";
@@ -158,7 +158,7 @@ function Event() {
                 />
               </div>
               {/* Title & Key Info */}
-              <div className="flex-1 pb-4">
+              <div className="flex-1 pb-4 flex flex-col">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="px-3 py-1 rounded-full bg-white/10 border border-white/10 text-xs font-semibold text-white backdrop-blur-md uppercase tracking-wider">
                     {event?.category} Festival
@@ -173,9 +173,26 @@ function Event() {
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-2 text-gradient">
                   {event?.name}
                 </h1>
-                <p className="text-lg text-gray-300 max-w-2xl font-medium">
+                <p className="text-lg text-gray-300 max-w-2xl font-medium ">
                   {event?.tagline}
                 </p>
+                <Link
+                  to={`/profile/organizer/${event?.organizer?.id}`}
+                  className="flex items-center gap-2 group cursor-pointer w-fit mt-5"
+                >
+                  <span className="text-sm font-medium text-gray-400">
+                    Organizer:
+                  </span>
+                  <div className="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 transition-colors">
+                    <span className="font-bold">{event?.organizer?.name}</span>
+                    <span className="material-symbols-outlined text-[16px] text-blue-400 filled">
+                      verified
+                    </span>
+                    <span className="material-symbols-outlined text-[18px] opacity-70 group-hover:translate-x-1 transition-transform">
+                      chevron_right
+                    </span>
+                  </div>
+                </Link>
               </div>
             </div>
           </div>

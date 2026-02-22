@@ -28,7 +28,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success("Berhasil logout 👋");
   };
 
-  return <AuthContext.Provider value={{ user, setUser, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, setUser, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

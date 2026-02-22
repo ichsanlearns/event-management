@@ -45,6 +45,10 @@ export type TEvent = {
   about: string;
   startDate: Date;
   endDate?: Date;
+  organizer?: {
+    id: string;
+    name: string;
+  };
   tickets?: ITicket[];
   orderCancelled: number;
   lowestPrice: number;

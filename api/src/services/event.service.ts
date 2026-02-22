@@ -194,6 +194,11 @@ export async function getById(id: string) {
     where: { Ticket: { event_id: id }, deleted_at: { not: null } },
   });
 
+  const organizer = await prisma.user.findUnique({
+    where: { id: event.organizer_id },
+    select: { id: true, name: true },
+  });
+
   const mapped = {
     id: event.id,
     name: event.name,
@@ -208,6 +213,7 @@ export async function getById(id: string) {
     about: event.about,
     startDate: event.start_date,
     endDate: event.end_date,
+    organizer: { id: organizer?.id, name: organizer?.name },
     tickets: event.Tickets.map((ticket: any) => {
       return {
         id: ticket.id,

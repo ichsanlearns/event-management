@@ -33,7 +33,7 @@ function OrgProfile() {
   }, []);
 
   return (
-    <main className="flex-1 flex flex-col items-center py-8 px-4 sm:px-8">
+    <main className="flex-1 flex flex-col items-center py-35 px-4 sm:px-8">
       <div className="w-full max-w-280 flex flex-col gap-8">
         <section className="bg-white rounded-2xl p-8 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)] border border-[#e7e7f3]">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
@@ -111,50 +111,73 @@ function OrgProfile() {
                 View all
               </a>
             </div>
-            {profile?.events.map((event) => (
-              <article
-                key={event.id}
-                className="group flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-[#e7e7f3] hover:border-primary/30"
-              >
-                <div className="sm:w-64 h-48 sm:h-auto relative overflow-hidden">
-                  <img
-                    alt="Crowd at a tech conference with purple lighting"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    data-alt="Crowd at a tech conference with purple lighting"
-                    src={event.heroImage}
-                  />
-                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-md text-xs font-bold text-[#0d0d1b] shadow-sm">
-                    From IDR {formattedPrice(event.price)}
-                  </div>
-                </div>
-                <div className="flex-1 p-6 flex flex-col justify-between">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
-                      <span>{formatEventDateYear(event.startDate)}</span>
-                      <span>•</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-[#0d0d1b] leading-tight group-hover:text-primary transition-colors">
-                      {event.name}
-                    </h3>
-                    <div className="flex items-center gap-2 text-[#4c4c9a] text-sm">
-                      <span className="material-symbols-outlined text-[18px]">
-                        location_on
-                      </span>
-                      {event.venue}, {event.city}
+            {profile?.events.length !== 0 &&
+              profile?.events.map((event) => (
+                <article
+                  key={event.id}
+                  className="group flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-[#e7e7f3] hover:border-primary/30"
+                >
+                  <div className="sm:w-64 h-48 sm:h-auto relative overflow-hidden">
+                    <img
+                      alt="Crowd at a tech conference with purple lighting"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      data-alt="Crowd at a tech conference with purple lighting"
+                      src={event.heroImage}
+                    />
+                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-md text-xs font-bold text-[#0d0d1b] shadow-sm">
+                      From IDR {formattedPrice(event.price)}
                     </div>
                   </div>
-                  <div className="mt-6 flex items-center justify-between pt-4 border-t border-[#f0f0f5]">
-                    <div></div>
-                    <Link
-                      to={`/event/${event.id}`}
-                      className="h-9 px-4 rounded-lg bg-white border border-[#e7e7f3] text-[#0d0d1b] text-sm font-bold hover:bg-[#f8f8fc] hover:border-[#cfcfe7] transition-colors pt-1"
-                    >
-                      Get Tickets
-                    </Link>
+                  <div className="flex-1 p-6 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
+                        <span>{formatEventDateYear(event.startDate)}</span>
+                        <span>•</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-[#0d0d1b] leading-tight group-hover:text-primary transition-colors">
+                        {event.name}
+                      </h3>
+                      <div className="flex items-center gap-2 text-[#4c4c9a] text-sm">
+                        <span className="material-symbols-outlined text-[18px]">
+                          location_on
+                        </span>
+                        {event.venue}, {event.city}
+                      </div>
+                    </div>
+                    <div className="mt-6 flex items-center justify-between pt-4 border-t border-[#f0f0f5]">
+                      <div></div>
+                      <Link
+                        to={`/event/${event.id}`}
+                        className="h-9 px-4 rounded-lg bg-white border border-[#e7e7f3] text-[#0d0d1b] text-sm font-bold hover:bg-[#f8f8fc] hover:border-[#cfcfe7] transition-colors pt-1"
+                      >
+                        Get Tickets
+                      </Link>
+                    </div>
                   </div>
+                </article>
+              ))}
+            {profile?.events.length === 0 && (
+              <div className="bg-white rounded-xl border border-[#e7e7f3] p-12 flex flex-col items-center justify-center text-center shadow-sm">
+                <div className="size-16 rounded-full bg-[#f8f8fc] flex items-center justify-center mb-6">
+                  <span className="material-symbols-outlined text-[#9ca3af] text-[32px]">
+                    calendar_today
+                  </span>
                 </div>
-              </article>
-            ))}
+                <h3 className="text-xl font-bold text-[#0d0d1b] mb-2">
+                  No events yet
+                </h3>
+                <p className="text-[#6e6e91] max-w-sm mb-8">
+                  This organizer hasn't scheduled any events. Check back later
+                  or follow for updates.
+                </p>
+                <Link
+                  to={"/"}
+                  className="h-11 px-6 bg-primary hover:bg-primary/90 text-white rounded-lg font-bold text-sm transition-all shadow-sm hover:shadow-md pt-3"
+                >
+                  Go Back to Home
+                </Link>
+              </div>
+            )}
           </div>
           <div className="lg:col-span-4 flex flex-col gap-6">
             <div className="flex items-center justify-between">
@@ -170,50 +193,71 @@ function OrgProfile() {
                 </span>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-[#e7e7f3] flex flex-col gap-6">
-              {profile?.events.map((event) =>
-                event.review?.map((review) => (
-                  <div
-                    key={review.id}
-                    className="flex flex-col gap-3 pb-6 border-b border-[#f0f0f5]"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-3">
-                        <div className="size-10 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold">
-                          <img
-                            alt="Professional headshot of a smiling man in a suit"
-                            className="w-full h-full rounded-full object-cover"
-                            src={review.customer.profileImage}
-                          />
+            {profile?.events.length === 0 && (
+              <div className="bg-white p-8 rounded-xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-[#e7e7f3] flex flex-col items-center text-center gap-4">
+                <div className="size-12 rounded-full bg-[#f8f8fc] flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#9ca3af] text-[24px]">
+                    rate_review
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#0d0d1b] mb-1">
+                    No reviews yet
+                  </h3>
+                  <p className="text-sm text-[#6e6e91] leading-relaxed">
+                    Be the first to share your experience after attending an
+                    event.
+                  </p>
+                </div>
+              </div>
+            )}
+            <div
+              className={`bg-white p-6 rounded-xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-[#e7e7f3] flex flex-col gap-6 ${profile?.events.length === 0 ? "hidden" : ""}`}
+            >
+              {profile?.events.length !== 0 &&
+                profile?.events.map((event) =>
+                  event.review?.map((review) => (
+                    <div
+                      key={review.id}
+                      className="flex flex-col gap-3 pb-6 border-b border-[#f0f0f5]"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <div className="size-10 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold">
+                            <img
+                              alt="Professional headshot of a smiling man in a suit"
+                              className="w-full h-full rounded-full object-cover"
+                              src={review.customer.profileImage}
+                            />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-[#0d0d1b]">
+                              {review.customer.name}
+                            </p>
+                            <p className="text-xs text-[#6e6e91]">
+                              {formatEventDateYear(review.createdAt)}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-bold text-[#0d0d1b]">
-                            {review.customer.name}
-                          </p>
-                          <p className="text-xs text-[#6e6e91]">
-                            {formatEventDateYear(review.createdAt)}
-                          </p>
+                        <div className="flex text-yellow-400">
+                          {Array.from({ length: review.rating }).map(
+                            (_, index) => (
+                              <span
+                                key={index}
+                                className="material-symbols-outlined filled text-[16px]"
+                              >
+                                star
+                              </span>
+                            ),
+                          )}
                         </div>
                       </div>
-                      <div className="flex text-yellow-400">
-                        {Array.from({ length: review.rating }).map(
-                          (_, index) => (
-                            <span
-                              key={index}
-                              className="material-symbols-outlined filled text-[16px]"
-                            >
-                              star
-                            </span>
-                          ),
-                        )}
-                      </div>
+                      <p className="text-sm text-[#4c4c9a] leading-relaxed my-2 mt-4">
+                        {review.comment}
+                      </p>
                     </div>
-                    <p className="text-sm text-[#4c4c9a] leading-relaxed my-2 mt-4">
-                      {review.comment}
-                    </p>
-                  </div>
-                )),
-              )}
+                  )),
+                )}
             </div>
             {/* <button className="w-full py-3 rounded-lg border border-[#e7e7f3] bg-white text-sm font-bold text-[#4c4c9a] hover:bg-[#f8f8fc] hover:text-[#0d0d1b] transition-colors">
               Load More Reviews
