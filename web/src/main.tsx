@@ -45,7 +45,10 @@ createRoot(document.getElementById("root")!).render(
         <Route path="organizer" element={<Organizer />}>
           <Route index element={<Dashboard />} />
           <Route path="events" element={<EventOrganizer />} />
-          <Route path="/organizer/attendees/:eventId" element={<AttendeePage />} />
+          <Route
+            path="/organizer/attendees/:eventId"
+            element={<AttendeePage />}
+          />
 
           <Route path="approval" element={<Approval />} />
           <Route path="report" element={<Report />} />

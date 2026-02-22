@@ -6,13 +6,6 @@ export const Status = {
 };
 export type Status = (typeof Status)[keyof typeof Status];
 
-const Category = {
-  MUSIC: "MUSIC",
-  SPORT: "SPORT",
-  THEATRE: "THEATRE",
-};
-type Category = (typeof Category)[keyof typeof Category];
-
 export interface ITicket {
   id: string;
   eventId: string;
@@ -28,7 +21,7 @@ export type TEvent = {
   name: string;
   price: number;
   tagline: string;
-  category: Category;
+  category: string;
   venue: string;
   city: string;
   availableSeats: number;
@@ -70,6 +63,34 @@ export type TUser = {
   referralCode: string;
   profileImage: string;
   Points: { amount: number };
+};
+
+export type OrganizerProfile = {
+  name: string;
+  email: string;
+  profileImage: string;
+  events: {
+    id: string;
+    name: string;
+    price: number;
+    tagline: string;
+    category: string;
+    venue: string;
+    city: string;
+    heroImage: string;
+    about: string;
+    startDate: Date;
+    review: {
+      id: string;
+      comment: string;
+      rating: number;
+      createdAt: Date;
+      customer: {
+        name: string;
+        profileImage: string;
+      };
+    }[];
+  }[];
 };
 
 export type CreateOrderPayload = {

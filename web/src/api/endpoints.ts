@@ -16,4 +16,7 @@ export const API_ENDPOINTS = {
   EVENT: {
     SEARCH: "/events/search",
   },
+  PROFILE: {
+    ORGANIZER: "/user/organizer",
+  },
 };

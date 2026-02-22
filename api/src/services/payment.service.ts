@@ -12,19 +12,29 @@ export async function create(
     | "FAILED",
   proofImage?: string,
 ) {
-  return await prisma.$transaction(async (tx) => {
-    const order = await tx.order.findUnique({
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+  });
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  if (
+    order.status === "WAITING_PAYMENT" &&
+    order.expired_at &&
+    order.expired_at < new Date()
+  ) {
+    await prisma.order.update({
       where: { id: orderId },
+      data: {
+        status: "EXPIRED",
+      },
     });
+    throw new Error("Order has expired");
+  }
 
-    if (!order) {
-      throw new Error("Order not found");
-    }
-
-    if (order.expired_at && order.expired_at < new Date()) {
-      throw new Error("Order has expired");
-    }
-
+  return await prisma.$transaction(async (tx) => {
     const payment = await tx.payment.create({
       data: {
         order_id: orderId,
