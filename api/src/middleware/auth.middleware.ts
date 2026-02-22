@@ -1,18 +1,9 @@
 import { type Request, type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppError } from "../utils/app-error.util.js";
+import type { JwtPayload } from "../types/jwt.type.js";
 
-interface JwtPayload {
-  id: string;
-  role: string;
-  email: string;
-}
-
-export function authMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -34,7 +25,15 @@ export function authMiddleware(
     };
 
     next();
-  } catch (error) {
-    next(error);
+  } catch (error: any) {
+    if (error.name === "TokenExpiredError") {
+      return next(new AppError(401, "Token expired"));
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      return next(new AppError(401, "Invalid token"));
+    }
+
+    return next(new AppError(401, "Unauthorized"));
   }
 }
