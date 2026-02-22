@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "../api/endpoints";
 import api from "../lib/api";
 
 export const createEvent = async (data: any) => {
-  const res = await api.post("/events/", data);
+  const res = await api.post(`${API_ENDPOINTS.EVENT.CREATE}`, data);
   return res.data;
 };
 

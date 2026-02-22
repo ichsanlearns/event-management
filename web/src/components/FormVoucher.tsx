@@ -32,7 +32,11 @@ function FormVoucher({ data, onClose }: { data: TEvent; onClose: () => void }) {
       }
 
       toast.success("Voucher created successfully");
-    } catch (error) {}
+      form.reset();
+      onClose();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Failed to create voucher");
+    }
   }
 
   return (

@@ -46,14 +46,6 @@ function FormEvent({ onClose }: { onClose: () => void }) {
 
       formData.append("organizerId", user.id);
 
-      // const payload = {
-      //   ...data,
-      //   organizerId: user.id,
-      //   heroImage: file?.rawFile,
-      //   startDate: new Date(data.startDate).toISOString(),
-      //   endDate: new Date(data.endDate).toISOString(),
-      // };
-
       await createEvent(formData);
 
       toast.dismiss();
@@ -62,11 +54,11 @@ function FormEvent({ onClose }: { onClose: () => void }) {
 
       form.reset();
 
-      // ⬇️ TUTUP MODAL SETELAH BERHASIL
       onClose();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to create event");
     } finally {
+      toast.dismiss();
       setIsLoading(false);
     }
   }
@@ -160,35 +152,42 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                     Event Cover Image
                   </label>
                   {!file ? (
-                    <label
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-border-light dark:border-border-dark rounded-xl hover:border-primary transition-colors bg-slate-50 dark:bg-slate-900/50 cursor-pointer group ${isDragging ? "border-primary bg-slate-50" : "border-slate-300"}`}
-                    >
-                      <div className="space-y-1 text-center">
-                        <div className="mx-auto size-12 flex items-center justify-center rounded-full bg-indigo-50 dark:bg-indigo-900/20 text-indigo-500 group-hover:scale-110 transition-transform">
-                          <span className="material-symbols-outlined text-[24px]">
-                            add_photo_alternate
-                          </span>
+                    <>
+                      <label
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-border-light dark:border-border-dark rounded-xl hover:border-primary transition-colors bg-slate-50 dark:bg-slate-900/50 cursor-pointer group ${isDragging ? "border-primary bg-slate-50" : "border-slate-300"}`}
+                      >
+                        <div className="space-y-1 text-center">
+                          <div className="mx-auto size-12 flex items-center justify-center rounded-full bg-indigo-50 dark:bg-indigo-900/20 text-indigo-500 group-hover:scale-110 transition-transform">
+                            <span className="material-symbols-outlined text-[24px]">
+                              add_photo_alternate
+                            </span>
+                          </div>
+                          <div className="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
+                            <label className="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
+                              <span>Upload a file</span>
+                              <input
+                                accept="image/*"
+                                className="sr-only"
+                                type="file"
+                                onChange={handleInputChange}
+                              />
+                            </label>
+                            <p className="pl-1">or drag and drop</p>
+                          </div>
+                          <p className="text-xs text-slate-500 dark:text-slate-500">
+                            PNG, JPG, GIF up to 10MB
+                          </p>
                         </div>
-                        <div className="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
-                          <label className="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
-                            <span>Upload a file</span>
-                            <input
-                              accept="image/*"
-                              className="sr-only"
-                              type="file"
-                              onChange={handleInputChange}
-                            />
-                          </label>
-                          <p className="pl-1">or drag and drop</p>
-                        </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-500">
-                          PNG, JPG, GIF up to 10MB
+                      </label>
+                      {typeof errorsEvent.heroImage?.message === "string" && (
+                        <p className="text-red-500 text-sm mt-2">
+                          {errorsEvent.heroImage?.message}
                         </p>
-                      </div>
-                    </label>
+                      )}
+                    </>
                   ) : (
                     <div className="border p-5 border-primary bg-slate-50 rounded-xl">
                       <div className="space-y-4">
@@ -229,12 +228,13 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                       placeholder="e.g. Summer Music Festival 2024"
                       type="text"
                     />
+                    {errorsEvent.name && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.name.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.name && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.name.message}
-                    </p>
-                  )}
+
                   <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                       Tagline
@@ -245,12 +245,13 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                       placeholder="e.g. A full-beat night you won’t ever forget"
                       type="text"
                     />
+                    {errorsEvent.tagline && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.tagline.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.tagline && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.tagline.message}
-                    </p>
-                  )}
+
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                       Price
@@ -271,12 +272,12 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                         <span className="text-slate-500 sm:text-sm">IDR</span>
                       </div>
                     </div>
+                    {errorsEvent.price && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.price.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.price && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.price.message}
-                    </p>
-                  )}
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                       Category
@@ -289,12 +290,12 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                       <option value="SPORT">Sport</option>
                       <option value="THEATRE">Theatre</option>
                     </select>
+                    {errorsEvent.category && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.category.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.category && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.category.message}
-                    </p>
-                  )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -330,12 +331,12 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                       placeholder="e.g. Jakarta"
                       type="text"
                     />
+                    {errorsEvent.city && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.city.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.city && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.city.message}
-                    </p>
-                  )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
@@ -349,12 +350,12 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                       className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
                       type="datetime-local"
                     />
+                    {errorsEvent.startDate && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.startDate.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.startDate && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.startDate.message}
-                    </p>
-                  )}
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                       End Date &amp; Time
@@ -366,12 +367,12 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                       className="mt-1 block w-full rounded-lg border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
                       type="datetime-local"
                     />
+                    {errorsEvent.endDate && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.endDate.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.endDate && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.endDate.message}
-                    </p>
-                  )}
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                       Available Seats
@@ -409,12 +410,13 @@ function FormEvent({ onClose }: { onClose: () => void }) {
                       placeholder="Describe the event, agenda, speakers..."
                       rows={4}
                     ></textarea>
+                    {errorsEvent.about && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsEvent.about.message}
+                      </p>
+                    )}
                   </div>
-                  {errorsEvent.about && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsEvent.about.message}
-                    </p>
-                  )}
+
                   <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                     Brief description for your event listing. URLs are
                     hyperlinked.
