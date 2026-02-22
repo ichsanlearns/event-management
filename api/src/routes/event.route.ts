@@ -18,11 +18,11 @@ const router = express.Router();
 
 router.post("/", uploadLocal.single("heroImage"), createEvent);
 router.get("/", getAllEvent);
+router.get("/search", getSearchEvent);
 router.get("/:id", getEventById);
 router.get("/organizer/:organizerId", getEventByOrganizerId);
 router.delete("/:id", deleteEvent);
 router.patch("/:id", updateEvent);
 router.get("/:eventId/attendees", getEventAttendees);
-router.get("/search", getSearchEvent);
 
 export default router;

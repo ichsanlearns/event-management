@@ -158,6 +158,7 @@ export async function getSearch({
       city: true,
       start_date: true,
       category: true,
+      hero_image: true,
       Tickets: {
         select: { price: true },
         orderBy: { price: "asc" },
@@ -172,6 +173,7 @@ export async function getSearch({
     city: event.city,
     startDate: event.start_date,
     category: event.category,
+    heroImage: event.hero_image,
     lowestPrice: event.Tickets.length ? event.Tickets[0]?.price : null,
   }));
 }

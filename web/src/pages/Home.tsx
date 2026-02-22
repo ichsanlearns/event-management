@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import { cityArray } from "../constants/city.constant";
 import { getSearchEvents } from "../services/event.service";
 import toast from "react-hot-toast";
+import { formatEventDate } from "../utils/format.util";
 
 function Home() {
   const [events, setEvents] = useState<TEvent[] | null>(null);
@@ -183,6 +184,7 @@ function Home() {
                     <div className="py-2">
                       {events?.map((event) => (
                         <a
+                          key={event.id}
                           className="flex items-center gap-4 px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary"
                           href="#"
                         >
@@ -196,16 +198,18 @@ function Home() {
                           <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2 mb-0.5">
                               <h5 className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                                Jakarta Summer Jazz Festival
+                                {event.name}
                               </h5>
                               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-                                Music
+                                {event.category}
                               </span>
                             </div>
                             <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                              <span>GBK Stadium, Jakarta</span>
+                              <span>
+                                {event.venue}, {event.city}
+                              </span>
                               <span className="w-0.5 h-0.5 rounded-full bg-gray-400"></span>
-                              <span>Aug 24</span>
+                              <span>{formatEventDate(event.startDate)}</span>
                             </div>
                           </div>
                           <div className="flex-shrink-0 text-right">
@@ -213,7 +217,7 @@ function Home() {
                               Starting from
                             </div>
                             <div className="text-sm font-bold text-primary">
-                              IDR 750k
+                              IDR {event.minPrice}
                             </div>
                           </div>
                         </a>
