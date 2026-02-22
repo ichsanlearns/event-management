@@ -9,7 +9,7 @@ import { formatEventDate } from "../utils/format.util";
 import { categoryArray } from "../constants/category,constant";
 
 function Home() {
-  const [events, setEvents] = useState<TEvent[] | null>(null);
+  const [eventsSearch, setEventsSearch] = useState<TEvent[] | null>(null);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState<
     "search" | "location" | "category" | null
@@ -19,17 +19,6 @@ function Home() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const locationRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`);
-        const data = await response.json();
-        setEvents(data.data);
-      } catch (error) {}
-    }
-    fetchEvents();
-  }, []);
 
   // close when clicking outside
   useEffect(() => {
@@ -62,7 +51,7 @@ function Home() {
 
           const response = await getSearchEvents(payload);
 
-          setEvents(response.data);
+          setEventsSearch(response.data);
         } catch (error: any) {
           toast.error(error.response.data.message);
         }
@@ -96,44 +85,20 @@ function Home() {
             Discover the world's most immersive festivals and exclusive events.
             Your next great memory starts with a ticket.
           </p>
-          <button className="bg-primary hover:bg-blue-900 text-white text-lg font-bold py-4 px-10 rounded-full transition-all shadow-xl shadow-indigo-900/40 hover:scale-105 active:scale-95">
+          <button
+            onClick={() => {
+              document.getElementById("event")?.scrollIntoView({
+                behavior: "smooth",
+              });
+            }}
+            className="bg-primary hover:bg-blue-900 text-white text-lg font-bold py-4 px-10 rounded-full transition-all shadow-xl shadow-indigo-900/40 hover:scale-105 active:scale-95"
+          >
             Get Tickets
           </button>
         </div>
         <div className="absolute bottom-0 w-full z-20 translate-y-1/2 px-4">
           <div className="max-w-250 mx-auto bg-white dark:bg-[#1E1B2E] rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 p-3 md:p-4">
             <form className="flex flex-col lg:flex-row gap-3">
-              {/* <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">
-                    search
-                  </span>
-                </div>
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onFocus={() => setIsOpen("search")}
-                  className="block w-full pl-12 pr-4 py-4 border-none rounded-t-2xl bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-0 focus:bg-white dark:focus:bg-gray-800 transition-all text-lg font-medium"
-                  placeholder="Search events, artists, or venues..."
-                  type="text"
-                /> */}
-              {/* {isOpen === "search" && query && (
-                  <>
-                    <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  rounded-b-xl shadow-xl z-50">
-                      <div className="max-h-72 overflow-y-auto overscroll-contain">
-                        {events?.map((event) => (
-                          <Link
-                            to={`/event/${event.id}`}
-                            key={event.id}
-                            className="block px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-                          >
-                            {event.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )} */}
-
               {/* Form */}
 
               <div ref={containerRef} className="relative grow group ">
@@ -151,9 +116,9 @@ function Home() {
                   type="text"
                 />
 
-                {isOpen === "search" && query && (
+                {isOpen === "search" && (
                   <div className="absolute top-full left-0 right-0 mt-3 bg-white dark:bg-[#1E1B2E] rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50 transform origin-top transition-all duration-200 opacity-100 visible">
-                    <div className="flex gap-2 p-3 border-b border-gray-100 dark:border-gray-800 overflow-x-auto no-scrollbar">
+                    {/* <div className="flex gap-2 p-3 border-b border-gray-100 dark:border-gray-800 overflow-x-auto no-scrollbar">
                       <button
                         className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-xs font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors whitespace-nowrap"
                         type="button"
@@ -181,38 +146,39 @@ function Home() {
                       >
                         Price
                       </button>
-                    </div>
+                    </div> */}
 
-                    {/* Event List */}
                     <div className="py-2">
-                      {events?.map((event) => (
+                      {eventsSearch?.map((eventSearch) => (
                         <Link
-                          to={`/event/${event.id}`}
-                          key={event.id}
+                          to={`/event/${eventSearch.id}`}
+                          key={eventSearch.id}
                           className="flex items-center gap-4 px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary"
                         >
                           <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
                             <img
                               alt="Thumbnail"
                               className="w-full h-full object-cover"
-                              src={event.heroImage}
+                              src={eventSearch.heroImage}
                             />
                           </div>
                           <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2 mb-0.5">
                               <h5 className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                                {event.name}
+                                {eventSearch.name}
                               </h5>
                               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-                                {event.category}
+                                {eventSearch.category}
                               </span>
                             </div>
                             <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                               <span>
-                                {event.venue}, {event.city}
+                                {eventSearch.venue}, {eventSearch.city}
                               </span>
                               <span className="w-0.5 h-0.5 rounded-full bg-gray-400"></span>
-                              <span>{formatEventDate(event.startDate)}</span>
+                              <span>
+                                {formatEventDate(eventSearch.startDate)}
+                              </span>
                             </div>
                           </div>
                           <div className="flex-shrink-0 text-right">
@@ -220,7 +186,7 @@ function Home() {
                               Starting from
                             </div>
                             <div className="text-sm font-bold text-primary">
-                              IDR {event.lowestPrice}
+                              IDR {eventSearch ? eventSearch.lowestPrice : 0}
                             </div>
                           </div>
                         </Link>
@@ -297,35 +263,27 @@ function Home() {
                       </a> */}
                     </div>
 
-                    {/* NO EVENT FOUND */}
-                    {/* <div className="hidden flex-col items-center justify-center py-8 px-4 text-center">
-                    <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
-                      <span className="material-symbols-outlined text-gray-400 text-2xl">
-                        search_off
-                      </span>
+                    <div
+                      className={`flex flex-col items-center justify-center py-8 px-4 text-center ${eventsSearch?.length! > 0 ? "hidden" : ""}`}
+                    >
+                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+                        <span className="material-symbols-outlined text-gray-400 text-2xl">
+                          search_off
+                        </span>
+                      </div>
+                      <h5 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+                        No events found
+                      </h5>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        We couldn't find any matches for {query}. Try adjusting
+                        your keywords.
+                      </p>
                     </div>
-                    <h5 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
-                      No events found
-                    </h5>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      We couldn't find any matches for "Underwater Basket
-                      Weaving". Try adjusting your keywords.
-                    </p>
-                  </div> */}
                     <div className="bg-gray-50 dark:bg-gray-800/50 px-4 py-2 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
-                      <span className="text-[10px] text-gray-400">
-                        Press
-                        <kbd className="font-sans px-1 py-0.5 rounded bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-xs">
-                          Enter
-                        </kbd>
-                        to search all results
+                      <div></div>
+                      <span className="text-[10px] font-bold text-primary hover:underline">
+                        {eventsSearch?.length!} results
                       </span>
-                      <a
-                        className="text-[10px] font-bold text-primary hover:underline"
-                        href="#"
-                      >
-                        View all 24 results
-                      </a>
                     </div>
                   </div>
                 )}
@@ -405,22 +363,13 @@ function Home() {
                 </div>
               </div>
               {/* Form */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  className="shrink-0 bg-primary hover:bg-primary-dark text-white font-bold py-3.5 px-8 rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95 flex items-center justify-center gap-2 text-lg r"
-                  type="button"
-                >
-                  Search
-                </button>
-                {/* Search */}
-              </div>
             </form>
           </div>
         </div>
       </div>
 
       {/* card */}
-      <div className="bg">
+      <div className="bg" id="event">
         <Card />
       </div>
     </main>

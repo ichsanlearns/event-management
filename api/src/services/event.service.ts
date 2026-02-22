@@ -166,7 +166,7 @@ export async function getSearch({
     },
   });
 
-  return events.map((event) => ({
+  const mapped = events.map((event) => ({
     id: event.id,
     name: event.name,
     venue: event.venue,
@@ -176,6 +176,8 @@ export async function getSearch({
     heroImage: event.hero_image,
     lowestPrice: event.Tickets.length ? event.Tickets[0]?.price : null,
   }));
+
+  return mapped;
 }
 
 export async function getById(id: string) {
