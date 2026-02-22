@@ -1,6 +1,14 @@
 import { type Request, type Response } from "express";
 
-import { create, getAll, getById, getByOrganizerId, remove, updateById } from "../services/event.service.js";
+import {
+  create,
+  getAll,
+  getById,
+  getByOrganizerId,
+  getSearch,
+  remove,
+  updateById,
+} from "../services/event.service.js";
 
 import { getAttendeesByEvent } from "../services/attendee.service.js";
 
@@ -56,6 +64,24 @@ export const getAllEvent = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+export const getSearchEvent = catchAsync(
+  async (req: Request, res: Response) => {
+    const query = typeof req.query.search === "string" ? req.query.search : "";
+    const category =
+      typeof req.query.category === "string" ? req.query.category : "";
+    const location =
+      typeof req.query.location === "string" ? req.query.location : "";
+
+    const events = await getSearch({ query, category, location });
+
+    res.status(200).json({
+      message: "Event berhasil diambil",
+      data: events,
+      length: events.length,
+    });
+  },
+);
+
 export const getEventById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
@@ -74,28 +100,42 @@ export const getEventById = catchAsync(async (req: Request, res: Response) => {
   res.status(200).json({ message: "Event berhasil diambil", data: event });
 });
 
-export const getEventByOrganizerId = catchAsync(async (req: Request, res: Response) => {
-  const organizerIdParam = req.params.organizerId;
-  const organizerId = Array.isArray(organizerIdParam) ? organizerIdParam[0] : organizerIdParam;
+export const getEventByOrganizerId = catchAsync(
+  async (req: Request, res: Response) => {
+    const organizerIdParam = req.params.organizerId;
+    const organizerId = Array.isArray(organizerIdParam)
+      ? organizerIdParam[0]
+      : organizerIdParam;
 
-  if (!organizerId) {
-    return res.status(400).json({
-      message: "Organizer ID is required",
+    if (!organizerId) {
+      return res.status(400).json({
+        message: "Organizer ID is required",
+      });
+    }
+
+    const search =
+      typeof req.query.search === "string"
+        ? req.query.search.toLowerCase()
+        : "";
+
+    const events = await getByOrganizerId(organizerId);
+
+    const filtered = search
+      ? events.filter(
+          (e: any) =>
+            e.name.toLowerCase().includes(search) ||
+            e.city?.toLowerCase().includes(search) ||
+            e.venue?.toLowerCase().includes(search),
+        )
+      : events;
+
+    res.status(200).json({
+      message: "Events fetched by organizer",
+      data: filtered,
+      length: filtered.length,
     });
-  }
-
-  const search = typeof req.query.search === "string" ? req.query.search.toLowerCase() : "";
-
-  const events = await getByOrganizerId(organizerId);
-
-  const filtered = search ? events.filter((e: any) => e.name.toLowerCase().includes(search) || e.city?.toLowerCase().includes(search) || e.venue?.toLowerCase().includes(search)) : events;
-
-  res.status(200).json({
-    message: "Events fetched by organizer",
-    data: filtered,
-    length: filtered.length,
-  });
-});
+  },
+);
 
 export const updateEvent = catchAsync(async (req: Request, res: Response) => {
   const idParam = req.params.id;

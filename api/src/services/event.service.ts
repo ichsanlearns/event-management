@@ -112,6 +112,70 @@ export async function getAll(limit: number, query?: string) {
   return mapped;
 }
 
+export async function getSearch({
+  query,
+  category,
+  location,
+}: {
+  query?: string;
+  category?: string;
+  location?: string;
+}) {
+  const where: any = {
+    AND: [],
+  };
+
+  if (query) {
+    where.AND.push({
+      OR: [
+        { name: { startsWith: query, mode: "insensitive" } },
+        { name: { contains: query, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  if (category) {
+    where.AND.push({
+      category: category,
+    });
+  }
+
+  if (location) {
+    where.AND.push({
+      city: {
+        equals: location,
+        mode: "insensitive",
+      },
+    });
+  }
+
+  const events = await prisma.event.findMany({
+    where: where.AND.length ? where : undefined,
+    select: {
+      id: true,
+      name: true,
+      venue: true,
+      city: true,
+      start_date: true,
+      category: true,
+      Tickets: {
+        select: { price: true },
+        orderBy: { price: "asc" },
+      },
+    },
+  });
+
+  return events.map((event) => ({
+    id: event.id,
+    name: event.name,
+    venue: event.venue,
+    city: event.city,
+    startDate: event.start_date,
+    category: event.category,
+    lowestPrice: event.Tickets.length ? event.Tickets[0]?.price : null,
+  }));
+}
+
 export async function getById(id: string) {
   const event = await prisma.event.findUnique({
     where: { id },

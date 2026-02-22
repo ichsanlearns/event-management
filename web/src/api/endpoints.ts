@@ -13,4 +13,7 @@ export const API_ENDPOINTS = {
   AUTH: {
     ME: "/auth/me",
   },
+  EVENT: {
+    SEARCH: "/events/search",
+  },
 };
