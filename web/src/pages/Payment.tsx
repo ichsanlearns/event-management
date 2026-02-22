@@ -46,6 +46,11 @@ function Payment() {
     !hasVoucher &&
     (order?.status === "WAITING_PAYMENT" || order?.status === "REJECTED");
 
+  const hasCoupon = !!coupon?.id;
+  const canApplyCoupon =
+    !hasCoupon &&
+    (order?.status === "WAITING_PAYMENT" || order?.status === "REJECTED");
+
   useEffect(() => {
     try {
       async function getOrder() {
@@ -253,7 +258,7 @@ function Payment() {
                             Rp {order ? formattedPrice(order?.ticket.price) : 0}
                           </span>
                         </div>
-                        <div className="border-slate-300 border-t" />
+                        <div className="border-t border-slate-100 dark:border-slate-800 mt-3" />
                         <div className="flex justify-between text-sm">
                           <span className="text-slate-600 dark:text-slate-300">
                             Subtotal Produk ({order?.quantity}x)
@@ -348,24 +353,27 @@ function Payment() {
                           </>
                         )}
 
-                        <div className="border-t border-slate-100 dark:border-slate-800" />
-                        {!coupon?.id ? (
-                          <div className="flex justify-between items-center text-sm pt-2 pb-2">
-                            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                              <span className="material-symbols-outlined text-[16px]">
-                                confirmation_number
+                        {canApplyCoupon && (
+                          <>
+                            <div className="border-t border-slate-100 dark:border-slate-800" />
+                            <div className="flex justify-between items-center text-sm pt-2 pb-2">
+                              <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                                <span className="material-symbols-outlined text-[16px]">
+                                  confirmation_number
+                                </span>
+                                No coupon applied
                               </span>
-                              No coupon applied
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setOpenCoupon(true)}
-                              className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
-                            >
-                              View Available Coupons (2)
-                            </button>
-                          </div>
-                        ) : (
+                              <button
+                                type="button"
+                                onClick={() => setOpenCoupon(true)}
+                                className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
+                              >
+                                View Available Coupons (2)
+                              </button>
+                            </div>
+                          </>
+                        )}
+                        {hasCoupon && (
                           <div className="flex flex-col gap-1.5 p-3 bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30 rounded-lg">
                             <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
                               <span className="flex items-center gap-1 font-medium">
@@ -382,15 +390,15 @@ function Payment() {
                           </div>
                         )}
 
-                        <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
-                          <div className="flex justify-between items-end">
-                            <span className="text-slate-500 dark:text-slate-400 font-medium">
-                              Total Amount
-                            </span>
-                            <span className="text-2xl font-black text-primary">
-                              Rp {order ? formattedPrice(finalAmount) : 0}
-                            </span>
-                          </div>
+                        <div className="border-slate-300 border-t" />
+
+                        <div className="flex justify-between items-end">
+                          <span className="text-slate-500 dark:text-slate-400 font-medium">
+                            Total Amount
+                          </span>
+                          <span className="text-2xl font-black text-primary">
+                            Rp {order ? formattedPrice(finalAmount) : 0}
+                          </span>
                         </div>
                       </div>
                     </div>

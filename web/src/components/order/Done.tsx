@@ -42,13 +42,10 @@ function Done({ data }: { data: Order }) {
           <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate">
             {data.ticket.type} • {data.quantity} Ticket
           </p>
-          <Link
-            to={`/payment/${data.id}`}
-            className="text-xs font-medium text-primary hover:text-primary-hover dark:text-primary dark:hover:text-indigo-400 flex items-center gap-1 transition-colors"
-          >
+          <div className="text-xs font-medium text-primary hover:text-primary-hover dark:text-primary dark:hover:text-indigo-400 flex items-center gap-1 transition-colors">
             View Details
             <span className="material-icons text-[14px]">arrow_forward</span>
-          </Link>
+          </div>
         </div>
       </div>
     </Link>

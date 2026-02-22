@@ -103,17 +103,21 @@ export async function getById(id: string) {
     usingPoint: order.using_point,
     total: order.total,
     expiredAt: order.expired_at,
-    voucher: {
-      id: order.Voucher?.id,
-      code: order.Voucher?.code,
-      discountAmount: order.Voucher?.discount_amount,
-      quota: order.Voucher?.quota,
-    },
-    coupon: {
-      id: order.Coupon?.id,
-      amount: order.Coupon?.amount,
-      expiredAt: order.Coupon?.expired_at,
-    },
+    voucher: order.Voucher
+      ? {
+          id: order.Voucher?.id,
+          code: order.Voucher?.code,
+          discountAmount: order.Voucher?.discount_amount,
+          quota: order.Voucher?.quota,
+        }
+      : null,
+    coupon: order.Coupon
+      ? {
+          id: order.Coupon?.id,
+          amount: order.Coupon?.amount,
+          expiredAt: order.Coupon?.expired_at,
+        }
+      : null,
     ticket: {
       eventId: order.Ticket.event_id,
       type: order.Ticket.type,

@@ -13,6 +13,18 @@ export async function create(
   proofImage?: string,
 ) {
   return await prisma.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
+    if (order.expired_at && order.expired_at < new Date()) {
+      throw new Error("Order has expired");
+    }
+
     const payment = await tx.payment.create({
       data: {
         order_id: orderId,
