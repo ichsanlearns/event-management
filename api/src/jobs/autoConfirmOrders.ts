@@ -9,7 +9,7 @@ export async function autoConfirmOrders() {
       status: "WAITING_CONFIRMATION",
     },
     data: {
-      status: "DONE",
+      status: "EXPIRED",
     },
   });
 }

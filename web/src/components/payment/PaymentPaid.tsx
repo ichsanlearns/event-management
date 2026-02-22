@@ -1,4 +1,8 @@
-function PaymentPaid() {
+import { Link } from "react-router";
+import type { IOrder } from "../../types/event.type";
+import { formatEventDateYear } from "../../utils/format.util";
+
+function PaymentPaid({ order }: { order: IOrder }) {
   return (
     <div className="lg:col-span-8 space-y-6">
       <section className="bg-white dark:bg-[#1a162e] rounded-xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 text-center">
@@ -16,7 +20,7 @@ function PaymentPaid() {
           Thank you for your purchase. Your payment has been processed
           successfully and your tickets for
           <span className="font-semibold text-primary">
-            &nbsp;Neon Nights Music Festival 2024&nbsp;
+            &nbsp;{order.ticket.eventName.name}&nbsp;
           </span>
           have been secured.
         </p>
@@ -27,7 +31,9 @@ function PaymentPaid() {
                 Payment Date
               </p>
               <p className="text-slate-900 dark:text-white font-medium">
-                Oct 24, 2024
+                {order.payments && order.payments.length > 0
+                  ? formatEventDateYear(new Date(order.payments[0].createdAt))
+                  : "-"}
               </p>
               <p className="text-slate-500 text-sm">14:30 WIB</p>
             </div>
@@ -36,28 +42,34 @@ function PaymentPaid() {
                 Transaction ID
               </p>
               <p className="text-slate-900 dark:text-white font-mono font-medium">
-                TRX-8892-BB1
+                {order.payments && order.payments.length > 0
+                  ? order.payments[0].id
+                  : "-"}
               </p>
             </div>
             <div>
               <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold mb-1">
                 Amount Paid
               </p>
-              <p className="text-primary font-bold text-xl">Rp 2.700.000</p>
+              <p className="text-primary font-bold text-xl">
+                Rp{" "}
+                {order.payments && order.payments.length > 0
+                  ? order.payments[0].amount
+                  : "-"}
+              </p>
             </div>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="w-full sm:w-auto px-8 py-3 bg-white dark:bg-transparent border-2 border-primary text-primary hover:bg-primary/5 text-lg font-bold rounded-xl transition-all active:scale-[0.99] flex items-center justify-center gap-2">
-            <span className="material-symbols-outlined">download</span>
-            Download Invoice
-          </button>
-          <button className="w-full sm:w-auto px-8 py-3 bg-primary hover:bg-primary/90 text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2">
+          <Link
+            to={`/myticket`}
+            className="w-full sm:w-auto px-8 py-3 bg-primary hover:bg-primary/90 text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+          >
             <span className="material-symbols-outlined">
               confirmation_number
             </span>
             View Ticket
-          </button>
+          </Link>
         </div>
       </section>
       <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-xl p-4 flex items-start gap-3">

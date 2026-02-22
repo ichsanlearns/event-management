@@ -517,7 +517,7 @@ async function seed() {
           customer_id: user,
           ticket_id: ticketDwpId!,
           quantity: 3,
-          expired_at: new Date(Date.now()),
+          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
           status: "REJECTED",
           using_point: 0,
           total: 600000,

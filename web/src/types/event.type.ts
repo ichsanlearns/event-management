@@ -29,6 +29,13 @@ export interface ICoupon {
   referrerId: string;
 }
 
+export interface IPayment {
+  id: string;
+  proofImage: string;
+  amount: number;
+  createdAt: string;
+}
+
 export type TUserCoupon = ICoupon[];
 
 export type TEvent = {
@@ -83,4 +90,5 @@ export interface IOrder {
   coupon: ICoupon;
   ticket: ITicket;
   userCoupons: TUserCoupon;
+  payments: IPayment[];
 }

@@ -1,7 +1,80 @@
 import { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { v4 as uuidV4 } from "uuid";
+import type { IOrder } from "../../types/event.type";
 
-function PaymentRejected() {
-  const [isOpen, setIsOpen] = useState<string | null>(null);
+interface UploadedFile {
+  id: string;
+  preview: string;
+  name: string;
+  rawFile: File;
+}
+
+function PaymentRejected({ order }: { order: IOrder }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [open, setOpen] = useState<"atm" | "banking" | null>(null);
+  const [file, setFile] = useState<UploadedFile | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const {
+    setValue,
+    formState: { errors },
+    clearErrors,
+  } = useFormContext();
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files?.[0]) {
+      setValue("proofImage", e.target.files?.[0]);
+      handleFileSelect(e.target.files?.[0]);
+      clearErrors("proofImage");
+    }
+  }
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText("8800 1234 5678 900");
+    setCopied(true);
+
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  function handleFileSelect(selectedFile: File) {
+    if (selectedFile) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const preview = e.target?.result as string;
+        setFile({
+          id: uuidV4(),
+          preview: preview,
+          name: selectedFile.name,
+          rawFile: selectedFile,
+        });
+      };
+
+      reader.readAsDataURL(selectedFile);
+    }
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave() {
+    setIsDragging(false);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(false);
+    clearErrors("proofImage");
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files[0]);
+      setValue("proofImage", files[0]);
+    }
+  }
   return (
     <div className="lg:col-span-8 space-y-6">
       <section className="bg-white dark:bg-[#1a162e] rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
@@ -67,32 +140,35 @@ function PaymentRejected() {
                 8800 1234 5678 900
               </p>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+            >
               <span className="material-symbols-outlined text-[18px]">
                 content_copy
               </span>
-              Copy Number
+              {copied ? "Copied ✓" : "Copy Number"}
             </button>
           </div>
         </div>
         <div className="mt-4 flex gap-4 text-sm text-slate-500">
           <button
-            onClick={() => setIsOpen(isOpen === "atm" ? null : "atm")}
+            onClick={() => setOpen(open === "atm" ? null : "atm")}
             className="flex items-center gap-1 hover:text-primary transition-colors"
           >
             <span
-              className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${isOpen === "atm" ? "rotate-180" : ""}`}
+              className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${open === "atm" ? "rotate-180" : ""}`}
             >
               expand_more
             </span>
             How to pay via ATM
           </button>
           <button
-            onClick={() => setIsOpen(isOpen === "banking" ? null : "banking")}
+            onClick={() => setOpen(open === "banking" ? null : "banking")}
             className="flex items-center gap-1 hover:text-primary transition-colors"
           >
             <span
-              className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${isOpen === "banking" ? "rotate-180" : ""}`}
+              className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${open === "banking" ? "rotate-180" : ""}`}
             >
               expand_more
             </span>
@@ -100,7 +176,7 @@ function PaymentRejected() {
           </button>
         </div>
         <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen === "atm" ? "max-h-125 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${open === "atm" ? "max-h-125 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
         >
           <ol className="list-decimal pl-5 text-sm text-slate-600 space-y-2">
             <li> Insert your BCA ATM card and enter your PIN</li>
@@ -122,7 +198,7 @@ function PaymentRejected() {
           </ol>
         </div>
         <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen === "banking" ? "max-h-125 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${open === "banking" ? "max-h-125 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
         >
           <ol className="list-decimal pl-5 text-sm text-slate-600 space-y-2">
             <li>
@@ -153,56 +229,98 @@ function PaymentRejected() {
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
             Previous Upload
           </h3>
-          <div className="bg-slate-50 dark:bg-[#25203b] p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center gap-4">
+          {order.payments?.map((payment) => (
             <div
-              className="size-16 rounded bg-slate-200 dark:bg-slate-800 flex-shrink-0 bg-cover bg-center opacity-70"
-              style={{
-                backgroundImage:
-                  "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDNd6nfumOyOaGStunmqgtgZ2fD-6FwF9JLShHQPWohL-f5xWn3TRPXC9NKXOgkMgCiOWjL8OzY-9b7MzXLFz9Ok1ALB3BVpX0Z2VTdPEhC6NVWEvli_2pugAnrdMAQFWsI9ntonPV6wj1bF6Aj9lldfmTwGOxOGOevBUAM4lwhJyW1_oYz4afJ9inOmSofRUKNZg6wMd16QibjBeU1nCWNo5HlbuwXCGdMN5JA0P94MyPp3_-SNgfPxGf0rNJNEgRl6jaSUNS0yJA')",
-              }}
-            ></div>
-            <div>
-              <p className="text-sm font-medium text-slate-900 dark:text-white">
-                transfer_receipt_001.jpg
-              </p>
-              <p className="text-xs text-red-500 font-medium flex items-center gap-1 mt-1">
-                <span className="material-symbols-outlined text-[14px]">
-                  cancel
-                </span>
-                Rejected
-              </p>
+              key={payment.id}
+              className="bg-slate-50 dark:bg-[#25203b] p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center gap-4"
+            >
+              <div
+                className="size-16 rounded bg-slate-200 dark:bg-slate-800 flex-shrink-0 bg-cover bg-center opacity-70"
+                style={{
+                  backgroundImage: `url('${payment.proofImage}')`,
+                }}
+              ></div>
+              <div>
+                <p className="text-sm font-medium text-slate-900 dark:text-white">
+                  {payment.proofImage}
+                </p>
+                <p className="text-xs text-red-500 font-medium flex items-center gap-1 mt-1">
+                  <span className="material-symbols-outlined text-[14px]">
+                    cancel
+                  </span>
+                  Rejected
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
           Re-upload Payment Proof
         </h3>
-        <div className="relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl p-8 transition-colors hover:border-primary hover:bg-slate-50 dark:hover:bg-[#25203b] group cursor-pointer text-center">
-          <input
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            type="file"
-          />
-          <div className="flex flex-col items-center justify-center gap-3">
-            <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-2xl">
-                cloud_upload
-              </span>
-            </div>
-            <div>
-              <p className="text-slate-900 dark:text-white font-medium">
-                Click to upload or drag and drop
+        {!file ? (
+          <>
+            <label
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              htmlFor="proofImage"
+              className={`block relative border-2 border-dashed  dark:border-slate-600 rounded-xl p-8 transition-colors hover:border-primary hover:bg-slate-50 dark:hover:bg-[#25203b] group cursor-pointer text-center ${isDragging ? "border-primary bg-slate-50" : " border-slate-300"}`}
+            >
+              <input
+                id="proofImage"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                type="file"
+                onChange={handleInputChange}
+                accept="image/*"
+              />
+              <div className="flex flex-col items-center justify-center gap-3">
+                <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">
+                    cloud_upload
+                  </span>
+                </div>
+                <div>
+                  <p className="text-slate-900 dark:text-white font-medium">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-sm text-slate-500 mt-1">
+                    SVG, PNG, JPG or GIF (max. 2MB)
+                  </p>
+                </div>
+              </div>
+            </label>
+            {typeof errors.proofImage?.message === "string" && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.proofImage.message}
               </p>
-              <p className="text-sm text-slate-500 mt-1">
-                SVG, PNG, JPG or GIF (max. 2MB)
-              </p>
+            )}
+          </>
+        ) : (
+          <div className="space-y-4">
+            <div className="relative">
+              <img
+                className="h-64 object-contain rounded-lg w-full"
+                src={file.preview || "/placeholder.svg"}
+                alt={file.name}
+              />
+              <button
+                onClick={() => {
+                  setFile(null);
+                }}
+                type="button"
+                className="absolute flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 hover:scale-110 text-white rounded-full p-1 min-h-7 min-w-7"
+              >
+                <span className="text-sm leading-none">x</span>
+              </button>
+              <div>
+                <p className="text-sm text-gray-600 truncate text-center">
+                  {file.name}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
-      <button className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2">
-        Resubmit Payment
-        <span className="material-symbols-outlined">refresh</span>
-      </button>
     </div>
   );
 }

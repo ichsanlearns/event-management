@@ -62,6 +62,15 @@ export async function getById(id: string) {
       quantity: true,
       using_point: true,
       expired_at: true,
+      Payments: {
+        select: {
+          id: true,
+          proof_image: true,
+          amount: true,
+          created_at: true,
+        },
+        orderBy: { created_at: "desc" },
+      },
       Voucher: {
         select: { id: true, code: true, discount_amount: true, quota: true },
       },
@@ -103,6 +112,15 @@ export async function getById(id: string) {
     usingPoint: order.using_point,
     total: order.total,
     expiredAt: order.expired_at,
+    payments:
+      order.Payments.length > 0
+        ? order.Payments.map((p) => ({
+            id: p.id,
+            proofImage: p.proof_image,
+            amount: p.amount,
+            createdAt: p.created_at,
+          }))
+        : null,
     voucher: order.Voucher
       ? {
           id: order.Voucher?.id,

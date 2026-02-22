@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { formattedPrice } from "../utils/format.util";
-import type { ICoupon, IOrder, TUserCoupon } from "../types/event.type";
+import type {
+  ICoupon,
+  IOrder,
+  IPayment,
+  TUserCoupon,
+} from "../types/event.type";
 
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,7 +34,7 @@ function Payment() {
   const [openCoupon, setOpenCoupon] = useState(false);
   const [order, setOrder] = useState<IOrder | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [payments, setPayments] = useState<IPayment[] | null>(null);
   const [orderStatus, setOrderStatus] = useState<string | null>(null);
   const [voucher, setVoucher] = useState<{
     id: string;
@@ -42,14 +47,10 @@ function Payment() {
   const [userCoupons, setUserCoupons] = useState<TUserCoupon | null>();
 
   const hasVoucher = !!voucher?.code;
-  const canApplyVoucher =
-    !hasVoucher &&
-    (order?.status === "WAITING_PAYMENT" || order?.status === "REJECTED");
+  const canApplyVoucher = !hasVoucher && order?.status === "WAITING_PAYMENT";
 
   const hasCoupon = !!coupon?.id;
-  const canApplyCoupon =
-    !hasCoupon &&
-    (order?.status === "WAITING_PAYMENT" || order?.status === "REJECTED");
+  const canApplyCoupon = !hasCoupon && order?.status === "WAITING_PAYMENT";
 
   useEffect(() => {
     try {
@@ -62,6 +63,7 @@ function Payment() {
         setOrderStatus(response.data.status);
         setUserCoupons(response.data.userCoupons);
         setCoupon(response.data.coupon);
+        setPayments(response.data.payments);
       }
 
       getOrder();
@@ -119,6 +121,7 @@ function Payment() {
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {
+      toast.dismiss();
       setIsLoading(false);
     }
   }
@@ -151,19 +154,31 @@ function Payment() {
               <p className="text-slate-900 dark:text-white text-lg font-bold">
                 Payment Details
               </p>
-              <p className="text-primary text-sm font-semibold">Step 3 of 4</p>
+              <p className="text-primary text-sm font-semibold">
+                Step {order?.status === "PAID" ? "4" : "3"} of 4
+              </p>
             </div>
             <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-primary rounded-full"
-                style={{ width: "75%" }}
+                style={{
+                  width: order?.status === "PAID" ? "100%" : "75%",
+                }}
               ></div>
             </div>
             <div className="flex justify-between text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">
               <span>Selection</span>
               <span>Details</span>
-              <span className="text-primary">Payment</span>
-              <span>Confirmation</span>
+              <span
+                className={` ${order?.status === "PAID" ? " text-slate-500 dark:text-slate-400" : "text-primary"}`}
+              >
+                Payment
+              </span>
+              <span
+                className={` ${order?.status === "PAID" ? "text-primary" : "text-slate-500 dark:text-slate-400"}`}
+              >
+                Confirmation
+              </span>
             </div>
           </div>
         </div>
@@ -177,14 +192,20 @@ function Payment() {
               <div className="lg:col-span-8 space-y-6">
                 {/* Left Column: Payment Actions (Cards) */}
                 {order?.status === "WAITING_CONFIRMATION" && (
-                  <PaymentConfirmation />
+                  <PaymentConfirmation payments={payments!} />
                 )}
-                {order?.status === "PAID" && <PaymentPaid />}
-                {order?.status === "REJECTED" && <PaymentRejected />}
+                {order?.status === "PAID" && <PaymentPaid order={order} />}
+                {order?.status === "REJECTED" && (
+                  <PaymentRejected order={order} />
+                )}
                 {order?.status === "EXPIRED" && <PaymentExpired />}
                 {order?.status === "WAITING_PAYMENT" && (
                   <PaymentWaiting order={order} />
                 )}
+
+                {order?.status === "DONE" && <PaymentPaid order={order} />}
+                {order?.status === "REVIEWED" && <PaymentPaid order={order} />}
+
                 {(order?.status === "WAITING_PAYMENT" ||
                   order?.status === "REJECTED") && (
                   <div className="flex gap-2">
@@ -199,9 +220,13 @@ function Payment() {
                       type="submit"
                       className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Submit Payment
+                      {order?.status === "REJECTED"
+                        ? "Resubmit Payment"
+                        : "Submit Payment"}
                       <span className="material-symbols-outlined">
-                        arrow_forward
+                        {order?.status === "REJECTED"
+                          ? "refresh"
+                          : "arrow_forward"}
                       </span>
                     </button>
                   </div>
@@ -244,12 +269,20 @@ function Payment() {
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800">
                           <span className="size-2 rounded-full bg-amber-500 animate-pulse"></span>
                           <span className="text-xs font-bold text-amber-700 dark:text-amber-400">
-                            Pending Payment
+                            {order?.status === "WAITING_PAYMENT" &&
+                              "Pending Payment"}
+                            {order?.status === "REJECTED" && "Rejected"}
+                            {order?.status === "PAID" && "Paid"}
+                            {order?.status === "EXPIRED" && "Expired"}
+                            {order?.status === "WAITING_CONFIRMATION" &&
+                              "Waiting Confirmation"}
+                            {order?.status === "CANCELED" && "Cancelled"}
+                            {order?.status === "DONE" && "Done"}
+                            {order?.status === "REVIEWED" && "Done"}
                           </span>
                         </div>
                       </div>
                       <div className="space-y-4">
-                        {/* Items */}
                         <div className="flex justify-between text-sm mb-2">
                           <span className="text-slate-600 dark:text-slate-300">
                             {order?.ticket.type} Access
@@ -301,7 +334,6 @@ function Payment() {
 
                         {hasVoucher && (
                           <>
-                            {/* Discounts */}
                             <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
                               <span className="flex items-center gap-1">
                                 <span className="material-symbols-outlined text-[14px]">
@@ -320,7 +352,6 @@ function Payment() {
                         )}
                         {canApplyVoucher && (
                           <>
-                            {/* Promo Code Input */}
                             <div className="flex items-center gap-2">
                               <div className="relative flex-1">
                                 <input

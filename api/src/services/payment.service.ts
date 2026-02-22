@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.lib.js";
+import { AppError } from "../utils/app-error.util.js";
 
 export async function create(
   orderId: string,
@@ -17,11 +18,15 @@ export async function create(
   });
 
   if (!order) {
-    throw new Error("Order not found");
+    throw new AppError(404, "Order not found");
+  }
+
+  if (order.status !== "WAITING_PAYMENT" && order.status !== "REJECTED") {
+    throw new AppError(400, "Order not waiting for payment or rejected");
   }
 
   if (
-    order.status === "WAITING_PAYMENT" &&
+    (order.status === "WAITING_PAYMENT" || order.status === "REJECTED") &&
     order.expired_at &&
     order.expired_at < new Date()
   ) {
@@ -31,7 +36,7 @@ export async function create(
         status: "EXPIRED",
       },
     });
-    throw new Error("Order has expired");
+    throw new AppError(400, "Order has expired");
   }
 
   return await prisma.$transaction(async (tx) => {
