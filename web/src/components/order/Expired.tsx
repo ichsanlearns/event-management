@@ -1,9 +1,13 @@
 import type { Order } from "../../api/types";
 import { formatEventDate, formattedPrice } from "../../utils/format.util";
+import { Link } from "react-router";
 
 function Expired({ data }: { data: Order }) {
   return (
-    <div className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 transition-all cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+    <Link
+      to={`/payment/${data.id}`}
+      className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 transition-all cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+    >
       <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700 relative grayscale opacity-70">
         <img
           alt="Art Exhibition"
@@ -30,7 +34,7 @@ function Expired({ data }: { data: Order }) {
               {data.status}
             </span>
             <span className="text-xs font-bold text-gray-500 dark:text-gray-500 mt-1">
-              Rp. {formattedPrice(data.total)}
+              IDR {formattedPrice(data.total)}
             </span>
           </div>
         </div>
@@ -38,9 +42,16 @@ function Expired({ data }: { data: Order }) {
           <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate">
             {data.ticket.type} • {data.quantity} Ticket
           </p>
+          <Link
+            to={`/payment/${data.id}`}
+            className="text-xs font-medium text-primary hover:text-primary-hover dark:text-primary dark:hover:text-indigo-400 flex items-center gap-1 transition-colors"
+          >
+            View Details
+            <span className="material-icons text-[14px]">arrow_forward</span>
+          </Link>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

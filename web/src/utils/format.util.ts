@@ -28,6 +28,19 @@ export const formatEventDate = (iso: Date) =>
     .format(new Date(iso))
     .replace(",", " •");
 
+export const formatEventDateYear = (iso: Date) =>
+  new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  })
+    .format(new Date(iso))
+    .replace(",", " •");
+
 export const formatEventDetailDate = (iso: Date) => {
   const formatted = new Intl.DateTimeFormat("en-GB", {
     day: "numeric",

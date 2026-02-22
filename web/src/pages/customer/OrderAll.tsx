@@ -18,7 +18,6 @@ function OrderAll() {
       try {
         const res = await getOrderByCustomer(user?.id, "all");
         setEvents(res.data);
-        toast.success("Event fetched successfully");
       } catch (error: any) {
         toast.error(error.message || "Failed to fetch event");
       }

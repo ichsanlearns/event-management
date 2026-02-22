@@ -41,6 +41,11 @@ function Payment() {
   const [coupon, setCoupon] = useState<ICoupon | null>();
   const [userCoupons, setUserCoupons] = useState<TUserCoupon | null>();
 
+  const hasVoucher = !!voucher?.code;
+  const canApplyVoucher =
+    !hasVoucher &&
+    (order?.status === "WAITING_PAYMENT" || order?.status === "REJECTED");
+
   useEffect(() => {
     try {
       async function getOrder() {
@@ -289,7 +294,7 @@ function Payment() {
                           </span>
                         </div>
 
-                        {voucher?.code ? (
+                        {hasVoucher && (
                           <>
                             {/* Discounts */}
                             <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
@@ -307,7 +312,8 @@ function Payment() {
                               </span>
                             </div>
                           </>
-                        ) : (
+                        )}
+                        {canApplyVoucher && (
                           <>
                             {/* Promo Code Input */}
                             <div className="flex items-center gap-2">
@@ -341,6 +347,7 @@ function Payment() {
                             </div>
                           </>
                         )}
+
                         <div className="border-t border-slate-100 dark:border-slate-800" />
                         {!coupon?.id ? (
                           <div className="flex justify-between items-center text-sm pt-2 pb-2">

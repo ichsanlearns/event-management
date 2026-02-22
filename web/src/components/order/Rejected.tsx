@@ -1,13 +1,18 @@
+import { Link } from "react-router";
 import type { Order } from "../../api/types";
+import { formatEventDateYear, formattedPrice } from "../../utils/format.util";
 
 function Rejected({ data }: { data: Order }) {
   return (
-    <div className="group bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 hover:border-red-300 dark:hover:border-red-800 transition-all cursor-pointer opacity-90 hover:opacity-100">
+    <Link
+      to={`/payment/${data.id}`}
+      className="group bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 hover:border-red-300 dark:hover:border-red-800 transition-all cursor-pointer opacity-90 hover:opacity-100"
+    >
       <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700 relative grayscale">
         <img
           alt="Jazz Night"
           className="w-full h-full object-cover opacity-60"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnLVlV0wLQcNWx6vGSYxC6FCnxeJxelOpF3I4hz2vO3Ts8B5CpIlUeno_BSTML1X9lSeam3whYijSkq6zTSCnOWBQhJDEs-Qd0mVze36sOxQatOwgO7TK2I01GokOKz9opN3MeG1PWBI1D3OcUITvTxrsO_CEkgr7xyoqULIFWIvYqBbXKOwO84V8JlRSIJdJOhT-A29BCE6-YBu7wrw9MEtfyXpCCvcDJBQ2mwViLLTv46yZ4ZrR6QS6dPB_nRWuwBzZb2oTsWNA"
+          src={data.ticket.eventName.heroImage}
         />
         <div className="absolute inset-0 bg-red-500/10 dark:bg-red-900/20"></div>
       </div>
@@ -15,11 +20,11 @@ function Rejected({ data }: { data: Order }) {
         <div className="flex justify-between items-start">
           <div>
             <h4 className="font-bold text-gray-600 dark:text-gray-400 truncate pr-4 text-lg line-through decoration-red-400/50">
-              Jazz &amp; Coffee Night
+              {data.ticket.eventName.name}
             </h4>
             <div className="flex items-center gap-2 text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
               <span className="material-icons text-[14px]">event</span>
-              Nov 24, 2023
+              {formatEventDateYear(data.ticket.eventName.startDate)}
             </div>
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -27,13 +32,13 @@ function Rejected({ data }: { data: Order }) {
               REJECTED
             </span>
             <span className="text-xs font-bold text-gray-500 dark:text-gray-500 mt-1 line-through">
-              $45.00
+              {formattedPrice(data.total)}
             </span>
           </div>
         </div>
         <div className="flex justify-between items-end mt-2">
           <p className="text-xs text-red-600/80 dark:text-red-400/80 truncate font-medium">
-            Payment Failed
+            {data.status}
           </p>
           <button className="text-xs font-medium text-text-secondary-light hover:text-text-light dark:text-text-secondary-dark dark:hover:text-text-dark flex items-center gap-1 transition-colors">
             Retry
@@ -41,7 +46,7 @@ function Rejected({ data }: { data: Order }) {
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

@@ -494,6 +494,16 @@ async function seed() {
           using_point: 0,
           total: 400000,
         },
+        {
+          order_code: "DWP-RJ-000001",
+          customer_id: user,
+          ticket_id: ticketDwpId!,
+          quantity: 3,
+          expired_at: new Date(Date.now()),
+          status: "REJECTED",
+          using_point: 0,
+          total: 600000,
+        },
       ],
     });
     // =============================
