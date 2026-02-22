@@ -2,8 +2,11 @@ import OrderFinished from "./OrderFinished";
 import OrderAll from "./OrderAll";
 import OrderActive from "./OrderActive";
 import { NavLink, useSearchParams } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
 function MyTicket() {
+  const { user } = useAuth();
+
   const [searchParams] = useSearchParams();
   const currentTab = searchParams.get("tab") || "active";
 
@@ -16,50 +19,50 @@ function MyTicket() {
     "font-medium text-subtext-light dark:text-subtext-dark hover:text-primary";
 
   return (
-    <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-background-light dark:bg-background-dark">
-      <div className="mb-8">
+    <div className="relative min-h-screen overflow-x-hidden font-display my-20 px-8">
+      <div
+        className="fixed inset-0 bg-cover bg-center opacity-30 -z-10"
+        style={{
+          backgroundImage: `url(https://lh3.googleusercontent.com/aida-public/AB6AXuDKophNC69nmEztimWXz0jlrcYs189Nb32QLe-vkvsPNjtTeTDQV0GLK0TnGwJB1aiybWTO06z7p1P2V8irdShY_n9NTzXjB232FBx9zZB7342qPAOi5_guD2oYZcLSHypljdy-Vav9UQ0hQzVIQYNIjthC3ZWjtbzz5X2g2mBwk2ROClFhcoqFxqzCgx8NR0v3GlzLRzK2bEm9us7o2S3GrPphWOiwqRM7XDy4fMyK6r0wmt1K-sHC-nONim0aTaSq9nB-GqT-zaY)`,
+        }}
+      />
+      <div className="fixed inset-0 bg-black/70 -z-10" />
+      <div className="mb-8 mt-20">
         <nav className="flex text-sm text-subtext-light dark:text-subtext-dark mb-2">
-          <a className="hover:text-primary" href="#">
-            Dashboard
-          </a>
-          <span className="mx-2">/</span>
-          <span className="font-medium text-text-light dark:text-white">
-            My Profile
+          <span className="mx-2 text-white">/</span>
+          <span className="font-medium text-white dark:text-white">
+            My Ticket
           </span>
         </nav>
-        <h2 className="text-3xl font-bold text-text-light dark:text-white">
-          My Profile
+        <h2 className="text-3xl font-bold text-white dark:text-white text-center">
+          My Ticket
         </h2>
-        <p className="text-subtext-light dark:text-subtext-dark mt-1">
+        <p className="text-white dark:text-subtext-dark mt-1 text-center">
           Manage your Digital Ticket Wallet - Feedback &amp; Rewards
         </p>
       </div>
-      <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-white dark:bg-card-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
           <div className="relative">
             <img
               alt="Profile Picture"
               className="w-16 h-16 rounded-full object-cover ring-2 ring-primary ring-offset-2 dark:ring-offset-gray-900"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwmy6TYkp1NwYJlRXvOdoGXP-dV8i-qatbqIYB0RXRWNXwBxs9W5vBLgH7wMa0zpDeYzFthwwDZUPn3p-kGSPHEoKaqfh1EjbLe8aORmPWnctkqIWPEaK66A2DSEM1tc7EDqmDaHfyUa688fjnMs7W7v799abmtgkWrTDxahAn4HPkPw19s7FYw--IPIal59ZNtLvd9BOM_6ojVThNHeQVcjXMZyUqqEBFHLYIhmb_G-40rHXGwIdHut2mKBrQDxsIsz40_k3YBwQ"
+              src={user?.profile_image}
             />
           </div>
           <div>
             <h3 className="text-xl font-bold text-text-light dark:text-white">
-              test
+              {user?.name}
             </h3>
             <div className="flex items-center mt-1">
               <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs px-2 py-1 rounded font-mono">
-                Referral Code: NAQQTEH
+                Referral Code: {user?.referral_code}
               </span>
             </div>
           </div>
         </div>
-        <button className="flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm font-medium dark:text-white">
-          <span className="material-icons-outlined mr-2 text-lg">logout</span>
-          Logout
-        </button>
       </div>
-      <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-1 mb-8 flex">
+      <div className="bg-white dark:bg-card-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-1 mb-8 flex">
         <NavLink
           to="?tab=active"
           className={`${baseClass} ${currentTab === "active" ? activeClass : inactiveClass}`}
@@ -92,7 +95,7 @@ function MyTicket() {
       {currentTab === "active" && <OrderActive />}
       {currentTab === "need_review" && <OrderFinished />}
       {currentTab === "all" && <OrderAll />}
-    </main>
+    </div>
   );
 }
 

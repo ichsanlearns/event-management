@@ -201,7 +201,10 @@ function OrgProfile() {
                   </span>
                 </div>
               </div>
-              {profile?.events.length === 0 && (
+              {profile?.events.reduce(
+                (acc, event) => acc + event.review.length,
+                0,
+              ) === 0 && (
                 <div className="bg-white p-8 rounded-xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-[#e7e7f3] flex flex-col items-center text-center gap-4">
                   <div className="size-12 rounded-full bg-[#f8f8fc] flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#9ca3af] text-[24px]">
@@ -220,7 +223,14 @@ function OrgProfile() {
                 </div>
               )}
               <div
-                className={`bg-white p-6 rounded-xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-[#e7e7f3] flex flex-col gap-6 ${profile?.events.length === 0 ? "hidden" : ""}`}
+                className={`bg-white p-6 rounded-xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-[#e7e7f3] flex flex-col gap-6 ${
+                  profile?.events.reduce(
+                    (acc, event) => acc + event.review.length,
+                    0,
+                  ) === 0
+                    ? "hidden"
+                    : ""
+                }`}
               >
                 {profile?.events.length !== 0 &&
                   profile?.events.map((event) =>

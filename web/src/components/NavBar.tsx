@@ -29,12 +29,14 @@ function Navbar() {
           </Link>
           <div className="hidden md:flex flex-1 justify-end items-center gap-8">
             <nav className="flex gap-8">
-              <a
-                className="text-white/90 hover:text-white text-sm font-semibold transition-colors drop-shadow-sm"
-                href="#"
-              >
-                Explore
-              </a>
+              {user?.role === "CUSTOMER" && (
+                <Link
+                  to="/myticket"
+                  className="text-white/90 hover:text-white text-sm font-semibold transition-colors drop-shadow-sm"
+                >
+                  My Ticket
+                </Link>
+              )}
               {user?.role === "EVENT_ORGANIZER" && (
                 <Link
                   to="/organizer"
