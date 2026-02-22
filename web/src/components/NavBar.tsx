@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { LogOut } from "lucide-react";
+import { toast } from "react-hot-toast";
 function Navbar() {
   const { user, logout } = useAuth();
   return (
@@ -24,33 +25,42 @@ function Navbar() {
               <a className="text-white/90 hover:text-white text-sm font-semibold transition-colors drop-shadow-sm" href="#">
                 Explore
               </a>
-              <Link to={"/organizer"} className="text-white/90 hover:text-white text-sm font-semibold transition-colors drop-shadow-sm">
-                Host an Event
-              </Link>
+              {user?.role === "EVENT_ORGANIZER" && (
+                <Link to="/organizer" className="text-white/90 hover:text-white text-sm font-semibold transition-colors drop-shadow-sm">
+                  Host an Event
+                </Link>
+              )}
             </nav>
             <div className="flex items-center gap-3">
-              {!user ? (
+              {!user && (
                 <>
-                  <Link to={"/login"}>
-                    <button className="flex items-center justify-center rounded-lg h-10 px-4 text-white hover:bg-white/10 text-sm font-bold transition-colors">Login</button>
+                  <Link to="/login">
+                    <button className="rounded-lg h-10 px-4 text-white hover:bg-white/10 font-bold">Login</button>
                   </Link>
 
-                  <Link to={"/register"}>
-                    <button className="flex items-center justify-center rounded-lg h-10 px-5 bg-white text-gray-900 hover:bg-gray-100 text-sm font-bold shadow-lg shadow-black/10">Sign Up</button>
+                  <Link to="/register">
+                    <button className="rounded-lg h-10 px-5 bg-white text-gray-900 font-bold">Sign Up</button>
                   </Link>
                 </>
-              ) : (
+              )}
+
+              {user && (
                 <div className="flex items-center gap-3">
-                  {/* Avatar */}
-                  <img src={`https://ui-avatars.com/api/?name=${user.name}`} className="w-9 h-9 rounded-full" />
+                  <Link to="/profile" className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl transition">
+                    <img src={user.profile_image || `https://ui-avatars.com/api/?name=${user.name}`} alt="avatar" className="w-9 h-9 rounded-full object-cover border border-white/30" />
 
-                  {/* Username */}
-                  <span className="text-white font-semibold">{user.name}</span>
+                    <span className="text-white font-semibold text-sm hidden sm:block">{user.name}</span>
+                  </Link>
 
-                  {/* Logout */}
-                  <button onClick={logout} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
-                    <LogOut size={16} />
-                    Logout
+                  <button
+                    onClick={() => {
+                      logout();
+                      toast.success("Berhasil logout");
+                    }}
+                    className="p-2 text-white/80 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
+                    title="Logout"
+                  >
+                    <LogOut size={20} />
                   </button>
                 </div>
               )}
