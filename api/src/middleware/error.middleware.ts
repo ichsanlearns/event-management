@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../utils/app-error.util.js";
 import jwt from "jsonwebtoken";
 import z, { ZodError } from "zod";
+import { Prisma } from "../generated/prisma/client.js";
 
 interface flattenedZodErrors {
   formErrors: string[];
@@ -35,6 +36,12 @@ export function error(
     return res
       .status(400)
       .json({ message: "Validation error", error: formattedError });
+  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2002") {
+      return res.status(400).json({
+        message: "Duplicate value detected.",
+      });
+    }
   } else if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;

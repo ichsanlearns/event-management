@@ -53,3 +53,8 @@ export const patchOrderVoucher = async ({
     eventId,
   });
 };
+
+export const deleteOrder = async (orderId: string) => {
+  const endpoint = API_ENDPOINTS.ORDERS.DELETE.replace(":orderId", orderId);
+  return api.delete(endpoint);
+};

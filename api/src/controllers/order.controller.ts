@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import {
   create,
+  deleteById,
   getAll,
   getById,
   getByUserId,
@@ -80,6 +81,23 @@ export const patchCouponByOrderId = catchAsync(
     res.status(200).json({
       message: "Coupon applied successfully",
       data: coupon,
+    });
+  },
+);
+
+export const deleteOrderById = catchAsync(
+  async (req: Request, res: Response) => {
+    const orderId = req.params.id as string;
+
+    if (!orderId) {
+      throw new AppError(400, "Missing order ID");
+    }
+
+    const order = await deleteById(orderId);
+
+    res.status(200).json({
+      message: "Order deleted successfully",
+      data: order,
     });
   },
 );

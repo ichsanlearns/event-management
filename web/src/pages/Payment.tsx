@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-import { formattedPrice, formatTime } from "../utils/format.util";
-import { useCountdown } from "../utils/countdown.util";
+import { formattedPrice } from "../utils/format.util";
 import type { ICoupon, IOrder, TUserCoupon } from "../types/event.type";
 
 import { FormProvider, useForm } from "react-hook-form";
@@ -11,7 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { paymentSchema, type PaymentInput } from "../schemas/payment.schema";
 import toast from "react-hot-toast";
 import api from "../lib/api";
-import { getOrderById, patchOrderVoucher } from "../services/order.service";
+import {
+  deleteOrder,
+  getOrderById,
+  patchOrderVoucher,
+} from "../services/order.service";
 import Coupon from "../components/payment/Coupon";
 import PaymentConfirmation from "../components/payment/PaymentConfirmation";
 import PaymentPaid from "../components/payment/PaymentPaid";
@@ -20,6 +23,7 @@ import PaymentExpired from "../components/payment/PaymentExpired";
 import PaymentWaiting from "../components/payment/PaymentWaiting";
 
 function Payment() {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [openCoupon, setOpenCoupon] = useState(false);
@@ -118,6 +122,16 @@ function Payment() {
     setCoupon(order.coupon);
   };
 
+  const handleCancelOrder = async () => {
+    try {
+      const response = await deleteOrder(id!);
+      toast.success(response.data.message);
+      navigate("/");
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  };
+
   return (
     <main className="max-w-full bg-background-dark p-30">
       <div className="grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
@@ -163,15 +177,24 @@ function Payment() {
                 )}
                 {(order?.status === "WAITING_PAYMENT" ||
                   order?.status === "REJECTED") && (
-                  <button
-                    type="submit"
-                    className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    Submit Payment
-                    <span className="material-symbols-outlined">
-                      arrow_forward
-                    </span>
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleCancelOrder}
+                      className=" bg-red-500 hover:bg-red-600 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer w-[28%]"
+                    >
+                      Cancel Order
+                    </button>
+                    <button
+                      type="submit"
+                      className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      Submit Payment
+                      <span className="material-symbols-outlined">
+                        arrow_forward
+                      </span>
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -328,6 +351,7 @@ function Payment() {
                               No coupon applied
                             </span>
                             <button
+                              type="button"
                               onClick={() => setOpenCoupon(true)}
                               className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
                             >

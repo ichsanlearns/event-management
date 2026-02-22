@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createOrder,
+  deleteOrderById,
   getAllOrders,
   getOrderById,
   getOrdersByUserId,
@@ -14,5 +15,6 @@ router.get("/", getAllOrders);
 router.get("/:id", getOrderById);
 router.get("/customer/:userid", getOrdersByUserId);
 router.patch("/:id/coupon", patchCouponByOrderId);
+router.delete("/:id", deleteOrderById);
 
 export default router;

@@ -122,6 +122,10 @@ export async function getById(id: string) {
     throw new AppError(404, "Event not found");
   }
 
+  const orderCounts = await prisma.order.findMany({
+    where: { Ticket: { event_id: id }, deleted_at: { not: null } },
+  });
+
   const mapped = {
     id: event.id,
     name: event.name,
@@ -145,6 +149,7 @@ export async function getById(id: string) {
         bought: ticket.bought,
       };
     }),
+    orderCancelled: orderCounts.length,
   };
 
   return mapped;

@@ -429,3 +429,59 @@ export const patchCouponId = async ({
 
   return mapped;
 };
+
+export async function deleteById(orderId: string) {
+  await prisma.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({ where: { id: orderId } });
+
+    if (!order) {
+      throw new AppError(404, "Order not found");
+    }
+
+    if (order.status !== "WAITING_PAYMENT") {
+      throw new AppError(400, "Order cannot be cancelled");
+    }
+
+    await tx.order.update({
+      where: { id: orderId },
+      data: {
+        deleted_at: new Date(),
+        status: "CANCELED",
+      },
+    });
+
+    await tx.ticket.update({
+      where: { id: order.ticket_id },
+      data: {
+        bought: { decrement: order.quantity },
+      },
+    });
+
+    if (order.voucher_id) {
+      await tx.voucher.update({
+        where: { id: order.voucher_id },
+        data: {
+          quota: { increment: 1 },
+        },
+      });
+    }
+
+    if (order.coupon_id) {
+      await tx.coupon.update({
+        where: { id: order.coupon_id },
+        data: {
+          deleted_at: null,
+        },
+      });
+    }
+
+    if (order.using_point > 0) {
+      await tx.point.update({
+        where: { user_id: order.customer_id },
+        data: {
+          amount: { increment: order.using_point },
+        },
+      });
+    }
+  });
+}
