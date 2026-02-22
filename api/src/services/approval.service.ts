@@ -59,12 +59,12 @@ export async function approveOrder(orderId: string, organizerId: string) {
       throw new Error("Order not in approvable state");
     }
 
-    // ✅ VALIDASI SEATS CUKUP
+    // VALIDASI SEATS CUKUP
     if (order.Ticket.EventName.available_seats < order.quantity) {
       throw new Error("Seats not enough");
     }
 
-    // ✅ UPDATE COUNTER
+    // UPDATE COUNTER
     await tx.ticket.update({
       where: { id: order.ticket_id },
       data: {
@@ -72,7 +72,7 @@ export async function approveOrder(orderId: string, organizerId: string) {
       },
     });
 
-    // ✅ KURANGI SEATS EVENT
+    //  KURANGI SEATS EVENT
     await tx.event.update({
       where: { id: order.Ticket.event_id },
       data: {
@@ -80,7 +80,7 @@ export async function approveOrder(orderId: string, organizerId: string) {
       },
     });
 
-    // ✅ UPDATE STATUS ORDER
+    //  UPDATE STATUS ORDER
     const updated = await tx.order.update({
       where: { id: orderId },
       data: { status: Status.DONE },
@@ -97,7 +97,6 @@ export async function approveOrder(orderId: string, organizerId: string) {
     };
   });
 
-  // kirim email di luar transaction
   await sendEmail(result.customerEmail, "Payment Approved", approvedTemplate(result.customerName, result.orderCode, result.eventName, result.qty, result.total));
 
   return result.updated;
