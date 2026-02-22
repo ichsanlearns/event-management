@@ -3,6 +3,7 @@ import OrderAll from "./OrderAll";
 import OrderActive from "./OrderActive";
 import { NavLink, useSearchParams } from "react-router";
 import { useAuth } from "../../context/AuthContext";
+import Paid from "../../components/active-ticket/Paid";
 
 function MyTicket() {
   const { user } = useAuth();
@@ -92,7 +93,7 @@ function MyTicket() {
         </NavLink>
       </div>
       {/* Order list */}
-      {currentTab === "active" && <OrderActive />}
+      {currentTab === "active" && <Paid />}
       {currentTab === "need_review" && <OrderFinished />}
       {currentTab === "all" && <OrderAll />}
     </div>
