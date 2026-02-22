@@ -40,34 +40,67 @@ export async function getApprovalQueue(organizerId: string) {
 }
 
 export async function approveOrder(orderId: string, organizerId: string) {
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    include: {
-      Customer: true,
-      Ticket: {
-        include: {
-          EventName: true,
-        },
+  const result = await prisma.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({
+      where: { id: orderId },
+      include: {
+        Customer: true,
+        Ticket: { include: { EventName: true } },
       },
-    },
+    });
+
+    if (!order) throw new Error("Order not found");
+
+    if (order.Ticket.EventName.organizer_id !== organizerId) {
+      throw new Error("Forbidden");
+    }
+
+    if (order.status !== Status.WAITING_CONFIRMATION) {
+      throw new Error("Order not in approvable state");
+    }
+
+    // ✅ VALIDASI SEATS CUKUP
+    if (order.Ticket.EventName.available_seats < order.quantity) {
+      throw new Error("Seats not enough");
+    }
+
+    // ✅ UPDATE COUNTER
+    await tx.ticket.update({
+      where: { id: order.ticket_id },
+      data: {
+        bought: { increment: order.quantity },
+      },
+    });
+
+    // ✅ KURANGI SEATS EVENT
+    await tx.event.update({
+      where: { id: order.Ticket.event_id },
+      data: {
+        available_seats: { decrement: order.quantity },
+      },
+    });
+
+    // ✅ UPDATE STATUS ORDER
+    const updated = await tx.order.update({
+      where: { id: orderId },
+      data: { status: Status.DONE },
+    });
+
+    return {
+      updated,
+      customerEmail: order.Customer.email,
+      customerName: order.Customer.name,
+      orderCode: order.order_code,
+      eventName: order.Ticket.EventName.name,
+      qty: order.quantity,
+      total: Number(order.total),
+    };
   });
 
-  if (!order) throw new Error("Order not found");
+  // kirim email di luar transaction
+  await sendEmail(result.customerEmail, "Payment Approved", approvedTemplate(result.customerName, result.orderCode, result.eventName, result.qty, result.total));
 
-  if (order.Ticket.EventName.organizer_id !== organizerId) {
-    throw new Error("Forbidden");
-  }
-
-  const updated = await prisma.order.update({
-    where: { id: orderId },
-    data: {
-      status: Status.DONE,
-    },
-  });
-
-  await sendEmail(order.Customer.email, "Payment Approved", approvedTemplate(order.Customer.name, order.order_code, order.Ticket.EventName.name, order.quantity, Number(order.total)));
-
-  return updated;
+  return result.updated;
 }
 
 export async function rejectOrder(orderId: string, organizerId: string) {
