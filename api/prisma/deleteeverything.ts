@@ -5,7 +5,6 @@ async function deleteSeed() {
     // =============================
     // CLEAN DB
     // =============================
-    await prisma.orderItem.deleteMany({});
     await prisma.payment.deleteMany({});
     await prisma.order.deleteMany({});
     await prisma.review.deleteMany({});

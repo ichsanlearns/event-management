@@ -1,12 +1,5 @@
+import { Category, Role, Types } from "../src/generated/prisma/enums.js";
 import {
-  Category,
-  Role,
-  Types,
-  Status,
-} from "../src/generated/prisma/enums.js";
-import {
-  type User,
-  type Event,
   type Ticket,
   type Voucher,
   type Order,
