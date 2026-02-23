@@ -3,11 +3,11 @@ import {
   createPayment,
   getPayments,
 } from "../controllers/payment.controller.js";
-import { uploadLocal } from "../middleware/upload.middleware.js";
+import { uploadCloud } from "../middleware/upload.middleware.js";
 
 const router = Router();
 
 router.get("/", getPayments);
-router.post("/", uploadLocal.single("singleImage"), createPayment);
+router.post("/", uploadCloud.single("singleImage"), createPayment);
 
 export default router;

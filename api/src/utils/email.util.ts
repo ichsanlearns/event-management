@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 export const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_USER),
+  port: Number(process.env.EMAIL_PORT),
   secure: false,
   auth: {
     user: process.env.EMAIL_USER,
@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 
 export const transporterEvent = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_USER),
+  port: Number(process.env.EMAIL_PORT),
   secure: false,
   auth: {
     user: process.env.EMAIL_USER,

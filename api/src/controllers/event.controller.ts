@@ -14,17 +14,22 @@ import { getAttendeesByEvent } from "../services/attendee.service.js";
 
 import { redis } from "../lib/redis.lib.js";
 import { createEventSchema } from "../validators/event.validator.js";
-import { uploadSingleService } from "../services/image.service.js";
+import { uploadToCloudinary } from "../services/image.service.js";
 import { catchAsync } from "../utils/catch-async.util.js";
+import { AppError } from "../utils/app-error.util.js";
 
 export const createEvent = catchAsync(async (req: Request, res: Response) => {
-  const file = req.file as Express.Multer.File;
+  const file = req.file?.buffer;
+
+  if (!file) {
+    throw new AppError(400, "file cant be found");
+  }
 
   const validatedData = createEventSchema.parse({
     ...req.body,
   });
 
-  const heroImage = await uploadSingleService(file);
+  const heroImage = await uploadToCloudinary(file, "heroImage");
 
   const result = await create({ ...validatedData, heroImage });
 

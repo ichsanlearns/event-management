@@ -1,13 +1,18 @@
 import { type Request, type Response } from "express";
 import { create, get } from "../services/payment.service.js";
-import { uploadSingleService } from "../services/image.service.js";
+import { uploadToCloudinary } from "../services/image.service.js";
+import { AppError } from "../utils/app-error.util.js";
 
 export async function createPayment(req: Request, res: Response) {
   try {
-    const file = req.file as Express.Multer.File;
+    const file = req.file?.buffer;
     const { orderId, amount, method, status } = req.body;
 
-    const proofImage = await uploadSingleService(file);
+    if (!file) {
+      throw new AppError(400, "File cant be found");
+    }
+
+    const proofImage = await uploadToCloudinary(file, "proofImage");
 
     const payment = await create(orderId, amount, method, status, proofImage);
 

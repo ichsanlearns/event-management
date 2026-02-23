@@ -1,10 +1,18 @@
 import express from "express";
 
-import { createEvent, getAllEvent, getEventById, getEventByOrganizerId, deleteEvent, updateEvent, getSearchEvent } from "../controllers/event.controller.js";
+import {
+  createEvent,
+  getAllEvent,
+  getEventById,
+  getEventByOrganizerId,
+  deleteEvent,
+  updateEvent,
+  getSearchEvent,
+} from "../controllers/event.controller.js";
 
 import { getEventAttendees } from "../controllers/event.controller.js";
 
-import { uploadLocal } from "../middleware/upload.middleware.js";
+import { uploadCloud } from "../middleware/upload.middleware.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import { organizerOnly } from "../middleware/role.middleware.js";
 
@@ -21,7 +29,7 @@ router.post(
   "/",
   authMiddleware,
   organizerOnly,
-  uploadLocal.single("heroImage"),
+  uploadCloud.single("heroImage"),
   createEvent,
 );
 router.patch("/:id", authMiddleware, organizerOnly, updateEvent);
@@ -32,13 +40,11 @@ router.get("/organizer/:organizerId", getEventByOrganizerId);
 router.delete("/:id", deleteEvent);
 router.patch("/:id", updateEvent);
 
-
 router.get(
   "/:eventId/attendees",
   authMiddleware,
   organizerOnly,
   getEventAttendees,
 );
-
 
 export default router;
