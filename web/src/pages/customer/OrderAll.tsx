@@ -22,7 +22,7 @@ function OrderAll() {
         const res = await getOrderByCustomer(user?.id, "all");
         setEvents(res.data);
       } catch (error: any) {
-        toast.error(error.message || "Failed to fetch event");
+        toast.error(error.response.data.message || "Failed to fetch event");
       }
     };
     fetchEvent();

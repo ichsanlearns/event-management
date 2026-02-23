@@ -18,12 +18,11 @@ function Paid() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await getOrderByCustomer(user?.id, "active");
-        console.log(res.data);
+        const response = await getOrderByCustomer(user?.id, "active");
 
-        setEvents(res.data);
+        setEvents(response.data);
       } catch (error: any) {
-        toast.error(error.message || "Failed to fetch event");
+        toast.error(error.response.data.message || "Failed to fetch event");
       }
     };
     fetchEvent();

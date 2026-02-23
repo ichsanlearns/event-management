@@ -20,7 +20,7 @@ function OrderActive() {
 
         setEvents(res.data);
       } catch (error: any) {
-        toast.error(error.message || "Failed to fetch event");
+        toast.error(error.response.data.message || "Failed to fetch event");
       }
     };
     fetchEvent();

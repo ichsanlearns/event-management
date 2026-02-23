@@ -5,7 +5,7 @@ import { formatEventDateYear } from "../../utils/format.util";
 function WaitingPayment({ event }: { event: Order }) {
   return (
     <article
-      className="bg-black rounded-[24px] overflow-hidden flex flex-col custom-shadow relative h-[500px]"
+      className="bg-black rounded-3xl overflow-hidden flex flex-col custom-shadow relative h-125"
       data-purpose="event-card"
     >
       <div className="absolute inset-0">

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Category } from "../types/event.type.js";
 
 export const createEventSchema = z
   .object({

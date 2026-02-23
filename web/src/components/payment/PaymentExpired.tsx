@@ -16,7 +16,7 @@ function PaymentExpired() {
           </div>
         </div>
       </section>
-      <section className="bg-white dark:bg-[#1a162e] rounded-xl p-12 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center text-center justify-center min-h-[400px]">
+      <section className="bg-white dark:bg-[#1a162e] rounded-xl p-12 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center text-center justify-center min-h-100">
         <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
           <span className="material-symbols-outlined text-red-500 text-4xl">
             timer_off

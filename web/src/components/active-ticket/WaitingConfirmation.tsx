@@ -4,10 +4,7 @@ import { formatEventDateYear } from "../../utils/format.util";
 
 function WaitingConfirmation({ event }: { event: Order }) {
   return (
-    <article
-      className="bg-black rounded-[24px] overflow-hidden flex flex-col custom-shadow relative h-[500px]"
-      data-purpose="event-card"
-    >
+    <article className={newFunction()} data-purpose="event-card">
       <div className="absolute inset-0">
         <img
           alt={event.ticket.eventName.name}
@@ -63,6 +60,10 @@ function WaitingConfirmation({ event }: { event: Order }) {
       </div>
     </article>
   );
+
+  function newFunction(): string | undefined {
+    return "bg-black rounded-[24px] overflow-hidden flex flex-col custom-shadow relative h-[500px]";
+  }
 }
 
 export default WaitingConfirmation;

@@ -1,10 +1,22 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EditEventSchema, type EditEventType } from "../schemas/editevent.schema";
+import {
+  EditEventSchema,
+  type EditEventType,
+} from "../schemas/editevent.schema";
 import toast from "react-hot-toast";
 import { updateEventApi } from "../services/event.service";
-import { X, Calendar, Sparkles, CreditCard, Tag, MapPin, Building2, Users } from "lucide-react";
+import {
+  X,
+  Calendar,
+  Sparkles,
+  CreditCard,
+  Tag,
+  MapPin,
+  Building2,
+  Users,
+} from "lucide-react";
 
 type Props = {
   event: any;
@@ -33,22 +45,30 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
       city: event.city,
       about: event.about,
       availableSeats: event.availableSeats,
-      startDate: event.startDate ? new Date(event.startDate).toISOString().slice(0, 10) : "",
-      endDate: event.endDate ? new Date(event.endDate).toISOString().slice(0, 10) : "",
+      startDate: event.startDate
+        ? new Date(event.startDate).toISOString().slice(0, 10)
+        : "",
+      endDate: event.endDate
+        ? new Date(event.endDate).toISOString().slice(0, 10)
+        : "",
     } as any);
   }, [event, form]);
 
   async function handleSubmit(data: EditEventType) {
+    toast.loading("Editing event...");
     try {
       const payload: any = { ...data };
-      if (data.startDate) payload.startDate = new Date(data.startDate).toISOString();
+      if (data.startDate)
+        payload.startDate = new Date(data.startDate).toISOString();
       if (data.endDate) payload.endDate = new Date(data.endDate).toISOString();
 
       await updateEventApi(event.id, payload);
+      toast.dismiss();
       toast.success("Event updated successfully ✨");
       onSuccess?.();
       onClose();
     } catch (error: any) {
+      toast.dismiss();
       toast.error(error?.response?.data?.message || "Failed to update event");
     }
   }
@@ -56,14 +76,22 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
+      ></div>
 
       {/* Modal Container */}
       <div className="relative z-10 w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
         {/* HEADER */}
         <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Edit Event</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Edit Event
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+          >
             <X size={20} />
           </button>
         </div>
@@ -79,9 +107,17 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Calendar size={18} />
                   </div>
-                  <input {...form.register("name")} className={`input-field w-full pl-10 ${errors.name ? "border-red-500" : ""}`} placeholder="e.g. Summer Music Festival" />
+                  <input
+                    {...form.register("name")}
+                    className={`input-field w-full pl-10 ${errors.name ? "border-red-500" : ""}`}
+                    placeholder="e.g. Summer Music Festival"
+                  />
                 </div>
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
 
               {/* Tagline */}
@@ -91,7 +127,11 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Sparkles size={18} />
                   </div>
-                  <input {...form.register("tagline")} className="input-field w-full pl-10" placeholder="Short description for your event" />
+                  <input
+                    {...form.register("tagline")}
+                    className="input-field w-full pl-10"
+                    placeholder="Short description for your event"
+                  />
                 </div>
               </div>
             </div>
@@ -104,7 +144,11 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <CreditCard size={18} />
                   </div>
-                  <input type="number" {...form.register("price", { valueAsNumber: true })} className="input-field pl-10" />
+                  <input
+                    type="number"
+                    {...form.register("price", { valueAsNumber: true })}
+                    className="input-field pl-10"
+                  />
                 </div>
               </div>
 
@@ -115,7 +159,10 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Tag size={18} />
                   </div>
-                  <select {...form.register("category")} className="input-field pl-10">
+                  <select
+                    {...form.register("category")}
+                    className="input-field pl-10"
+                  >
                     <option value="MUSIC">Music</option>
                     <option value="SPORT">Sport</option>
                     <option value="THEATRE">Theatre</option>
@@ -130,7 +177,11 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <MapPin size={18} />
                   </div>
-                  <input {...form.register("venue")} className="input-field pl-10" placeholder="Building name" />
+                  <input
+                    {...form.register("venue")}
+                    className="input-field pl-10"
+                    placeholder="Building name"
+                  />
                 </div>
               </div>
 
@@ -141,7 +192,11 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Building2 size={18} />
                   </div>
-                  <input {...form.register("city")} className="input-field pl-10" placeholder="City name" />
+                  <input
+                    {...form.register("city")}
+                    className="input-field pl-10"
+                    placeholder="City name"
+                  />
                 </div>
               </div>
 
@@ -152,7 +207,11 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Calendar size={18} />
                   </div>
-                  <input type="date" {...form.register("startDate")} className="input-field pl-10" />
+                  <input
+                    type="date"
+                    {...form.register("startDate")}
+                    className="input-field pl-10"
+                  />
                 </div>
               </div>
 
@@ -163,7 +222,11 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Calendar size={18} />
                   </div>
-                  <input type="date" {...form.register("endDate")} className="input-field pl-10" />
+                  <input
+                    type="date"
+                    {...form.register("endDate")}
+                    className="input-field pl-10"
+                  />
                 </div>
               </div>
 
@@ -174,7 +237,13 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <Users size={18} />
                   </div>
-                  <input type="number" {...form.register("availableSeats", { valueAsNumber: true })} className="input-field pl-10" />
+                  <input
+                    type="number"
+                    {...form.register("availableSeats", {
+                      valueAsNumber: true,
+                    })}
+                    className="input-field pl-10"
+                  />
                 </div>
               </div>
 
@@ -193,10 +262,17 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
 
           {/* FOOTER */}
           <div className="px-8 py-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50">
-            <button type="button" onClick={onClose} className="px-6 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all active:scale-95">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all active:scale-95"
+            >
               Cancel
             </button>
-            <button type="submit" className="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg shadow-blue-500/20 transition-all active:scale-95">
+            <button
+              type="submit"
+              className="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+            >
               Update Event
             </button>
           </div>
@@ -207,6 +283,10 @@ function FormEditEvent({ event, onClose, onSuccess }: Props) {
 }
 
 // Helper Components
-const Label = ({ children }: { children: React.ReactNode }) => <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">{children}</label>;
+const Label = ({ children }: { children: React.ReactNode }) => (
+  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+    {children}
+  </label>
+);
 
 export default FormEditEvent;

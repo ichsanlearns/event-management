@@ -8,7 +8,7 @@ function Paid({ data }: { data: Order }) {
       to={`/payment/${data.id}`}
       className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 hover:border-primary dark:hover:border-primary transition-all cursor-pointer shadow-sm hover:shadow-md"
     >
-      <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 dark:bg-gray-700 relative">
+      <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700 relative">
         <img
           alt="Neon Nights Festival"
           className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"

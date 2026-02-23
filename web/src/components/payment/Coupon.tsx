@@ -14,16 +14,19 @@ function Coupon({
   onApply: (order: IOrder) => void;
 }) {
   const submitCoupon = async (couponId: string) => {
+    toast.loading("Apllying coupon...");
     try {
       const response = await patchOrderCoupon({
         couponId,
         orderId,
       });
 
+      toast.dismiss();
       toast.success("Coupon applied successfully");
       onApply(response.data.data);
       onClose();
     } catch (error: any) {
+      toast.dismiss();
       toast.error(error.response.data.message);
     }
   };

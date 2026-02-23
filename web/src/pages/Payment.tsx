@@ -35,7 +35,6 @@ function Payment() {
   const [order, setOrder] = useState<IOrder | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [payments, setPayments] = useState<IPayment[] | null>(null);
-  const [orderStatus, setOrderStatus] = useState<string | null>(null);
   const [voucher, setVoucher] = useState<{
     id: string;
     code: string;
@@ -56,11 +55,9 @@ function Payment() {
     try {
       async function getOrder() {
         const response = await getOrderById(id!);
-        console.log(response);
 
         setOrder(response.data);
         setVoucher(response.data.voucher);
-        setOrderStatus(response.data.status);
         setUserCoupons(response.data.userCoupons);
         setCoupon(response.data.coupon);
         setPayments(response.data.payments);
@@ -68,7 +65,7 @@ function Payment() {
 
       getOrder();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   }, []);
 
@@ -77,6 +74,9 @@ function Payment() {
   });
 
   async function submitPromo() {
+    setIsLoading(true);
+    toast.loading("Applying voucher...");
+
     try {
       const code = form.getValues("voucherCode");
 
@@ -86,10 +86,16 @@ function Payment() {
         eventId: order?.ticket.eventId!,
       });
 
+      toast.dismiss();
+      toast.success(response.data.message);
+
       setOrder(response.data.data);
       setVoucher(response.data.data.voucher);
     } catch (error: any) {
+      toast.dismiss();
       toast.error(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -97,7 +103,6 @@ function Payment() {
     if (!order) {
       return;
     }
-    setIsLoading(true);
 
     try {
       const formData = new FormData();
@@ -107,22 +112,20 @@ function Payment() {
       formData.append("method", "MANUAL_TRANSFER");
       formData.append("status", "WAITING_CONFIRMATION");
 
-      toast.loading("Processing payment...");
+      toast.loading("Uploading payment proof...");
 
       await api.post("/payments", formData);
 
       toast.dismiss();
-      toast.success("Payment successful");
+      toast.success("Payment proof upload successful");
+
       const updatedOrder = await getOrderById(id!);
 
       setOrder(updatedOrder.data);
       setVoucher(updatedOrder.data.voucher);
-      setOrderStatus(updatedOrder.data.status);
     } catch (error: any) {
-      toast.error(error.response.data.message);
-    } finally {
       toast.dismiss();
-      setIsLoading(false);
+      toast.error(error.response.data.message);
     }
   }
 
@@ -141,6 +144,7 @@ function Payment() {
       toast.success(response.data.message);
       navigate("/");
     } catch (error: any) {
+      toast.dismiss();
       toast.error(error.response.data.message);
     }
   };
@@ -211,6 +215,7 @@ function Payment() {
                   <div className="flex gap-2">
                     <button
                       type="button"
+                      disabled={form.formState.isSubmitting || isLoading}
                       onClick={handleCancelOrder}
                       className=" bg-red-500 hover:bg-red-600 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer w-[28%]"
                     >
@@ -218,11 +223,14 @@ function Payment() {
                     </button>
                     <button
                       type="submit"
+                      disabled={form.formState.isSubmitting || isLoading}
                       className="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      {order?.status === "REJECTED"
-                        ? "Resubmit Payment"
-                        : "Submit Payment"}
+                      {form.formState.isSubmitting
+                        ? "Loading..."
+                        : order?.status === "REJECTED"
+                          ? "Resubmit Payment"
+                          : "Submit Payment"}
                       <span className="material-symbols-outlined">
                         {order?.status === "REJECTED"
                           ? "refresh"
@@ -371,14 +379,14 @@ function Payment() {
                               <button
                                 type="button"
                                 onClick={() => submitPromo()}
-                                disabled={form.formState.isSubmitting}
+                                disabled={
+                                  form.formState.isSubmitting || isLoading
+                                }
                                 className="px-4 py-2 text-sm font-semibold rounded-xl
                bg-primary text-white hover:bg-primary/90
                transition-colors disabled:opacity-50 active:scale-[0.99]"
                               >
-                                {form.formState.isSubmitting
-                                  ? "Applying..."
-                                  : "Apply"}
+                                {isLoading ? "Applying..." : "Apply"}
                               </button>
                             </div>
                           </>
@@ -396,6 +404,9 @@ function Payment() {
                               </span>
                               <button
                                 type="button"
+                                disabled={
+                                  form.formState.isSubmitting || isLoading
+                                }
                                 onClick={() => setOpenCoupon(true)}
                                 className="text-primary hover:text-primary/80 font-semibold text-xs transition-colors cursor-pointer"
                               >

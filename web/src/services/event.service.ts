@@ -30,6 +30,12 @@ export const getEventsApi = async (params?: { search?: string }) => {
   return res.data;
 };
 
+export const getEventsCardLimit = async (params?: { limit: number }) => {
+  const res = await api.get("/events", { params });
+
+  return res.data;
+};
+
 export const getEventById = (id: string) => api.get(`/events/${id}`);
 
 export const updateEventApi = async (id: string, data: any) => {

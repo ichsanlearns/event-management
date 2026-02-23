@@ -15,7 +15,6 @@ import Event from "./pages/Event";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
 import EditProfile from "./pages/EditProfile";
 
 import { Toaster } from "react-hot-toast";
@@ -33,7 +32,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="reset-password" element={<ResetPassword />} />
 
           <Route path="/" element={<Root />}>
             <Route index element={<Home />} />

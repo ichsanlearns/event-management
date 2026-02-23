@@ -20,4 +20,7 @@ export const API_ENDPOINTS = {
   PROFILE: {
     ORGANIZER: "/user/organizer",
   },
+  VOUCHER: {
+    CREATE: "/vouchers",
+  },
 };

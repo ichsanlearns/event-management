@@ -93,9 +93,6 @@ function Event() {
   }, []);
 
   async function handleSubmit() {
-    setIsLoading(true);
-    toast.loading("Loading...");
-
     if (!user) {
       toast.error("Login first");
       navigate("/login");
@@ -118,11 +115,14 @@ function Event() {
     };
 
     try {
+      setIsLoading(true);
+      toast.loading("Creating order...");
+
       const response = await createOrder(payload);
 
       toast.dismiss();
-
       toast.success(response.message);
+
       navigate(`/payment/${response.data.id}`);
     } catch (error: any) {
       toast.dismiss();
@@ -424,7 +424,7 @@ function Event() {
                               type="checkbox"
                               value=""
                             />
-                            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                           </label>
                         </div>
                         <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
@@ -500,28 +500,6 @@ function Event() {
           </div>
         </div>
       </main>
-
-      {/* Footer  */}
-      <footer className="bg-[#0b0f17] border-t border-[#232f48] py-12 mt-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3 text-white opacity-50">
-            <span className="text-sm">
-              © 2024 TicketMaster. All rights reserved.
-            </span>
-          </div>
-          <div className="flex gap-8 text-sm text-gray-400">
-            <a className="hover:text-white" href="#">
-              Privacy Policy
-            </a>
-            <a className="hover:text-white" href="#">
-              Terms of Service
-            </a>
-            <a className="hover:text-white" href="#">
-              Support
-            </a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

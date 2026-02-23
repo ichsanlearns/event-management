@@ -23,7 +23,11 @@ export const EditEventSchema = z
 
     city: z.string().optional(),
 
-    availableSeats: z.number().int("Available seats must be integer").nonnegative().optional(),
+    availableSeats: z
+      .number()
+      .int("Available seats must be integer")
+      .nonnegative()
+      .optional(),
 
     organizerId: z.string().uuid().optional(),
 

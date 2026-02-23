@@ -4,7 +4,7 @@ import { formatEventDateYear } from "../../utils/format.util";
 function Canceled({ data }: { data: Order }) {
   return (
     <div className="bg-gray-50/50 dark:bg-gray-900/30 rounded-xl border border-dashed border-border-light dark:border-border-dark p-3 flex gap-4 opacity-70 hover:opacity-100 transition-opacity">
-      <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800 relative grayscale">
+      <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-800 relative grayscale">
         <div className="flex items-center justify-center w-full h-full text-gray-300 dark:text-gray-600">
           <span className="material-icons">block</span>
         </div>

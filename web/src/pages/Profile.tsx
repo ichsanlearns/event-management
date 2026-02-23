@@ -5,7 +5,7 @@ import api from "../lib/api";
 
 import type { UserProfile } from "../types/user.type";
 import type { UserRewards } from "../types/reward.type";
-import type { Order } from "../types/order.type";
+import toast from "react-hot-toast";
 
 /* =======================
    COMPONENT
@@ -17,15 +17,12 @@ export default function Profile() {
   const [user, setUser] = useState<UserProfile | null>(
     storedUser ? JSON.parse(storedUser) : null,
   );
-  const [userOrders, setUserOrders] = useState<Order[] | null>(null);
 
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [image, setImage] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-
-  const [isActive, setIsActive] = useState("finished");
 
   /* =======================
      FETCH DATA
@@ -40,8 +37,9 @@ export default function Profile() {
 
         const rewardsRes = await api.get("/user/rewards");
         setRewards(rewardsRes.data);
-      } catch (error) {
+      } catch (error: any) {
         console.error("PROFILE ERROR:", error);
+        toast.error(error.response.data.message);
         navigate("/login");
       } finally {
         setLoading(false);
@@ -50,21 +48,6 @@ export default function Profile() {
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    async function getOrdersById() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/orders/customer/${user?.id}?status=${isActive}`,
-        );
-
-        const data = await response.json();
-        setUserOrders(data.data);
-      } catch (error) {}
-    }
-
-    getOrdersById();
-  }, [user]);
 
   /* =======================
    UPLOAD IMAGE
@@ -77,8 +60,12 @@ export default function Profile() {
 
     try {
       setUploading(true);
+      toast.loading("Uploading profile image...");
 
       const res = await api.put("/user/profile/image", formData);
+
+      toast.dismiss();
+      toast.success("Successfully uploaded profile image...");
 
       setUser((prev) => {
         if (!prev) return prev;
@@ -93,8 +80,9 @@ export default function Profile() {
       });
 
       setImage(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("UPLOAD ERROR:", error);
+      toast.error(error.response.data.message);
       alert("Upload foto gagal");
     } finally {
       setUploading(false);
@@ -235,6 +223,7 @@ export default function Profile() {
           {/* Actions */}
           <div className="mt-10 space-y-4">
             <button
+              disabled={uploading}
               onClick={() => navigate("/profile/edit")}
               className="w-full py-3 rounded-xl bg-indigo-600 text-white font-bold"
             >
@@ -242,6 +231,7 @@ export default function Profile() {
             </button>
 
             <button
+              disabled={uploading}
               onClick={handleLogout}
               className="w-full py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold flex items-center justify-center gap-2"
             >

@@ -8,7 +8,7 @@ function WaitingPayment({ data }: { data: Order }) {
       to={`/payment/${data.id}`}
       className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-amber-200 dark:border-amber-800/50 p-4 flex gap-4 hover:border-amber-400 dark:hover:border-amber-600 transition-all cursor-pointer shadow-sm hover:shadow-md ring-1 ring-amber-50 dark:ring-amber-900/10"
     >
-      <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 dark:bg-gray-700 relative">
+      <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700 relative">
         <img
           alt="Summer Vibes Concert"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

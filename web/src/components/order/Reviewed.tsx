@@ -8,7 +8,7 @@ function Reviewed({ data }: { data: Order }) {
       to={`/payment/${data.id}`}
       className="group bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-4 flex gap-4 hover:border-green-500/50 dark:hover:border-green-500/50 transition-all cursor-pointer shadow-sm hover:shadow-md"
     >
-      <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 dark:bg-gray-700 relative">
+      <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700 relative">
         <img
           alt="Year End Party"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

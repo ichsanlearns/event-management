@@ -29,6 +29,7 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
   } = form;
 
   const handleSubmit = async (formData: ReviewFormValues) => {
+    toast.loading("Submitting review");
     try {
       setIsSubmitting(true);
       const payload: ReviewPayload = {
@@ -40,9 +41,11 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
       };
       await createReview(payload);
 
+      toast.dismiss();
       toast.success("Review added successfully");
       onClick();
     } catch (error: any) {
+      toast.dismiss();
       toast.error(error.response.data.message || error.message);
     } finally {
       setIsSubmitting(false);
@@ -140,6 +143,9 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
               placeholder="What did you enjoy most about the event?"
               rows={4}
             ></textarea>
+            {typeof errors.comment?.message === "string" && (
+              <p className="text-red-500 text-sm ">{errors.comment?.message}</p>
+            )}
             <div className="flex justify-end mt-1">
               <span className="text-xs text-subtext-light dark:text-subtext-dark">
                 *200 characters
@@ -151,11 +157,14 @@ function Review({ onClick, data }: { onClick: () => void; data: Order }) {
           <button
             type="submit"
             className="w-full py-3.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary-dark hover:shadow-primary/40 transition-all duration-200 flex items-center justify-center group transform active:scale-[0.98] cursor-pointer"
+            disabled={isSubmitting}
           >
             <span className="material-icons-outlined mr-2 animate-bounce">
               stars
             </span>
-            Submit Review &amp; Earn +50 pts
+            {isSubmitting
+              ? "Submitting ..."
+              : "Submit Review &amp; Earn +50 pts"}
           </button>
           <button
             type="button"

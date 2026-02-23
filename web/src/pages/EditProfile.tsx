@@ -3,7 +3,15 @@ import { useNavigate } from "react-router";
 import { updateProfile } from "../services/user.service";
 import api from "../lib/api";
 import toast from "react-hot-toast";
-import { User, Lock, Settings, Eye, EyeOff, Camera, Loader2 } from "lucide-react";
+import {
+  User,
+  Lock,
+  Settings,
+  Eye,
+  EyeOff,
+  Camera,
+  Loader2,
+} from "lucide-react";
 
 export default function EditProfile() {
   const navigate = useNavigate();
@@ -20,7 +28,9 @@ export default function EditProfile() {
 
   // State Image Upload
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(storedUser.profile_image || "");
+  const [previewUrl, setPreviewUrl] = useState<string>(
+    storedUser.profile_image || "",
+  );
   const [uploading, setUploading] = useState(false);
 
   // UI States
@@ -50,9 +60,11 @@ export default function EditProfile() {
     try {
       setUploading(true);
       const res = await api.put("/user/profile/image", formData);
+
       return res.data.profile_image;
     } catch (error) {
       console.error("UPLOAD ERROR:", error);
+      toast.dismiss();
       toast.error("Gagal mengunggah foto profil");
       return null;
     } finally {
@@ -75,7 +87,6 @@ export default function EditProfile() {
       }
     }
 
-    setLoading(true);
     const toastId = toast.loading("Menyimpan perubahan...");
 
     try {
@@ -92,6 +103,8 @@ export default function EditProfile() {
         payload.confirmPassword = confirmPassword;
       }
 
+      toast.loading("Saving profile...");
+      setLoading(true);
       const res = await updateProfile(payload);
 
       const updatedUser = {
@@ -100,10 +113,14 @@ export default function EditProfile() {
       };
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
+      toast.dismiss();
       toast.success("Profile berhasil diperbarui", { id: toastId });
       navigate("/profile");
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Gagal update profile", { id: toastId });
+      toast.dismiss();
+      toast.error(err.response?.data?.message || "Gagal update profile", {
+        id: toastId,
+      });
     } finally {
       setLoading(false);
     }
@@ -115,10 +132,17 @@ export default function EditProfile() {
         {/* HEADER */}
         <div className="p-6 md:p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Edit Profil</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Kelola informasi akun dan keamanan Anda.</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+              Edit Profil
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+              Kelola informasi akun dan keamanan Anda.
+            </p>
           </div>
-          <button type="button" className="p-2 text-slate-400 hover:text-indigo-600 transition-colors">
+          <button
+            type="button"
+            className="p-2 text-slate-400 hover:text-indigo-600 transition-colors"
+          >
             <Settings size={22} />
           </button>
         </div>
@@ -128,23 +152,47 @@ export default function EditProfile() {
           <div className="flex flex-col md:flex-row items-center gap-6">
             <div className="relative group">
               <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-4 border-white dark:border-slate-800 shadow-md overflow-hidden">
-                {previewUrl ? <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" /> : <User className="text-slate-400" size={40} />}
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="text-slate-400" size={40} />
+                )}
                 {uploading && (
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <Loader2 className="text-white animate-spin" size={24} />
                   </div>
                 )}
               </div>
-              <label htmlFor="photo-upload" className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full cursor-pointer hover:scale-110 transition-transform shadow-lg">
+              <label
+                htmlFor="photo-upload"
+                className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full cursor-pointer hover:scale-110 transition-transform shadow-lg"
+              >
                 <Camera size={14} />
-                <input id="photo-upload" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                <input
+                  id="photo-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
               </label>
             </div>
             <div className="text-center md:text-left">
-              <h3 className="font-semibold text-slate-900 dark:text-white">Foto Profil</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">PNG, JPG atau GIF. Maksimal 2MB.</p>
+              <h3 className="font-semibold text-slate-900 dark:text-white">
+                Foto Profil
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                PNG, JPG atau GIF. Maksimal 2MB.
+              </p>
               <div className="mt-3 flex gap-2 justify-center md:justify-start">
-                <label htmlFor="photo-upload" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 cursor-pointer">
+                <label
+                  htmlFor="photo-upload"
+                  className="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 cursor-pointer"
+                >
                   Ganti Foto
                 </label>
                 <span className="text-slate-300 dark:text-slate-700">|</span>
@@ -168,11 +216,15 @@ export default function EditProfile() {
           <section className="space-y-6">
             <div className="flex items-center gap-2">
               <User className="text-indigo-600" size={20} />
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Informasi Dasar</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                Informasi Dasar
+              </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Lengkap</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Nama Lengkap
+                </label>
                 <input
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
                   placeholder="Nama"
@@ -181,7 +233,9 @@ export default function EditProfile() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Alamat Email</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Alamat Email
+                </label>
                 <input
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
                   placeholder="Email"
@@ -198,11 +252,15 @@ export default function EditProfile() {
           <section className="space-y-6">
             <div className="flex items-center gap-2">
               <Lock className="text-indigo-600" size={20} />
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Keamanan</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                Keamanan
+              </h2>
             </div>
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Kata Sandi Lama</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Kata Sandi Lama
+                </label>
                 <div className="relative">
                   <input
                     type={showOldPassword ? "text" : "password"}
@@ -211,14 +269,20 @@ export default function EditProfile() {
                     onChange={(e) => setOldPassword(e.target.value)}
                     placeholder="Masukkan kata sandi lama"
                   />
-                  <button type="button" onClick={() => setShowOldPassword(!showOldPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+                  <button
+                    type="button"
+                    onClick={() => setShowOldPassword(!showOldPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  >
                     {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password Baru</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                    Password Baru
+                  </label>
                   <input
                     type="password"
                     placeholder="Min. 8 karakter"
@@ -228,7 +292,9 @@ export default function EditProfile() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Konfirmasi Password</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                    Konfirmasi Password
+                  </label>
                   <input
                     type="password"
                     placeholder="Ulangi password baru"
@@ -243,7 +309,12 @@ export default function EditProfile() {
 
           {/* ACTIONS */}
           <div className="pt-4 flex flex-col sm:flex-row gap-4 items-center justify-end">
-            <button type="button" onClick={() => navigate("/profile")} className="w-full sm:w-auto px-8 py-3 text-slate-600 dark:text-slate-400 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all">
+            <button
+              disabled={loading || uploading}
+              type="button"
+              onClick={() => navigate("/profile")}
+              className="w-full sm:w-auto px-8 py-3 text-slate-600 dark:text-slate-400 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
+            >
               Batalkan
             </button>
             <button

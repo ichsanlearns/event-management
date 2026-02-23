@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
-import { approveOrder, getApprovalQueue, rejectOrder, getOrdersByStatus } from "../services/approval.service.js";
+import {
+  approveOrder,
+  getApprovalQueue,
+  rejectOrder,
+  getOrdersByStatus,
+} from "../services/approval.service.js";
 import type { Status } from "../generated/prisma/enums.js";
 
 export async function getByStatus(req: Request, res: Response) {

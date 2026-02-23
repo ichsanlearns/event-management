@@ -1,6 +1,5 @@
 import OrderFinished from "./OrderFinished";
 import OrderAll from "./OrderAll";
-import OrderActive from "./OrderActive";
 import { NavLink, useSearchParams } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import Paid from "../../components/active-ticket/Paid";

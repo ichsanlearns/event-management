@@ -4,8 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { voucherSchema, type VoucherOutput } from "../schemas/voucher.schema";
 import toast from "react-hot-toast";
 import type { TEvent } from "../types/event.type";
+import { useState } from "react";
+import { createVoucher } from "../services/voucher.service";
 
 function FormVoucher({ data, onClose }: { data: TEvent; onClose: () => void }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(voucherSchema),
   });
@@ -17,25 +21,20 @@ function FormVoucher({ data, onClose }: { data: TEvent; onClose: () => void }) {
   } = form;
 
   async function handleSubmitButton(data: VoucherOutput) {
+    setIsLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/vouchers`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data, eventId: voucherEvents?.id }),
+      await createVoucher({
+        ...data,
+        eventId: voucherEvents?.id,
       });
-
-      if (!response.ok) {
-        toast.error("Failed to create voucher");
-        return;
-      }
 
       toast.success("Voucher created successfully");
       form.reset();
       onClose();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to create voucher");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -77,6 +76,7 @@ function FormVoucher({ data, onClose }: { data: TEvent; onClose: () => void }) {
                     form.reset();
                     onClose();
                   }}
+                  disabled={isLoading}
                   className="text-slate-400 hover:text-slate-500 focus:outline-none"
                   type="button"
                 >
@@ -192,16 +192,18 @@ function FormVoucher({ data, onClose }: { data: TEvent; onClose: () => void }) {
               {/*  */}
               <div className="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 sm:flex sm:flex-row-reverse sm:gap-3 border-t border-border-light dark:border-border-dark">
                 <button
+                  disabled={isLoading}
                   className="inline-flex w-full justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark sm:w-auto transition-colors"
                   type="submit"
                 >
-                  Create Voucher
+                  {isLoading ? "Creating..." : "Create Voucher"}
                 </button>
                 <button
                   onClick={() => {
                     form.reset();
                     onClose();
                   }}
+                  disabled={isLoading}
                   className="mt-3 inline-flex w-full justify-center rounded-lg bg-white dark:bg-transparent px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 sm:mt-0 sm:w-auto transition-colors"
                   type="button"
                 >

@@ -1,8 +1,26 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { CheckCircle2, Download, CheckCheck, Search, Filter, Calendar as CalendarIcon, Check, X, ChevronLeft, ChevronRight, Menu, Clock } from "lucide-react";
+import {
+  CheckCircle2,
+  Download,
+  CheckCheck,
+  Search,
+  Filter,
+  Calendar as CalendarIcon,
+  Check,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  Clock,
+} from "lucide-react";
 
-import { approveOrderApi, rejectOrderApi, getPendingOrdersApi, getOrdersByStatusApi } from "../../services/approval.service";
+import {
+  approveOrderApi,
+  rejectOrderApi,
+  getPendingOrdersApi,
+  getOrdersByStatusApi,
+} from "../../services/approval.service";
 import PaymentVerificationModal from "../../components/PaymentVerificationModal";
 import type { OrderApproval } from "../../types/approval.type";
 import type { Order } from "../../types/order.type";
@@ -10,7 +28,9 @@ import type { Order } from "../../types/order.type";
 function Approval() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<OrderApproval | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderApproval | null>(
+    null,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -32,7 +52,11 @@ function Approval() {
 
   const loadStats = async () => {
     try {
-      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([getOrdersByStatusApi("WAITING_CONFIRMATION"), getOrdersByStatusApi("DONE"), getOrdersByStatusApi("REJECTED")]);
+      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+        getOrdersByStatusApi("WAITING_CONFIRMATION"),
+        getOrdersByStatusApi("DONE"),
+        getOrdersByStatusApi("REJECTED"),
+      ]);
 
       setStats({
         pending: pendingRes.data.length,
@@ -114,12 +138,19 @@ function Approval() {
               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
                 <span>Dashboard</span>
                 <span className="text-slate-300">/</span>
-                <span className="text-slate-900 dark:text-white font-bold">Transaction Approvals</span>
+                <span className="text-slate-900 dark:text-white font-bold">
+                  Transaction Approvals
+                </span>
               </div>
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Transaction Approvals</h2>
-                  <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">Review and verify pending ticket purchases for upcoming events.</p>
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    Transaction Approvals
+                  </h2>
+                  <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                    Review and verify pending ticket purchases for upcoming
+                    events.
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <button className="hidden md:flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all">
@@ -134,11 +165,29 @@ function Approval() {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <StatsCard title="Pending Review" value={stats.pending} badge="Need Action" icon={<Clock />} color="text-orange-500" />
+              <StatsCard
+                title="Pending Review"
+                value={stats.pending}
+                badge="Need Action"
+                icon={<Clock />}
+                color="text-orange-500"
+              />
 
-              <StatsCard title="Approved" value={stats.approved} badge="Confirmed" icon={<CheckCircle2 />} color="text-emerald-500" />
+              <StatsCard
+                title="Approved"
+                value={stats.approved}
+                badge="Confirmed"
+                icon={<CheckCircle2 />}
+                color="text-emerald-500"
+              />
 
-              <StatsCard title="Rejected" value={stats.rejected} badge="Declined" icon={<X />} color="text-rose-500" />
+              <StatsCard
+                title="Rejected"
+                value={stats.rejected}
+                badge="Declined"
+                icon={<X />}
+                color="text-rose-500"
+              />
             </div>
 
             {/* Search and Filters */}
@@ -154,7 +203,10 @@ function Approval() {
               </div>
               <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
                 <FilterButton icon={<Filter size={16} />} label="All Status" />
-                <FilterButton icon={<CalendarIcon size={16} />} label="Oct 2023" />
+                <FilterButton
+                  icon={<CalendarIcon size={16} />}
+                  label="Oct 2023"
+                />
               </div>
             </div>
 
@@ -165,14 +217,29 @@ function Approval() {
                   <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 font-bold">
                     <tr>
                       <th className="px-6 py-4 text-left w-12">
-                        <input type="checkbox" className="rounded border-slate-300 text-primary size-4" />
+                        <input
+                          type="checkbox"
+                          className="rounded border-slate-300 text-primary size-4"
+                        />
                       </th>
-                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">Buyer</th>
-                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">Date & Time</th>
-                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">Ticket Type</th>
-                      <th className="px-6 py-4 text-right text-xs text-slate-500 uppercase tracking-widest">Amount</th>
-                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">Proof</th>
-                      <th className="px-6 py-4 text-center text-xs text-slate-500 uppercase tracking-widest">Actions</th>
+                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">
+                        Buyer
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">
+                        Date & Time
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">
+                        Ticket Type
+                      </th>
+                      <th className="px-6 py-4 text-right text-xs text-slate-500 uppercase tracking-widest">
+                        Amount
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs text-slate-500 uppercase tracking-widest">
+                        Proof
+                      </th>
+                      <th className="px-6 py-4 text-center text-xs text-slate-500 uppercase tracking-widest">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -199,7 +266,15 @@ function Approval() {
               {/* Pagination */}
               <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-transparent">
                 <p className="text-sm text-slate-500">
-                  Showing <span className="font-bold text-slate-900 dark:text-white">1</span> to <span className="font-bold text-slate-900 dark:text-white">5</span> of 12
+                  Showing{" "}
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    1
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    5
+                  </span>{" "}
+                  of 12
                 </p>
                 <div className="flex gap-2">
                   <button className="px-3 py-1.5 text-xs font-bold text-slate-500 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 disabled:opacity-50 flex items-center gap-1">
@@ -215,7 +290,14 @@ function Approval() {
         </div>
       </main>
 
-      <PaymentVerificationModal open={isModalOpen} onClose={handleCloseModal} order={selectedOrder} onApprove={handleApprove} onReject={handleReject} loading={isSubmitting} />
+      <PaymentVerificationModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        order={selectedOrder}
+        onApprove={handleApprove}
+        onReject={handleReject}
+        loading={isSubmitting}
+      />
     </div>
   );
 }
@@ -225,27 +307,52 @@ function Approval() {
 function StatsCard({ title, value, badge, icon, color }: any) {
   return (
     <div className="p-5 rounded-xl bg-white dark:bg-[#1a2233] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-      <div className={`absolute top-4 right-4 opacity-10 group-hover:opacity-25 transition-opacity ${color}`}>{icon}</div>
+      <div
+        className={`absolute top-4 right-4 opacity-10 group-hover:opacity-25 transition-opacity ${color}`}
+      >
+        {icon}
+      </div>
       <p className="text-slate-500 text-sm font-bold">{title}</p>
       <div className="flex items-baseline gap-2 mt-1">
         <p className="text-3xl font-black">{value}</p>
-        <span className="text-[10px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 uppercase tracking-tighter">{badge}</span>
+        <span className="text-[10px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 uppercase tracking-tighter">
+          {badge}
+        </span>
       </div>
     </div>
   );
 }
 
-function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, onApprove, onReject, onViewProof }: any) {
+function TransactionRow({
+  initial,
+  name,
+  id,
+  trxId,
+  date,
+  type,
+  amount,
+  proof,
+  onApprove,
+  onReject,
+  onViewProof,
+}: any) {
   return (
     <tr className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
       <td className="px-6 py-4">
-        <input type="checkbox" className="rounded border-slate-300 text-primary size-4" />
+        <input
+          type="checkbox"
+          className="rounded border-slate-300 text-primary size-4"
+        />
       </td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="size-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 flex items-center justify-center text-[10px] font-black">{initial}</div>
+          <div className="size-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 flex items-center justify-center text-[10px] font-black">
+            {initial}
+          </div>
           <div className="flex flex-col">
-            <p className="text-sm font-bold text-slate-900 dark:text-white">{name}</p>
+            <p className="text-sm font-bold text-slate-900 dark:text-white">
+              {name}
+            </p>
             <p className="text-[11px] text-slate-500 font-medium">{trxId}</p>
           </div>
         </div>
@@ -254,11 +361,18 @@ function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, o
         <p className="text-sm font-bold">{new Date(date).toLocaleString()}</p>
       </td>
       <td className="px-6 py-4">
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 uppercase">{type}</span>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 uppercase">
+          {type}
+        </span>
       </td>
-      <td className="px-6 py-4 text-right font-black text-sm">Rp {amount.toLocaleString()}</td>
+      <td className="px-6 py-4 text-right font-black text-sm">
+        Rp {amount.toLocaleString()}
+      </td>
       <td className="px-6 py-4">
-        <button onClick={onViewProof} className="flex items-center gap-1.5 text-primary hover:text-blue-800 dark:hover:text-blue-400 text-xs font-bold transition-colors underline decoration-transparent hover:decoration-current">
+        <button
+          onClick={onViewProof}
+          className="flex items-center gap-1.5 text-primary hover:text-blue-800 dark:hover:text-blue-400 text-xs font-bold transition-colors underline decoration-transparent hover:decoration-current"
+        >
           {proof ? "View Proof" : "-"}
         </button>
       </td>
@@ -271,7 +385,11 @@ function TransactionRow({ initial, name, id, trxId, date, type, amount, proof, o
           >
             <Check size={18} />
           </button>
-          <button onClick={() => onReject(id)} className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all active:scale-90 border border-transparent hover:border-rose-100" title="Reject">
+          <button
+            onClick={() => onReject(id)}
+            className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all active:scale-90 border border-transparent hover:border-rose-100"
+            title="Reject"
+          >
             <X size={18} />
           </button>
         </div>

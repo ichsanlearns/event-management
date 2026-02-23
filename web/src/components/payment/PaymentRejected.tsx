@@ -235,7 +235,7 @@ function PaymentRejected({ order }: { order: IOrder }) {
               className="bg-slate-50 dark:bg-[#25203b] p-3 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center gap-4"
             >
               <div
-                className="size-16 rounded bg-slate-200 dark:bg-slate-800 flex-shrink-0 bg-cover bg-center opacity-70"
+                className="size-16 rounded bg-slate-200 dark:bg-slate-800 shrink-0 bg-cover bg-center opacity-70"
                 style={{
                   backgroundImage: `url('${payment.proofImage}')`,
                 }}

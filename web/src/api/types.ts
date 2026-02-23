@@ -103,3 +103,12 @@ export type CreateOrderPayload = {
   total: number;
   email: string;
 };
+
+export type createVoucherPayloads = {
+  eventId: string;
+  code: string;
+  discountAmount: number;
+  quota: number;
+  startDate: Date;
+  endDate: Date;
+};

@@ -18,7 +18,7 @@ function OrderFinished() {
         const res = await getOrderByCustomer(user?.id, "need_review");
         setEvents(res.data);
       } catch (error: any) {
-        toast.error(error.message || "Failed to fetch event");
+        toast.error(error.response.data.message || "Failed to fetch event");
       }
     };
     fetchEvent();
@@ -29,7 +29,7 @@ function OrderFinished() {
       {events.map((event: Order) => (
         <div
           key={event.id}
-          className="bg-white dark:bg-card-dark rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800 flex flex-col transition-transform hover:translate-y-[-4px] duration-300"
+          className="bg-white dark:bg-card-dark rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800 flex flex-col transition-transform hover:-translate-y-1 duration-300"
         >
           <div className="relative h-48">
             <div className="absolute inset-0 bg-black/40 z-10 flex flex-col items-center justify-center backdrop-blur-[1px]">

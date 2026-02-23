@@ -49,7 +49,9 @@ function AttendeePage() {
       <div className="flex h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <div className="size-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-          <p className="text-slate-500 font-medium italic">Loading guest list...</p>
+          <p className="text-slate-500 font-medium italic">
+            Loading guest list...
+          </p>
         </div>
       </div>
     );
@@ -61,28 +63,59 @@ function AttendeePage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <nav className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-            <Link to="/dashboard/events" className="hover:text-primary transition-colors">
+            <Link
+              to="/dashboard/events"
+              className="hover:text-primary transition-colors"
+            >
               Events
             </Link>
-            <span className="material-symbols-outlined text-xs">chevron_right</span>
-            <span className="text-slate-900 dark:text-slate-300 font-medium">Attendee Management</span>
+            <span className="material-symbols-outlined text-xs">
+              chevron_right
+            </span>
+            <span className="text-slate-900 dark:text-slate-300 font-medium">
+              Attendee Management
+            </span>
           </nav>
-          <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Attendee Management</h2>
-          <p className="text-slate-500 mt-1">Real-time tracking of guest list, ticket types, and revenue.</p>
+          <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+            Attendee Management
+          </h2>
+          <p className="text-slate-500 mt-1">
+            Real-time tracking of guest list, ticket types, and revenue.
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary px-4 py-2.5 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 transition-all">
-            <span className="material-symbols-outlined text-lg">download</span> Export CSV
+            <span className="material-symbols-outlined text-lg">download</span>{" "}
+            Export CSV
           </button>
         </div>
       </div>
 
       {/* Summary Metrics (Opsional - Data statis berdasarkan array) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatsCard label="Total Attendees" value={attendees.length.toString()} icon="groups" color="blue" />
-        <StatsCard label="Tickets Sold" value={attendees.reduce((acc, curr) => acc + curr.quantity, 0).toString()} icon="local_activity" color="purple" />
-        <StatsCard label="Total Revenue" value={formatCurrency(attendees.reduce((acc, curr) => acc + Number(curr.total), 0))} icon="payments" color="emerald" />
+        <StatsCard
+          label="Total Attendees"
+          value={attendees.length.toString()}
+          icon="groups"
+          color="blue"
+        />
+        <StatsCard
+          label="Tickets Sold"
+          value={attendees
+            .reduce((acc, curr) => acc + curr.quantity, 0)
+            .toString()}
+          icon="local_activity"
+          color="purple"
+        />
+        <StatsCard
+          label="Total Revenue"
+          value={formatCurrency(
+            attendees.reduce((acc, curr) => acc + Number(curr.total), 0),
+          )}
+          icon="payments"
+          color="emerald"
+        />
       </div>
 
       {/* Table Section */}
@@ -90,7 +123,9 @@ function AttendeePage() {
         {/* Table Controls */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative w-full sm:w-96">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+              search
+            </span>
             <input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -104,44 +139,74 @@ function AttendeePage() {
           <table className="w-full text-left">
             <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Attendee Name</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Ticket Quantity</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Total Paid</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  Attendee Name
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  Ticket Quantity
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">
+                  Total Paid
+                </th>
                 <th className="px-6 py-4"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
               {filteredAttendees.length > 0 ? (
                 filteredAttendees.map((attendee, index) => (
-                  <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group">
+                  <tr
+                    key={index}
+                    className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group"
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="size-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary">{attendee.Customer.name.charAt(0)}</div>
+                        <div className="size-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary">
+                          {attendee.Customer.name.charAt(0)}
+                        </div>
                         <div>
-                          <p className="font-bold text-sm text-slate-900 dark:text-white">{attendee.Customer.name}</p>
-                          <p className="text-[10px] uppercase font-bold text-slate-400">Buyer</p>
+                          <p className="font-bold text-sm text-slate-900 dark:text-white">
+                            {attendee.Customer.name}
+                          </p>
+                          <p className="text-[10px] uppercase font-bold text-slate-400">
+                            Buyer
+                          </p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">{attendee.Customer.email}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
+                      {attendee.Customer.email}
+                    </td>
                     <td className="px-6 py-4">
-                      <span className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200">{attendee.quantity} Tickets</span>
+                      <span className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200">
+                        {attendee.quantity} Tickets
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <p className="text-sm font-black text-slate-900 dark:text-white">{formatCurrency(Number(attendee.total))}</p>
+                      <p className="text-sm font-black text-slate-900 dark:text-white">
+                        {formatCurrency(Number(attendee.total))}
+                      </p>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-primary transition-all">
-                        <span className="material-symbols-outlined">more_vert</span>
+                        <span className="material-symbols-outlined">
+                          more_vert
+                        </span>
                       </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500 italic">
-                    {searchTerm ? "No matching attendees found." : "No attendees found for this event."}
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-slate-500 italic"
+                  >
+                    {searchTerm
+                      ? "No matching attendees found."
+                      : "No attendees found for this event."}
                   </td>
                 </tr>
               )}
@@ -164,7 +229,9 @@ function StatsCard({ label, value, icon, color }: any) {
   return (
     <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 flex items-start justify-between shadow-sm hover:shadow-md transition-shadow">
       <div className="space-y-1">
-        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{label}</p>
+        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+          {label}
+        </p>
         <p className="text-2xl font-black">{value}</p>
       </div>
       <div className={`${colorMap[color]} p-3 rounded-lg`}>

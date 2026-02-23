@@ -3,6 +3,7 @@ import { Mail, ArrowLeft, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { forgotPassword } from "../../services/auth.service";
+import toast from "react-hot-toast";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,11 @@ function ForgotPassword() {
 
   // Inisialisasi Tema
   useEffect(() => {
-    if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    if (
+      localStorage.getItem("theme") === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
       setIsDarkMode(true);
       document.documentElement.classList.add("dark");
     }
@@ -34,7 +39,7 @@ function ForgotPassword() {
   // Handler Submit Form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    toast.loading("Loading...");
     setLoading(true);
     setSuccessMessage("");
     setErrorMessage("");
@@ -42,9 +47,13 @@ function ForgotPassword() {
     try {
       await forgotPassword(email);
 
-      setSuccessMessage("If the email is registered, a reset password link has been sent.");
+      setSuccessMessage(
+        "If the email is registered, a reset password link has been sent.",
+      );
+      toast.dismiss();
       setEmail("");
     } catch (err: any) {
+      toast.dismiss();
       setErrorMessage(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -70,13 +79,19 @@ function ForgotPassword() {
       <section className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 md:p-16 relative">
         <div className="w-full max-w-110">
           <div className="mb-10">
-            <h1 className="text-[#141118] dark:text-white text-4xl font-black mb-3">Reset Password</h1>
-            <p className="text-gray-500 dark:text-gray-400 text-lg">Enter your email and we'll send you a link to reset your password.</p>
+            <h1 className="text-[#141118] dark:text-white text-4xl font-black mb-3">
+              Reset Password
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
+              Enter your email and we'll send you a link to reset your password.
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-bold uppercase">Email Address</label>
+              <label className="text-sm font-bold uppercase">
+                Email Address
+              </label>
 
               <div className="relative">
                 <input
@@ -91,11 +106,21 @@ function ForgotPassword() {
             </div>
 
             {/* Message */}
-            {successMessage && <p className="text-green-600 text-sm font-medium">{successMessage}</p>}
+            {successMessage && (
+              <p className="text-green-600 text-sm font-medium">
+                {successMessage}
+              </p>
+            )}
 
-            {errorMessage && <p className="text-red-500 text-sm font-medium">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="text-red-500 text-sm font-medium">{errorMessage}</p>
+            )}
 
-            <button type="submit" disabled={loading} className="w-full py-4 rounded-2xl font-bold text-white bg-[#6366f1]">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-4 rounded-2xl font-bold text-white bg-[#6366f1]"
+            >
               {loading ? "Sending..." : "Send Reset Link"}
             </button>
           </form>
@@ -105,14 +130,21 @@ function ForgotPassword() {
               {" "}
               <button className="flex items-center gap-2 font-bold text-[#6366f1] hover:underline transition-all">
                 {" "}
-                <ArrowLeft className="group-hover:-translate-x-1 transition-transform" size={18} /> Back to Login
+                <ArrowLeft
+                  className="group-hover:-translate-x-1 transition-transform"
+                  size={18}
+                />{" "}
+                Back to Login
               </button>
             </Link>
           </div>
         </div>
       </section>
 
-      <button onClick={toggleDarkMode} className="fixed bottom-8 right-8 p-3 rounded-full">
+      <button
+        onClick={toggleDarkMode}
+        className="fixed bottom-8 right-8 p-3 rounded-full"
+      >
         {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
       </button>
     </main>

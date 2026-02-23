@@ -155,14 +155,14 @@ function Home() {
                           key={eventSearch.id}
                           className="flex items-center gap-4 px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary"
                         >
-                          <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+                          <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden shrink-0">
                             <img
                               alt="Thumbnail"
                               className="w-full h-full object-cover"
                               src={eventSearch.heroImage}
                             />
                           </div>
-                          <div className="flex-grow min-w-0">
+                          <div className="grow min-w-0">
                             <div className="flex items-center gap-2 mb-0.5">
                               <h5 className="text-sm font-bold text-gray-900 dark:text-white truncate">
                                 {eventSearch.name}
@@ -181,7 +181,7 @@ function Home() {
                               </span>
                             </div>
                           </div>
-                          <div className="flex-shrink-0 text-right">
+                          <div className="shrink-0 text-right">
                             <div className="text-[10px] text-gray-400 uppercase font-medium">
                               Starting from
                             </div>
@@ -195,14 +195,14 @@ function Home() {
                         className="flex items-center gap-4 px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary"
                         href="#"
                       >
-                        <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden shrink-0">
                           <img
                             alt="Thumbnail"
                             className="w-full h-full object-cover"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbqfCDuMAq20_jhytFOwa1ZZRsSh-zJo31Zqrb04bCKcaC_-NRg8rSg4gzpSjznFolKyqIIcHnP_g_I8-5_QKniSaYYLY7E--JiG53z8h9Lh90rsfiM2MkbCmbhHC2T_iz5oiNr9D0OH3gRX3xHoG3Ninjn1aEn7C9koTY7WAmfGntAug29lJFW_aOsg4eCGxpgYD7tI34AZPg9pG2JqEgJSxK8LQn_3xR99M7e4P2r2-d8-m2dFO68P5wm18KMuLxjv8PIOchgXg"
                           />
                         </div>
-                        <div className="flex-grow min-w-0">
+                        <div className="grow min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
                             <h5 className="text-sm font-bold text-gray-900 dark:text-white truncate">
                               Future Tech Summit Asia
@@ -217,7 +217,7 @@ function Home() {
                             <span>Aug 28</span>
                           </div>
                         </div>
-                        <div className="flex-shrink-0 text-right">
+                        <div className="shrink-0 text-right">
                           <div className="text-[10px] text-gray-400 uppercase font-medium">
                             Starting from
                           </div>
@@ -230,14 +230,14 @@ function Home() {
                         className="flex items-center gap-4 px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group cursor-pointer border-l-4 border-transparent hover:border-primary"
                         href="#"
                       >
-                        <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden shrink-0">
                           <img
                             alt="Thumbnail"
                             className="w-full h-full object-cover"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL67BJLc-Z1NOQTGfX8BaIfnEbdnBLTUWEdflHKvxt81bEK5QweipV3m3Wa4VMUjFW0azudMOzzVifkOaUIAHXeKEwYnnG_bH4Dk7M0flJRtr4X3EATVSzbbDQ3z5ghOlWc3gVpqIZZMSs_xsYjBRYjKR_mmUseeQCX_pPGxHylFTXjpYKtM7wmpgAN0UWExziYqihXqLILTJ4IfmZTMAdscTfzM3w5_lfSJi8lE329-5Nai-6MJArQlYreP0bWOG3zeATPIoLm1s"
                           />
                         </div>
-                        <div className="flex-grow min-w-0">
+                        <div className="grow min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
                             <h5 className="text-sm font-bold text-gray-900 dark:text-white truncate">
                               Modern Art &amp; Culture Expo
@@ -252,7 +252,7 @@ function Home() {
                             <span>Sep 06</span>
                           </div>
                         </div>
-                        <div className="flex-shrink-0 text-right">
+                        <div className="shrink-0 text-right">
                           <div className="text-[10px] text-gray-400 uppercase font-medium">
                             Price
                           </div>

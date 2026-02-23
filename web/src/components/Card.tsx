@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import { type TEvent } from "../types/event.type";
 import { Link } from "react-router";
+import { getEventsCardLimit } from "../services/event.service";
+import toast from "react-hot-toast";
 
 function Card() {
   const [events, setEvents] = useState<TEvent[] | null>(null);
@@ -11,20 +13,16 @@ function Card() {
   useEffect(() => {
     async function getEvents() {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/events?limit=${limit}`,
-          {
-            method: "GET",
-          },
-        );
-        const data = await response.json();
+        const response = await getEventsCardLimit({ limit });
 
-        setEvents(data.data);
-        if (data.length < limit) {
+        console.log(response);
+
+        setEvents(response.data);
+        if (response.data.length < limit) {
           setMax(true);
         }
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        toast.error(error.response.data.message);
       }
     }
     getEvents();
