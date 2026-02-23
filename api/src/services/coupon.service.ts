@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma.lib.js";
+import { prisma } from "../lib/prisma.lib";
 
 export const getByUserId = async (userId: string) => {
   const vouchers = await prisma.coupon.findMany({

@@ -1,5 +1,5 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { Role } from "../generated/prisma/enums.js";
+import { Role } from "../generated/prisma/enums";
 
 export function organizerOnly(req: Request, res: Response, next: NextFunction) {
   if (!req.user) {

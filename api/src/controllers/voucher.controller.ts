@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express";
-import { create, get, getByCode } from "../services/voucher.service.js";
-import { catchAsync } from "../utils/catch-async.util.js";
+import { create, get, getByCode } from "../services/voucher.service";
+import { catchAsync } from "../utils/catch-async.util";
 
 export async function createVoucher(req: Request, res: Response) {
   try {

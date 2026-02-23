@@ -1,4 +1,4 @@
-import { transporterEvent } from "../utils/email.util.js";
+import { transporterEvent } from "../utils/email.util";
 import type { SendMailOptions } from "nodemailer";
 
 interface HbsMailOptions extends SendMailOptions {

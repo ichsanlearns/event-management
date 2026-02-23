@@ -1,6 +1,6 @@
-import { cloudinary } from "../lib/cloudinary.lib.js";
+import { cloudinary } from "../lib/cloudinary.lib";
 import streamifier from "streamifier";
-import { AppError } from "../utils/app-error.util.js";
+import { AppError } from "../utils/app-error.util";
 
 export const uploadSingleService = (
   file: Express.Multer.File,

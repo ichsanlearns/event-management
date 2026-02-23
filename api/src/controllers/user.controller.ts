@@ -1,11 +1,11 @@
 import { type Request, type Response } from "express";
-import { prisma } from "../lib/prisma.lib.js";
-import { comparePassword, hashPassword } from "../utils/hash.util.js";
-import { uploadToCloudinary } from "../services/image.service.js";
-import { catchAsync } from "../utils/catch-async.util.js";
-import { getById } from "../services/user.service.js";
-import { runMulter } from "../middleware/multer.promise.js";
-import { AppError } from "../utils/app-error.util.js";
+import { prisma } from "../lib/prisma.lib";
+import { comparePassword, hashPassword } from "../utils/hash.util";
+import { uploadToCloudinary } from "../services/image.service";
+import { catchAsync } from "../utils/catch-async.util";
+import { getById } from "../services/user.service";
+import { runMulter } from "../middleware/multer.promise";
+import { AppError } from "../utils/app-error.util";
 
 export const getUserPointAndCoupon = async (req: Request, res: Response) => {
   try {

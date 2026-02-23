@@ -1,7 +1,10 @@
-import { prisma } from "../lib/prisma.lib.js";
-import { Status } from "../generated/prisma/client.js";
-import { sendEmail } from "../utils/email.util.js";
-import { approvedTemplate, rejectedTemplate } from "../utils/email-template.util.js";
+import { prisma } from "../lib/prisma.lib";
+import { Status } from "../generated/prisma/client";
+import { sendEmail } from "../utils/email.util";
+import {
+  approvedTemplate,
+  rejectedTemplate,
+} from "../utils/email-template.util";
 
 export async function getOrdersByStatus(status: Status) {
   return prisma.order.findMany({
@@ -97,7 +100,17 @@ export async function approveOrder(orderId: string, organizerId: string) {
     };
   });
 
-  await sendEmail(result.customerEmail, "Payment Approved", approvedTemplate(result.customerName, result.orderCode, result.eventName, result.qty, result.total));
+  await sendEmail(
+    result.customerEmail,
+    "Payment Approved",
+    approvedTemplate(
+      result.customerName,
+      result.orderCode,
+      result.eventName,
+      result.qty,
+      result.total,
+    ),
+  );
 
   return result.updated;
 }
@@ -163,7 +176,11 @@ export async function rejectOrder(orderId: string, organizerId: string) {
     };
   });
 
-  await sendEmail(result.customerEmail, "Order Rejected", rejectedTemplate(result.customerName, result.orderCode));
+  await sendEmail(
+    result.customerEmail,
+    "Order Rejected",
+    rejectedTemplate(result.customerName, result.orderCode),
+  );
 
   return result.updated;
 }

@@ -7,17 +7,17 @@ import express, {
 import cors from "cors";
 import path from "path";
 
-import authRoutes from "./routes/auth.route.js";
-import eventRoutes from "./routes/event.route.js";
-import userRoutes from "./routes/user.route.js";
-import orderRoutes from "./routes/order.route.js";
-import paymentRoutes from "./routes/payment.route.js";
-import voucherRoutes from "./routes/voucher.route.js";
-import reviewRoutes from "./routes/review.route.js";
-import approvalRoutes from "./routes/approval.route.js";
-import { startCronJobs } from "./jobs/cron.js";
-import { notFound } from "./middleware/not-found.middleware.js";
-import { error } from "./middleware/error.middleware.js";
+import authRoutes from "./routes/auth.route";
+import eventRoutes from "./routes/event.route";
+import userRoutes from "./routes/user.route";
+import orderRoutes from "./routes/order.route";
+import paymentRoutes from "./routes/payment.route";
+import voucherRoutes from "./routes/voucher.route";
+import reviewRoutes from "./routes/review.route";
+import approvalRoutes from "./routes/approval.route";
+import { startCronJobs } from "./jobs/cron";
+import { notFound } from "./middleware/not-found.middleware";
+import { error } from "./middleware/error.middleware";
 
 const app: Application = express();
 const PORT: number = 8000;

@@ -1,9 +1,13 @@
 import { type Request, type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { AppError } from "../utils/app-error.util.js";
-import type { JwtPayload } from "../types/jwt.type.js";
+import { AppError } from "../utils/app-error.util";
+import type { JwtPayload } from "../types/jwt.type";
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

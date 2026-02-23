@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import { runMulter } from "../middleware/multer.promise.js";
+import { runMulter } from "../middleware/multer.promise";
 
 import {
   create,
@@ -9,15 +9,15 @@ import {
   getSearch,
   remove,
   updateById,
-} from "../services/event.service.js";
+} from "../services/event.service";
 
-import { getAttendeesByEvent } from "../services/attendee.service.js";
+import { getAttendeesByEvent } from "../services/attendee.service";
 
-import { redis } from "../lib/redis.lib.js";
-import { createEventSchema } from "../validators/event.validator.js";
-import { uploadSingleService } from "../services/image.service.js";
-import { catchAsync } from "../utils/catch-async.util.js";
-import { AppError } from "../utils/app-error.util.js";
+import { redis } from "../lib/redis.lib";
+import { createEventSchema } from "../validators/event.validator";
+import { uploadSingleService } from "../services/image.service";
+import { catchAsync } from "../utils/catch-async.util";
+import { AppError } from "../utils/app-error.util";
 
 export const createEvent = catchAsync(async (req, res) => {
   await runMulter("heroImage", req, res);

@@ -8,12 +8,12 @@ import {
   deleteEvent,
   updateEvent,
   getSearchEvent,
-} from "../controllers/event.controller.js";
+} from "../controllers/event.controller";
 
-import { getEventAttendees } from "../controllers/event.controller.js";
+import { getEventAttendees } from "../controllers/event.controller";
 
-import { authMiddleware } from "../middleware/auth.middleware.js";
-import { organizerOnly } from "../middleware/role.middleware.js";
+import { authMiddleware } from "../middleware/auth.middleware";
+import { organizerOnly } from "../middleware/role.middleware";
 
 const router = express.Router();
 

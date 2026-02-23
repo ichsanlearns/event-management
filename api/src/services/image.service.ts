@@ -1,6 +1,6 @@
-import { prisma } from "../lib/prisma.lib.js";
-import { AppError } from "../utils/app-error.util.js";
-import { cloudinary } from "../lib/cloudinary.lib.js";
+import { prisma } from "../lib/prisma.lib";
+import { AppError } from "../utils/app-error.util";
+import { cloudinary } from "../lib/cloudinary.lib";
 
 /* ================================
    CLOUDINARY BUFFER UPLOAD

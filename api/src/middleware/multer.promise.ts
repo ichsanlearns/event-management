@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { upload } from "./multer.middleware.js";
+import { upload } from "./multer.middleware";
 
 export const runMulter = (
   fieldName: string,

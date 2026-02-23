@@ -1,12 +1,12 @@
 import { type Request, type Response } from "express";
-import { Role } from "../generated/prisma/enums.js";
-import { findByEmail, findByReferral } from "../services/auth.service.js";
-import { generateReferralCode } from "../utils/referral.util.js";
-import { hashPassword, comparePassword } from "../utils/hash.util.js";
-import { generateToken } from "../utils/jwt.util.js";
-import { prisma } from "../lib/prisma.lib.js";
+import { Role } from "../generated/prisma/enums";
+import { findByEmail, findByReferral } from "../services/auth.service";
+import { generateReferralCode } from "../utils/referral.util";
+import { hashPassword, comparePassword } from "../utils/hash.util";
+import { generateToken } from "../utils/jwt.util";
+import { prisma } from "../lib/prisma.lib";
 import crypto from "crypto";
-import { transporter } from "../utils/email.util.js";
+import { transporterEvent } from "../utils/email.util";
 
 export async function register(req: Request, res: Response) {
   const { name, email, password, role, referred_by } = req.body;
@@ -181,7 +181,7 @@ export async function forgotPassword(req: Request, res: Response) {
 
   const resetLink = `${process.env.WEB_URL}/reset-password?token=${token}`;
 
-  await transporter.sendMail({
+  await transporterEvent.sendMail({
     from: `"Event App" <${process.env.EMAIL_USER}>`,
     to: user.email,
     subject: "Reset Password",

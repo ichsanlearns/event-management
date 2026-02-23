@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma.lib.js";
+import { prisma } from "../lib/prisma.lib";
 
 export function getUserPoints(userId: string) {
   return prisma.point.findMany({

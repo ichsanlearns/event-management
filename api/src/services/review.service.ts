@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma.lib.js";
-import type { ReviewInput } from "../types/review.type.js";
+import { prisma } from "../lib/prisma.lib";
+import type { ReviewInput } from "../types/review.type";
 
 export async function create(data: ReviewInput) {
   await prisma.$transaction(async (tx) => {

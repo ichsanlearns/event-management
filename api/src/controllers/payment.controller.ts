@@ -1,9 +1,9 @@
 import { type Request, type Response } from "express";
-import { create, get } from "../services/payment.service.js";
-import { uploadSingleService } from "../services/image.service.js";
+import { create, get } from "../services/payment.service";
+import { uploadSingleService } from "../services/image.service";
 
-import { runMulter } from "../middleware/multer.promise.js";
-import { AppError } from "../utils/app-error.util.js";
+import { runMulter } from "../middleware/multer.promise";
+import { AppError } from "../utils/app-error.util";
 
 export async function createPayment(req: Request, res: Response) {
   try {

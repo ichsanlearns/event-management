@@ -1,15 +1,15 @@
-import { Category, Role, Types } from "../src/generated/prisma/enums.js";
+import { Category, Role, Types } from "../src/generated/prisma/enums";
 import {
   type Ticket,
   type Voucher,
   type Order,
   Prisma,
-} from "../src/generated/prisma/client.js";
-import { prisma } from "../src/lib/prisma.lib.js";
+} from "../src/generated/prisma/client";
+import { prisma } from "../src/lib/prisma.lib";
 import { Faker, id_ID } from "@faker-js/faker";
 
 import bcrypt from "bcrypt";
-import { generateReferralCode } from "../src/utils/referral.util.js";
+import { generateReferralCode } from "../src/utils/referral.util";
 
 // 🇮🇩 Use Indonesian locale
 const faker = new Faker({ locale: [id_ID] });

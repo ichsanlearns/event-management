@@ -3,7 +3,7 @@ import {
   createVoucher,
   getVoucher,
   getVoucherByCode,
-} from "../controllers/voucher.controller.js";
+} from "../controllers/voucher.controller";
 
 const router = Router();
 

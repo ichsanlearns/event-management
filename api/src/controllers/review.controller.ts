@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { create, getByEventId } from "../services/review.service.js";
-import { catchAsync } from "../utils/catch-async.util.js";
+import { create, getByEventId } from "../services/review.service";
+import { catchAsync } from "../utils/catch-async.util";
 
 export const createReview = catchAsync(async (req: Request, res: Response) => {
   const { userId, eventId, orderId, comment, rating } = req.body;

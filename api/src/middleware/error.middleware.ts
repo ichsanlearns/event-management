@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
-import { AppError } from "../utils/app-error.util.js";
+import { AppError } from "../utils/app-error.util";
 import jwt from "jsonwebtoken";
 import z, { ZodError } from "zod";
-import { Prisma } from "../generated/prisma/client.js";
+import { Prisma } from "../generated/prisma/client";
 
 interface flattenedZodErrors {
   formErrors: string[];

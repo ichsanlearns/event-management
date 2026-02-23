@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma.lib.js";
-import { Status } from "../generated/prisma/enums.js";
+import { prisma } from "../lib/prisma.lib";
+import { Status } from "../generated/prisma/enums";
 
 export async function getAttendeesByEvent(eventId: string) {
   const orders = await prisma.order.findMany({

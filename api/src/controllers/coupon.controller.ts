@@ -1,7 +1,7 @@
 import type { Response, Request } from "express";
-import { catchAsync } from "../utils/catch-async.util.js";
-import { getByUserId } from "../services/coupon.service.js";
-import { AppError } from "../utils/app-error.util.js";
+import { catchAsync } from "../utils/catch-async.util";
+import { getByUserId } from "../services/coupon.service";
+import { AppError } from "../utils/app-error.util";
 
 export const getCouponByUserId = catchAsync(
   async (req: Request, res: Response) => {

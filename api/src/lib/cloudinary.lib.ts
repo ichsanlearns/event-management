@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { AppError } from "../utils/app-error.util.js";
+import { AppError } from "../utils/app-error.util";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,

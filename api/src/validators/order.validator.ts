@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Status } from "../generated/prisma/enums.js";
+import { Status } from "../generated/prisma/enums";
 
 export const createOrderSchema = z.object({
   orderCode: z.string(),

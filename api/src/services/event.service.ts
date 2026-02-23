@@ -1,7 +1,7 @@
-import { prisma } from "../lib/prisma.lib.js";
-import { type EventInput } from "../types/event.type.js";
-import { AppError } from "../utils/app-error.util.js";
-import { Types } from "../generated/prisma/enums.js";
+import { prisma } from "../lib/prisma.lib";
+import { type EventInput } from "../types/event.type";
+import { AppError } from "../utils/app-error.util";
+import { Types } from "../generated/prisma/enums";
 
 export async function create({
   name,

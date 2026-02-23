@@ -1,13 +1,23 @@
 import { Router } from "express";
-import { authMiddleware } from "../middleware/auth.middleware.js";
-import { organizerOnly } from "../middleware/role.middleware.js";
+import { authMiddleware } from "../middleware/auth.middleware";
+import { organizerOnly } from "../middleware/role.middleware";
 
-import { listApprovals, approval, reject, getByStatus } from "../controllers/approval.controller.js";
+import {
+  listApprovals,
+  approval,
+  reject,
+  getByStatus,
+} from "../controllers/approval.controller";
 
 const router = Router();
 
 router.get("/orders/pending", authMiddleware, organizerOnly, listApprovals);
-router.get("/orders/status/:status", authMiddleware, organizerOnly, getByStatus);
+router.get(
+  "/orders/status/:status",
+  authMiddleware,
+  organizerOnly,
+  getByStatus,
+);
 
 router.patch("/orders/:id/approve", authMiddleware, organizerOnly, approval);
 

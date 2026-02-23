@@ -6,10 +6,10 @@ import {
   getById,
   getByUserId,
   patchCouponId,
-} from "../services/order.service.js";
-import { catchAsync } from "../utils/catch-async.util.js";
-import { createOrderSchema } from "../validators/order.validator.js";
-import { AppError } from "../utils/app-error.util.js";
+} from "../services/order.service";
+import { catchAsync } from "../utils/catch-async.util";
+import { createOrderSchema } from "../validators/order.validator";
+import { AppError } from "../utils/app-error.util";
 
 export const createOrder = catchAsync(async (req: Request, res: Response) => {
   const validatedData = createOrderSchema.parse({

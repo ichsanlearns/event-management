@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma.lib.js";
-import { AppError } from "../utils/app-error.util.js";
+import { prisma } from "../lib/prisma.lib";
+import { AppError } from "../utils/app-error.util";
 
 export async function create(
   orderId: string,

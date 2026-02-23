@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   createReview,
   getReviewByEventId,
-} from "../controllers/review.controller.js";
+} from "../controllers/review.controller";
 
 const router = Router();
 

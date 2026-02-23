@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import { autoChangeEventDone } from "./autoChangeEventDone.js";
-import { autoExpirePaymentOrders } from "./autoExpiredPaymentOrders.js";
-import { autoExpireConfirmOrders } from "./autoExpireConfirmOrders.js";
+import { autoChangeEventDone } from "./autoChangeEventDone";
+import { autoExpirePaymentOrders } from "./autoExpiredPaymentOrders";
+import { autoExpireConfirmOrders } from "./autoExpireConfirmOrders";
 
 export function startCronJobs() {
   cron.schedule("* * * * * *", () => {

@@ -4,8 +4,8 @@ import {
   getApprovalQueue,
   rejectOrder,
   getOrdersByStatus,
-} from "../services/approval.service.js";
-import type { Status } from "../generated/prisma/enums.js";
+} from "../services/approval.service";
+import type { Status } from "../generated/prisma/enums";
 
 export async function getByStatus(req: Request, res: Response) {
   const status = req.params.status as Status;
