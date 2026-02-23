@@ -4,6 +4,8 @@ import { comparePassword, hashPassword } from "../utils/hash.util.js";
 import { uploadToCloudinary } from "../services/image.service.js";
 import { catchAsync } from "../utils/catch-async.util.js";
 import { getById } from "../services/user.service.js";
+import { runMulter } from "../middleware/multer.promise.js";
+import { AppError } from "../utils/app-error.util.js";
 
 export const getUserPointAndCoupon = async (req: Request, res: Response) => {
   try {
@@ -65,8 +67,10 @@ export async function getMe(req: Request, res: Response) {
 
 export async function uploadProfileImage(req: Request, res: Response) {
   try {
+    await runMulter("profileImage", req, res);
+
     if (!req.file) {
-      return res.status(400).json({ message: "File tidak ditemukan" });
+      throw new AppError(400, "Profile image is required");
     }
 
     const userId = req.user!.id;
@@ -78,13 +82,22 @@ export async function uploadProfileImage(req: Request, res: Response) {
       data: { profile_image: imageUrl },
     });
 
-    res.json({
+    return res.status(200).json({
       message: "Upload berhasil",
       profile_image: imageUrl,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Upload gagal" });
+
+    if (error instanceof AppError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Upload gagal",
+    });
   }
 }
 

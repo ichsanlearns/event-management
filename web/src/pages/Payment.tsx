@@ -106,7 +106,7 @@ function Payment() {
 
     try {
       const formData = new FormData();
-      formData.append("singleImage", data.proofImage);
+      formData.append("proofImage", data.proofImage);
       formData.append("orderId", order?.id);
       formData.append("amount", finalAmount.toString());
       formData.append("method", "MANUAL_TRANSFER");

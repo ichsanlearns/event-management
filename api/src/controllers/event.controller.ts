@@ -1,4 +1,5 @@
 import { type Request, type Response } from "express";
+import { runMulter } from "../middleware/multer.promise.js";
 
 import {
   create,
@@ -16,24 +17,30 @@ import { redis } from "../lib/redis.lib.js";
 import { createEventSchema } from "../validators/event.validator.js";
 import { uploadSingleService } from "../services/image.service.js";
 import { catchAsync } from "../utils/catch-async.util.js";
+import { AppError } from "../utils/app-error.util.js";
 
-export const createEvent = catchAsync(async (req: Request, res: Response) => {
-  const file = req.file as Express.Multer.File;
+export const createEvent = catchAsync(async (req, res) => {
+  await runMulter("heroImage", req, res);
 
-  const validatedData = createEventSchema.parse({
-    ...req.body,
-  });
-
-  const heroImage = await uploadSingleService(file);
-
-  const result = await create({ ...validatedData, heroImage });
-
-  const keys = await redis.keys("events:*");
-  if (keys.length > 0) {
-    await redis.del(keys);
+  if (!req.file) {
+    throw new AppError(400, "Hero image is required");
   }
 
-  res.status(200).json({ message: "Event has been created", data: result });
+  const validatedData = createEventSchema.parse(req.body);
+
+  const heroImage = await uploadSingleService(req.file, "events");
+
+  const result = await create({
+    ...validatedData,
+    heroImage,
+  });
+
+  await redis.del("events:list");
+
+  res.status(201).json({
+    message: "Event has been created",
+    data: result,
+  });
 });
 
 export const getAllEvent = catchAsync(async (req: Request, res: Response) => {

@@ -55,7 +55,7 @@ export default function EditProfile() {
     if (!imageFile) return null;
 
     const formData = new FormData();
-    formData.append("image", imageFile);
+    formData.append("profileImage", imageFile);
 
     try {
       setUploading(true);
