@@ -56,11 +56,6 @@ function Coupon({
               const diff = startDate.getTime() - Date.now();
               const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-              let label = "Coupon expired";
-
-              if (daysLeft > 1) label = `Starts in ${daysLeft} days`;
-              else if (daysLeft === 1) label = "Starts tomorrow";
-              else if (daysLeft === 0) label = "Starts today";
               return (
                 <div
                   key={item.id}
