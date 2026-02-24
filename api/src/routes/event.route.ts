@@ -32,7 +32,7 @@ router.post(
   uploadCloud.single("heroImage"),
   createEvent,
 );
-router.patch("/:id", authMiddleware, organizerOnly, updateEvent);
+
 router.patch("/:id", authMiddleware, organizerOnly, updateEvent);
 
 router.get("/organizer/:organizerId", getEventByOrganizerId);

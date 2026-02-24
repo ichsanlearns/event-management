@@ -65,19 +65,6 @@ function Event() {
   const currentPrice = selectedTicket ? selectedTicket.price * quantity : 0;
 
   useEffect(() => {
-    async function getUser() {
-      try {
-        const user = await getProfile();
-
-        setUser(user);
-      } catch (error: any) {
-        toast.error(error.response.data.message || "Failed to get profile");
-      }
-    }
-    getUser();
-  }, []);
-
-  useEffect(() => {
     async function getEvent() {
       try {
         const response = await getEventById(params.id!);
@@ -93,12 +80,15 @@ function Event() {
   }, []);
 
   async function handleSubmit() {
+    const user = await getProfile();
+
+    setUser(user);
+
     if (!user) {
       toast.error("Login first");
       navigate("/login");
       return;
     }
-
     const payload: CreateOrderPayload = {
       orderCode: generateOrderId(
         event!.name,
