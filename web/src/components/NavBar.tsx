@@ -24,7 +24,7 @@ function Navbar() {
               </svg>
             </div>
             <span className="text-white text-xl font-bold tracking-tight drop-shadow-md">
-              Event___
+              Eventra
             </span>
           </Link>
           <div className="hidden md:flex flex-1 justify-end items-center gap-8">

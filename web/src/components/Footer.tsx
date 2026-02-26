@@ -10,10 +10,10 @@ function Footer() {
               confirmation_number
             </span>
           </div>
-          <span className="font-bold text-lg">Event__</span>
+          <span className="font-bold text-lg">Eventra</span>
         </Link>
         <div className="text-[#6e6e91] text-sm">
-          © 2024 EventConnect Inc. All rights reserved.
+          © 2024 Eventra Inc. All rights reserved.
         </div>
         <div className="flex gap-6">
           <a
