@@ -9,7 +9,7 @@ import { prisma } from "../src/lib/prisma.lib.js";
 import { Faker, id_ID } from "@faker-js/faker";
 
 import bcrypt from "bcrypt";
-import { generateReferralCode } from "../src/utils/referral.util.js";
+import { generateReferralCode } from "../src/shared/utils/referral.util.js";
 
 // 🇮🇩 Use Indonesian locale
 const faker = new Faker({ locale: [id_ID] });

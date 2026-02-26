@@ -1,0 +1,55 @@
+import { type NextFunction, type Request, type Response } from "express";
+import { create, get, getByCode } from "./voucher.service.js";
+import { catchAsync } from "../../shared/utils/catch-async.util.js";
+
+export async function createVoucher(req: Request, res: Response) {
+  try {
+    const { eventId, code, discountAmount, quota, startDate, endDate } =
+      req.body;
+
+    const voucher = await create(
+      eventId,
+      code,
+      discountAmount,
+      quota,
+      startDate,
+      endDate,
+    );
+
+    res.status(200).json({ message: "Voucher successfully created", voucher });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: "Failed to create voucher" });
+  }
+}
+
+export async function getVoucher(req: Request, res: Response) {
+  try {
+    const voucher = await get();
+
+    res.status(200).json({ message: "Event voucher fetched", data: voucher });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: "Failed to fetch data" });
+  }
+}
+
+export const getVoucherByCode = catchAsync(
+  async (req: Request, res: Response) => {
+    const code = typeof req.body.code === "string" ? req.body.code : "";
+    const eventId =
+      typeof req.body.eventId === "string" ? req.body.eventId : "";
+    const orderId =
+      typeof req.body.orderId === "string" ? req.body.orderId : "";
+
+    const updatedOrder = await getByCode({ code, eventId, orderId });
+
+    if (!updatedOrder) {
+      return res.status(200).json({ message: "Voucher not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Successfully used voucher", data: updatedOrder });
+  },
+);
