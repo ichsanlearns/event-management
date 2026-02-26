@@ -43,7 +43,7 @@ function SideBar() {
         onClick={() => navigate("/")}
         className="p-6 text-xl font-bold text-indigo-600 cursor-pointer"
       >
-        EventFlow
+        Eventra
       </div>
 
       {/* Navigation */}
