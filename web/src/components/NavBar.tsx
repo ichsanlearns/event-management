@@ -2,8 +2,10 @@ import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { LogOut } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useState } from "react";
 function Navbar() {
   const { user, logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <nav className="absolute top-0 z-50 w-full bg-transparent">
@@ -27,7 +29,7 @@ function Navbar() {
               Eventra
             </span>
           </Link>
-          <div className="hidden md:flex flex-1 justify-end items-center gap-8">
+          <div className="flex flex-1 justify-end items-center gap-8">
             <nav className="flex gap-8">
               {user?.role === "CUSTOMER" && (
                 <Link
@@ -88,7 +90,7 @@ function Navbar() {
                       logout();
                       toast.success("Berhasil logout");
                     }}
-                    className="p-2 text-white/80 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
+                    className="hidden sm:flex p-2 text-white/80 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
                     title="Logout"
                   >
                     <LogOut size={20} />
@@ -98,9 +100,29 @@ function Navbar() {
             </div>
           </div>
           <div className="md:hidden flex items-center">
-            <button className="text-white hover:text-white/80">
-              <span className="material-symbols-outlined">menu</span>
-            </button>
+            {/* <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`md:hidden p-2 rounded-lg transition-colors
+                    text-gray-700 text-white
+                  }`}
+              aria-label="Toggle menu"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isMenuOpen ? (
+                  <path d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button> */}
           </div>
         </div>
       </div>
