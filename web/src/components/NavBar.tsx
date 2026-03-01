@@ -2,13 +2,24 @@ import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { LogOut } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 function Navbar() {
   const { user, logout } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className="absolute top-0 z-50 w-full bg-transparent">
+    <nav
+      className={` top-0 z-50 w-full bg-transparent ${isScrolled ? "fixed" : "absolute"}`}
+    >
       <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-20 sm:h-24">
           <Link to="/" className="flex items-center gap-3 cursor-pointer">
