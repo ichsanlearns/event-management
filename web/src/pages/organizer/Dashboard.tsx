@@ -125,6 +125,157 @@ function Dashboard() {
           </div>
         </div>
 
+        <div className="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-border-light dark:border-border-dark flex flex-wrap gap-4 justify-between items-center">
+            <div>
+              <h3 className="text-lg font-bold text-text-primary-light dark:text-white">
+                Ticket Sales Overview
+              </h3>
+              <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                Daily ticket sales performance
+              </p>
+            </div>
+            <div className="flex bg-background-light dark:bg-background-dark rounded-lg p-1">
+              <button className="px-3 py-1.5 text-sm font-medium rounded-md bg-white dark:bg-surface-dark text-text-primary-light dark:text-white shadow-sm transition-all">
+                Daily
+              </button>
+              <button className="px-3 py-1.5 text-sm font-medium rounded-md text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white transition-all">
+                Weekly
+              </button>
+              <button className="px-3 py-1.5 text-sm font-medium rounded-md text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white transition-all">
+                Monthly
+              </button>
+            </div>
+          </div>
+          <div className="p-6">
+            <div className="w-full h-64">
+              <svg
+                className="w-full h-full"
+                preserveAspectRatio="none"
+                viewBox="0 0 1200 300"
+              >
+                <defs>
+                  <linearGradient
+                    id="chartGradient"
+                    x1="0"
+                    x2="0"
+                    y1="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="0%"
+                      stop-color="#3211d4"
+                      stop-opacity="0.1"
+                    ></stop>
+                    <stop
+                      offset="100%"
+                      stop-color="#3211d4"
+                      stop-opacity="0"
+                    ></stop>
+                  </linearGradient>
+                </defs>
+                <line
+                  className="dark:stroke-slate-700"
+                  stroke="#e9e7f3"
+                  stroke-width="1"
+                  x1="0"
+                  x2="1200"
+                  y1="299"
+                  y2="299"
+                ></line>
+                <line
+                  className="dark:stroke-slate-800"
+                  stroke="#e9e7f3"
+                  stroke-dasharray="4 4"
+                  stroke-width="1"
+                  x1="0"
+                  x2="1200"
+                  y1="225"
+                  y2="225"
+                ></line>
+                <line
+                  className="dark:stroke-slate-800"
+                  stroke="#e9e7f3"
+                  stroke-dasharray="4 4"
+                  stroke-width="1"
+                  x1="0"
+                  x2="1200"
+                  y1="150"
+                  y2="150"
+                ></line>
+                <line
+                  className="dark:stroke-slate-800"
+                  stroke="#e9e7f3"
+                  stroke-dasharray="4 4"
+                  stroke-width="1"
+                  x1="0"
+                  x2="1200"
+                  y1="75"
+                  y2="75"
+                ></line>
+                <path
+                  className="transition-all duration-1000 ease-out"
+                  d="M0,250 Q100,200 200,220 T400,150 T600,100 T800,180 T1000,80 T1200,120"
+                  fill="url(#chartGradient)"
+                  stroke="#3211d4"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                ></path>
+                <circle
+                  cx="200"
+                  cy="220"
+                  fill="white"
+                  r="4"
+                  stroke="#3211d4"
+                  stroke-width="2"
+                ></circle>
+                <circle
+                  cx="400"
+                  cy="150"
+                  fill="white"
+                  r="4"
+                  stroke="#3211d4"
+                  stroke-width="2"
+                ></circle>
+                <circle
+                  cx="600"
+                  cy="100"
+                  fill="white"
+                  r="4"
+                  stroke="#3211d4"
+                  stroke-width="2"
+                ></circle>
+                <circle
+                  cx="800"
+                  cy="180"
+                  fill="white"
+                  r="4"
+                  stroke="#3211d4"
+                  stroke-width="2"
+                ></circle>
+                <circle
+                  className="animate-pulse"
+                  cx="1000"
+                  cy="80"
+                  fill="#3211d4"
+                  r="6"
+                  stroke="white"
+                  stroke-width="2"
+                ></circle>
+              </svg>
+            </div>
+            <div className="flex justify-between mt-4 text-xs text-text-secondary-light dark:text-text-secondary-dark px-2">
+              <span>Oct 01</span>
+              <span>Oct 05</span>
+              <span>Oct 10</span>
+              <span>Oct 15</span>
+              <span>Oct 20</span>
+              <span>Oct 25</span>
+              <span>Oct 31</span>
+            </div>
+          </div>
+        </div>
+
         {/* Event Table */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
           <div className="p-6 border-b border-slate-50 dark:border-slate-700 flex justify-between items-center">
