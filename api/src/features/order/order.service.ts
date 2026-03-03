@@ -564,3 +564,17 @@ export async function deleteById(orderId: string) {
     }
   });
 }
+
+export async function getRevenueByWeek() {
+  const result = await prisma.$queryRaw<
+    { week_start: Date; total_revenue: number; total_tickets: number }[]
+  >`SELECT DATE_TRUNC('week', created_at) AS week_start, SUM(total)::INT AS total_revenue, SUM(quantity)::INT AS total_tickets FROM orders WHERE created_at >= NOW() - INTERVAL '4 weeks' AND created_at <= NOW() AND status = 'PAID' GROUP BY week_start ORDER BY week_start ASC`;
+
+  const mapped = result.map((r) => ({
+    weekStart: r.week_start,
+    totalRevenue: Number(r.total_revenue),
+    totalTickets: Number(r.total_tickets),
+  }));
+
+  return mapped;
+}
