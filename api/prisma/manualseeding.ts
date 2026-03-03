@@ -5,7 +5,7 @@ import {
   type Order,
   Prisma,
 } from "../src/generated/prisma/client.js";
-import { prisma } from "../src/lib/prisma.lib.js";
+import { prisma } from "../src/shared/lib/prisma.lib.js";
 import { Faker, id_ID } from "@faker-js/faker";
 
 import bcrypt from "bcrypt";
@@ -411,6 +411,7 @@ async function seed() {
     const user = "a7c5e2d1-98f3-4b6a-82d4-1f7e3c9a5b20";
     const dwp = "695145ee-242c-45ad-a192-dc05c9c6b8de";
     const joyland = "7d2c367d-fe52-429e-8554-a26e2d092a18";
+    const atmosphere = "7b8aee32-542d-4727-92a1-6363676fd940";
 
     const eventJoylandTickets = await prisma.event.findUnique({
       where: {
@@ -430,7 +431,17 @@ async function seed() {
       },
     });
 
+    const eventAtmosphereTickets = await prisma.event.findUnique({
+      where: {
+        id: atmosphere,
+      },
+      select: {
+        Tickets: { select: { id: true } },
+      },
+    });
+
     const ticketDwpId = eventDwpTickets?.Tickets[1]!.id;
+    const ticketAtmosphereId = eventAtmosphereTickets?.Tickets[1]!.id;
     const ticketJoylandId = eventJoylandTickets?.Tickets[1]!.id;
 
     await prisma.order.createMany({
@@ -506,7 +517,7 @@ async function seed() {
           total: 400000,
         },
         {
-          order_code: "DWP-RJ-000001",
+          order_code: "DWP-RJ-000002",
           customer_id: user,
           ticket_id: ticketDwpId!,
           quantity: 3,
@@ -514,6 +525,49 @@ async function seed() {
           status: "REJECTED",
           using_point: 0,
           total: 600000,
+          created_at: new Date("2026-02-01"),
+        },
+        {
+          order_code: "ATM-P-000003",
+          customer_id: user,
+          ticket_id: ticketAtmosphereId!,
+          quantity: 3,
+          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+          status: "PAID",
+          using_point: 0,
+          total: 360000,
+        },
+        {
+          order_code: "ATM-P-000004",
+          customer_id: user,
+          ticket_id: ticketAtmosphereId!,
+          quantity: 2,
+          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+          status: "PAID",
+          using_point: 0,
+          total: 240000,
+        },
+        {
+          order_code: "ATM-P-000001",
+          customer_id: user,
+          ticket_id: ticketAtmosphereId!,
+          quantity: 5,
+          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+          status: "PAID",
+          using_point: 0,
+          total: 600000,
+          created_at: new Date("2026-01-01"),
+        },
+        {
+          order_code: "ATM-P-000005",
+          customer_id: user,
+          ticket_id: ticketAtmosphereId!,
+          quantity: 5,
+          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+          status: "PAID",
+          using_point: 0,
+          total: 600000,
+          created_at: new Date("2026-04-01"),
         },
       ],
     });
