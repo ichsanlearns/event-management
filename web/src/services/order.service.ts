@@ -58,3 +58,12 @@ export const deleteOrder = async (orderId: string) => {
   const endpoint = API_ENDPOINTS.ORDERS.DELETE.replace(":orderId", orderId);
   return api.delete(endpoint);
 };
+
+export const getRevenueByWeek = async (organizerId: string) => {
+  const endpoint = API_ENDPOINTS.ORDERS.REVENUE_BY_WEEK.replace(
+    ":organizerId",
+    organizerId,
+  );
+  const res = await api.get(endpoint);
+  return res.data;
+};

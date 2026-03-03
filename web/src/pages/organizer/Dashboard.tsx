@@ -8,10 +8,13 @@ import {
   ExternalLink,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { getRevenueByWeek } from "../../services/order.service";
+import LineCharts from "../../components/LineCharts";
 
 function Dashboard() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [revenueData, setRevenueData] = useState<any[]>([]);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const organizerId = user?.id;
@@ -55,6 +58,19 @@ function Dashboard() {
       maximumFractionDigits: 0,
     }).format(amount);
   };
+
+  useEffect(() => {
+    async function fetchRevenueData() {
+      try {
+        const res = await getRevenueByWeek(organizerId);
+        console.log(res.data);
+        setRevenueData(res.data);
+      } catch (error: any) {
+        toast.error(error.response.data.message);
+      }
+    }
+    fetchRevenueData();
+  }, [organizerId]);
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-[#0f172a] flex">
@@ -148,7 +164,7 @@ function Dashboard() {
             </div>
           </div>
           <div className="p-6">
-            <div className="w-full h-64">
+            {/* <div className="w-full h-64">
               <svg
                 className="w-full h-full"
                 preserveAspectRatio="none"
@@ -263,8 +279,9 @@ function Dashboard() {
                   stroke-width="2"
                 ></circle>
               </svg>
-            </div>
-            <div className="flex justify-between mt-4 text-xs text-text-secondary-light dark:text-text-secondary-dark px-2">
+            </div> */}
+            <LineCharts data={revenueData} />
+            {/* <div className="flex justify-between mt-4 text-xs text-text-secondary-light dark:text-text-secondary-dark px-2">
               <span>Oct 01</span>
               <span>Oct 05</span>
               <span>Oct 10</span>
@@ -272,7 +289,7 @@ function Dashboard() {
               <span>Oct 20</span>
               <span>Oct 25</span>
               <span>Oct 31</span>
-            </div>
+            </div> */}
           </div>
         </div>
 

@@ -5,6 +5,7 @@ import {
   getAll,
   getById,
   getByUserId,
+  getRevenueByWeek,
   patchCouponId,
 } from "./order.service.js";
 import { catchAsync } from "../../shared/utils/catch-async.util.js";
@@ -98,6 +99,18 @@ export const deleteOrderById = catchAsync(
     res.status(200).json({
       message: "Order deleted successfully",
       data: order,
+    });
+  },
+);
+
+export const getOrderRevenueByWeek = catchAsync(
+  async (req: Request, res: Response) => {
+    const organizerId = req.params.organizerId as string;
+    const result = await getRevenueByWeek(organizerId);
+
+    res.status(200).json({
+      message: "Successfully get order revenue by week",
+      data: result,
     });
   },
 );

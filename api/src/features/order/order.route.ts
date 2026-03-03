@@ -5,6 +5,7 @@ import {
   deleteOrderById,
   getAllOrders,
   getOrderById,
+  getOrderRevenueByWeek,
   getOrdersByUserId,
   patchCouponByOrderId,
 } from "./order.controller.js";
@@ -18,6 +19,7 @@ const router = Router();
 
 router.post("/", authMiddleware, customerOnly, createOrder);
 router.get("/", authMiddleware, organizerOnly, getAllOrders);
+router.get("/:organizerId/revenue", getOrderRevenueByWeek);
 router.get("/:id", authMiddleware, getOrderById);
 router.get(
   "/customer/:userid",
