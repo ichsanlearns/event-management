@@ -105,7 +105,8 @@ export const deleteOrderById = catchAsync(
 
 export const getOrderRevenueByWeek = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await getRevenueByWeek();
+    const organizerId = req.params.organizerId as string;
+    const result = await getRevenueByWeek(organizerId);
 
     res.status(200).json({
       message: "Successfully get order revenue by week",

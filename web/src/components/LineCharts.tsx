@@ -15,13 +15,21 @@ function LineCharts({ data }: { data: any[] }) {
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data}>
           <Tooltip
-            labelFormatter={(value) =>
-              new Date(value).toLocaleDateString("id-ID", {
-                day: "numeric",
+            labelFormatter={(value) => {
+              const start = new Date(value);
+              const end = new Date(start);
+              end.setDate(start.getDate() + 6);
+
+              const options: Intl.DateTimeFormatOptions = {
+                day: "2-digit",
                 month: "short",
-                year: "numeric",
-              })
-            }
+              };
+
+              const startStr = start.toLocaleDateString("id-ID", options);
+              const endStr = end.toLocaleDateString("id-ID", options);
+
+              return `${startStr} – ${endStr}`;
+            }}
           />
           <Legend />
           <CartesianGrid strokeDasharray="3 3" />

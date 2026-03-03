@@ -62,7 +62,7 @@ function Dashboard() {
   useEffect(() => {
     async function fetchRevenueData() {
       try {
-        const res = await getRevenueByWeek();
+        const res = await getRevenueByWeek(organizerId);
         console.log(res.data);
         setRevenueData(res.data);
       } catch (error: any) {
@@ -70,7 +70,7 @@ function Dashboard() {
       }
     }
     fetchRevenueData();
-  }, []);
+  }, [organizerId]);
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-[#0f172a] flex">

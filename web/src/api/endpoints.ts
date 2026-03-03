@@ -6,7 +6,7 @@ export const API_ENDPOINTS = {
     COUPON: "/orders/:id/coupon",
     VOUCHER: "/vouchers/check",
     DELETE: "/orders/:orderId",
-    REVENUE_BY_WEEK: "/orders/revenue",
+    REVENUE_BY_WEEK: "/orders/:organizerId/revenue",
   },
   REVIEW: {
     CREATE: "/reviews",
