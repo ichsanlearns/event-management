@@ -8,10 +8,12 @@ import {
   ExternalLink,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { getRevenueByWeek } from "../../services/order.service";
 
 function Dashboard() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [revenueData, setRevenueData] = useState<any[]>([]);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const organizerId = user?.id;
@@ -55,6 +57,19 @@ function Dashboard() {
       maximumFractionDigits: 0,
     }).format(amount);
   };
+
+  useEffect(() => {
+    async function fetchRevenueData() {
+      try {
+        const res = await getRevenueByWeek();
+        console.log(res.data);
+        setRevenueData(res.data);
+      } catch (error: any) {
+        toast.error(error.response.data.message);
+      }
+    }
+    fetchRevenueData();
+  }, []);
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-[#0f172a] flex">
