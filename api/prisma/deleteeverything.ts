@@ -1,4 +1,4 @@
-import { prisma } from "../src/lib/prisma.lib.js";
+import { prisma } from "../src/shared/lib/prisma.lib.js";
 
 async function deleteSeed() {
   try {
