@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { getRevenueByWeek } from "../../services/order.service";
+import LineCharts from "../../components/LineCharts";
 
 function Dashboard() {
   const [events, setEvents] = useState<any[]>([]);
@@ -163,7 +164,7 @@ function Dashboard() {
             </div>
           </div>
           <div className="p-6">
-            <div className="w-full h-64">
+            {/* <div className="w-full h-64">
               <svg
                 className="w-full h-full"
                 preserveAspectRatio="none"
@@ -278,8 +279,9 @@ function Dashboard() {
                   stroke-width="2"
                 ></circle>
               </svg>
-            </div>
-            <div className="flex justify-between mt-4 text-xs text-text-secondary-light dark:text-text-secondary-dark px-2">
+            </div> */}
+            <LineCharts data={revenueData} />
+            {/* <div className="flex justify-between mt-4 text-xs text-text-secondary-light dark:text-text-secondary-dark px-2">
               <span>Oct 01</span>
               <span>Oct 05</span>
               <span>Oct 10</span>
@@ -287,7 +289,7 @@ function Dashboard() {
               <span>Oct 20</span>
               <span>Oct 25</span>
               <span>Oct 31</span>
-            </div>
+            </div> */}
           </div>
         </div>
 
