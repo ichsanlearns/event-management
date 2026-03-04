@@ -322,7 +322,7 @@ function MyProfile() {
             <h3 className="font-bold text-lg mb-6">Quick Actions</h3>
             <div className="grid grid-cols-1 gap-3">
               <button
-                onClick={() => navigate("/organizer/profile/edit")}
+                onClick={() => navigate("/profile/edit")}
                 className="w-full flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
               >
                 <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 group-hover:bg-primary group-hover:text-white transition-colors">

@@ -15,8 +15,6 @@ function Card() {
       try {
         const response = await getEventsCardLimit({ limit });
 
-        console.log(response);
-
         setEvents(response.data);
         if (response.data.length < limit) {
           setMax(true);

@@ -65,7 +65,6 @@ function Dashboard() {
     async function fetchRevenueData() {
       try {
         const res = await getRevenueByWeek(organizerId);
-        console.log(res.data);
         setRevenueData(res.data);
       } catch (error: any) {
         toast.error(error.response.data.message);
@@ -88,7 +87,7 @@ function Dashboard() {
             </p>
           </div>
           <button
-            onClick={() => navigate("/organizer/events")}
+            onClick={() => navigate("/profile/events")}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 dark:shadow-none active:scale-95"
           >
             <Plus size={20} /> Create New Event

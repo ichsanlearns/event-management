@@ -6,7 +6,7 @@ import Root from "./routes/Root";
 import Home from "./pages/Home";
 import Payment from "./pages/Payment";
 import Profile from "./pages/Profile";
-import Organizer from "./routes/Organizer";
+import Organizer from "./routes/RootProfile";
 import Dashboard from "./pages/organizer/Dashboard";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
@@ -23,6 +23,7 @@ import OrgProfile from "./pages/OrgProfile";
 import AttendeePage from "./pages/organizer/Attendee";
 import { AuthProvider } from "./context/AuthContext";
 import MyProfile from "./pages/organizer/MyProfile";
+import RootProfile from "./routes/RootProfile";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -36,25 +37,22 @@ createRoot(document.getElementById("root")!).render(
 
           <Route path="/" element={<Root />}>
             <Route index element={<Home />} />
-            <Route path="profile" element={<Profile />} />
+            {/* <Route path="profile" element={<Profile />} /> */}
             <Route path="event/:id" element={<Event />} />
-            <Route path="myticket" element={<MyTicket />} />
 
             <Route path="payment/:id" element={<Payment />} />
-            <Route path="profile/organizer/:id" element={<OrgProfile />} />
+            {/* <Route path="profile/organizer/:id" element={<OrgProfile />} /> */}
           </Route>
-          <Route path="organizer" element={<Organizer />}>
-            <Route path="profile" element={<MyProfile />} />
-            <Route path="profile/edit" element={<EditProfile />} />
-            <Route index element={<Dashboard />} />
+          <Route path="profile" element={<RootProfile />}>
+            <Route index element={<MyProfile />} />
+            <Route path="edit" element={<EditProfile />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="events" element={<EventOrganizer />} />
-            <Route
-              path="/organizer/attendees/:eventId"
-              element={<AttendeePage />}
-            />
+            <Route path="attendees/:eventId" element={<AttendeePage />} />
 
             <Route path="approval" element={<Approval />} />
             <Route path="report" element={<Report />} />
+            <Route path="myticket" element={<MyTicket />} />
           </Route>
         </Routes>
       </BrowserRouter>

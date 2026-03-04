@@ -19,25 +19,19 @@ function MyTicket() {
     "font-medium text-subtext-light dark:text-subtext-dark hover:text-primary";
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden font-display my-20 px-8">
-      <div
-        className="fixed inset-0 bg-cover bg-center opacity-30 -z-10"
-        style={{
-          backgroundImage: `url(https://lh3.googleusercontent.com/aida-public/AB6AXuDKophNC69nmEztimWXz0jlrcYs189Nb32QLe-vkvsPNjtTeTDQV0GLK0TnGwJB1aiybWTO06z7p1P2V8irdShY_n9NTzXjB232FBx9zZB7342qPAOi5_guD2oYZcLSHypljdy-Vav9UQ0hQzVIQYNIjthC3ZWjtbzz5X2g2mBwk2ROClFhcoqFxqzCgx8NR0v3GlzLRzK2bEm9us7o2S3GrPphWOiwqRM7XDy4fMyK6r0wmt1K-sHC-nONim0aTaSq9nB-GqT-zaY)`,
-        }}
-      />
+    <div className="relative min-h-screen overflow-x-hidden font-display px-4">
       <div className="fixed inset-0 bg-black/70 -z-10" />
-      <div className="mb-8 mt-20">
+      <div className="mb-8 mt-5">
         <nav className="flex text-sm text-subtext-light dark:text-subtext-dark mb-2">
           <span className="mx-2 text-white">/</span>
-          <span className="font-medium text-white dark:text-white">
+          <span className="font-medium text-black dark:text-white">
             My Ticket
           </span>
         </nav>
-        <h2 className="text-3xl font-bold text-white dark:text-white text-center">
+        <h2 className="text-3xl font-bold text-black dark:text-white text-center mt-20">
           My Ticket
         </h2>
-        <p className="text-white dark:text-subtext-dark mt-1 text-center">
+        <p className="text-black dark:text-subtext-dark mt-1 text-center">
           Manage your Digital Ticket Wallet - Feedback &amp; Rewards
         </p>
       </div>
