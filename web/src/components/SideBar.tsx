@@ -21,6 +21,7 @@ function SideBar() {
   }, []);
 
   const menu = [
+    { label: "My Profile", path: "/organizer/profile", icon: LayoutDashboard },
     { label: "Dashboard", path: "/organizer", icon: LayoutDashboard },
     { label: "Events", path: "/organizer/events", icon: Calendar },
     { label: "Approval", path: "/organizer/approval", icon: Users },

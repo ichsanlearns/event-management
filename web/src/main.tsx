@@ -22,6 +22,7 @@ import MyTicket from "./pages/customer/MyTicket";
 import OrgProfile from "./pages/OrgProfile";
 import AttendeePage from "./pages/organizer/Attendee";
 import { AuthProvider } from "./context/AuthContext";
+import MyProfile from "./pages/organizer/MyProfile";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -44,6 +45,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="profile/organizer/:id" element={<OrgProfile />} />
           </Route>
           <Route path="organizer" element={<Organizer />}>
+            <Route path="profile" element={<MyProfile />} />
             <Route index element={<Dashboard />} />
             <Route path="events" element={<EventOrganizer />} />
             <Route
