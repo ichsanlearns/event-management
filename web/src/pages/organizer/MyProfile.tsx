@@ -16,7 +16,7 @@ function MyProfile() {
   const [rewards, setRewards] = useState<UserRewards | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [image, setImage] = useState<File | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
   // const [uploading, setUploading] = useState(false);
 
   /* =======================
