@@ -79,7 +79,7 @@ function Navbar() {
               {user && (
                 <div className="flex items-center gap-3">
                   <Link
-                    to="/profile"
+                    to="/organizer/profile"
                     className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl transition"
                   >
                     <img

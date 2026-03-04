@@ -22,11 +22,42 @@ function SideBar() {
   }, []);
 
   const menu = [
-    { label: "My Profile", path: "/organizer/profile", icon: User },
-    { label: "Dashboard", path: "/organizer", icon: LayoutDashboard },
-    { label: "Events", path: "/organizer/events", icon: Calendar },
-    { label: "Approval", path: "/organizer/approval", icon: Users },
-    { label: "Reports", path: "/organizer/report", icon: BarChart3 },
+    {
+      label: "My Profile",
+      path: "/organizer/profile",
+      icon: User,
+      role: "CUSTOMER",
+    },
+    {
+      label: "My Ticket",
+      path: "/organizer/myticket",
+      icon: User,
+      role: "CUSTOMER",
+    },
+    {
+      label: "Dashboard",
+      path: "/organizer",
+      icon: LayoutDashboard,
+      role: "EVENT_ORGANIZER",
+    },
+    {
+      label: "Events",
+      path: "/organizer/events",
+      icon: Calendar,
+      role: "EVENT_ORGANIZER",
+    },
+    {
+      label: "Approval",
+      path: "/organizer/approval",
+      icon: Users,
+      role: "EVENT_ORGANIZER",
+    },
+    {
+      label: "Reports",
+      path: "/organizer/report",
+      icon: BarChart3,
+      role: "EVENT_ORGANIZER",
+    },
   ];
 
   /* =======================
@@ -55,22 +86,24 @@ function SideBar() {
         </p>
 
         {menu.map((item) => {
-          const Icon = item.icon;
+          if (item.role === user?.role) {
+            const Icon = item.icon;
 
-          return (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              end={item.path === "/organizer"}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium
+            return (
+              <NavLink
+                key={item.label}
+                to={item.path}
+                end={item.path === "/organizer"}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium
         ${isActive ? "bg-indigo-600 text-white shadow-md" : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-600"}`
-              }
-            >
-              <Icon className="w-4 h-4" />
-              {item.label}
-            </NavLink>
-          );
+                }
+              >
+                <Icon className="w-4 h-4" />
+                {item.label}
+              </NavLink>
+            );
+          }
         })}
       </nav>
 
