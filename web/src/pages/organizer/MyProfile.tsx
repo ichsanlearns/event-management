@@ -1,4 +1,102 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import type { UserProfile } from "../../types/user.type";
+import type { UserRewards } from "../../types/reward.type";
+import api from "../../lib/api";
+import toast from "react-hot-toast";
+
 function MyProfile() {
+  const navigate = useNavigate();
+  const storedUser = localStorage.getItem("user");
+
+  const [user, setUser] = useState<UserProfile | null>(
+    storedUser ? JSON.parse(storedUser) : null,
+  );
+
+  const [rewards, setRewards] = useState<UserRewards | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const [image, setImage] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  /* =======================
+         FETCH DATA
+      ======================= */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profileRes = await api.get("/auth/me");
+
+        setUser(profileRes.data);
+        localStorage.setItem("user", JSON.stringify(profileRes.data));
+
+        const rewardsRes = await api.get("/user/rewards");
+        setRewards(rewardsRes.data);
+      } catch (error: any) {
+        console.error("PROFILE ERROR:", error);
+        toast.error(error.response.data.message);
+        navigate("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  /* =======================
+       UPLOAD IMAGE
+    ======================= */
+  const handleUploadImage = async () => {
+    if (!image) return;
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    try {
+      setUploading(true);
+      toast.loading("Uploading profile image...");
+
+      const res = await api.put("/user/profile/image", formData);
+
+      toast.dismiss();
+      toast.success("Successfully uploaded profile image...");
+
+      setUser((prev) => {
+        if (!prev) return prev;
+
+        const updatedUser = {
+          ...prev,
+          profile_image: res.data.profile_image,
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        return updatedUser;
+      });
+
+      setImage(null);
+    } catch (error: any) {
+      console.error("UPLOAD ERROR:", error);
+      toast.error(error.response.data.message);
+      alert("Upload foto gagal");
+    } finally {
+      setUploading(false);
+    }
+  };
+  /* =======================
+         LOGOUT
+      ======================= */
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
+  /* =======================
+         STATES
+      ======================= */
+  if (loading) return <p className="p-6">Loading...</p>;
+  if (!user) return <p className="p-6">User tidak ditemukan</p>;
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-8">
       <section className="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-800 relative overflow-hidden">
@@ -10,16 +108,16 @@ function MyProfile() {
                 alt="Alex Rivers"
                 className="w-full h-full object-cover"
                 data-alt="Alex Rivers professional avatar profile picture"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzzApD8tKeaq8aA0Rh9OzzDVqET3uMc4bpuWKR1GBZyD6UdMtygBTuMgjEbDlcVaDR4px2DX5PoTTaZ6Bh-tUMyJhwPhzJCAGMZUjcugzAsne34xwuANS8Z-svo9z5J3g5vmh2gG-0andUo5JdZADRM2EWv80g7EeAnngcHsLf3vFnWofDzeVJ8kSc7RzDfYWUnqc4fTetvWW5Oi_yAE9-wF6VwERtv6YZyoXeo61kt-H-xUSvT8bu-VuEcGcr2KobMfIybUTp6bQ"
+                src={user.profile_image}
               />
             </div>
             <div className="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-white dark:border-slate-900"></div>
           </div>
           <div className="text-center md:text-left flex-1">
             <div className="flex flex-col md:flex-row md:items-center gap-3">
-              <h2 className="text-3xl font-bold tracking-tight">Alex Rivers</h2>
+              <h2 className="text-3xl font-bold tracking-tight">{user.name}</h2>
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 w-fit mx-auto md:mx-0">
-                Organizer Pro
+                {user.role.split("_").join(" ")}
               </span>
             </div>
             <div className="mt-2 flex flex-wrap justify-center md:justify-start gap-4 text-slate-500 dark:text-slate-400">
@@ -33,7 +131,7 @@ function MyProfile() {
                 <span className="material-symbols-outlined text-[18px]">
                   calendar_month
                 </span>
-                <span className="text-sm">Joined Jan 2023</span>
+                <span className="text-sm">Joined 2026</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[18px]">
@@ -44,12 +142,15 @@ function MyProfile() {
             </div>
           </div>
           <div className="flex gap-3">
-            <button className="px-6 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-all shadow-md shadow-primary/20">
+            <button
+              onClick={() => navigate("/organizer/profile/edit")}
+              className="px-10 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-all shadow-md shadow-primary/20"
+            >
               Edit Profile
             </button>
-            <button className="px-3 py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+            {/* <button className="px-3 py-2.5 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
               <span className="material-symbols-outlined">more_horiz</span>
-            </button>
+            </button> */}
           </div>
         </div>
       </section>
@@ -68,9 +169,7 @@ function MyProfile() {
                   <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Email Address
                   </p>
-                  <p className="text-sm font-medium mt-0.5">
-                    alex.rivers@eventpro.com
-                  </p>
+                  <p className="text-sm font-medium mt-0.5">{user.email}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
@@ -83,12 +182,10 @@ function MyProfile() {
                   <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Account Role
                   </p>
-                  <p className="text-sm font-medium mt-0.5">
-                    Senior Event Producer
-                  </p>
+                  <p className="text-sm font-medium mt-0.5">{user.role}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+              {/* <div className="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
                 <div className="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm">
                   <span className="material-symbols-outlined">database</span>
                 </div>
@@ -100,8 +197,8 @@ function MyProfile() {
                     US-WEST-2 (Oregon)
                   </p>
                 </div>
-              </div>
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+              </div> */}
+              {/* <div className="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
                 <div className="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm">
                   <span className="material-symbols-outlined">history</span>
                 </div>
@@ -113,7 +210,7 @@ function MyProfile() {
                     Today at 10:24 AM
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </section>
           <section className="space-y-4">
@@ -125,17 +222,22 @@ function MyProfile() {
                     stars
                   </span>
                 </div>
-                <p className="text-primary/20 bg-white/20 backdrop-blur-md rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest w-fit mb-4">
+                <p className="text-primary bg-white/20 backdrop-blur-md rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest w-fit mb-4">
                   Loyalty Balance
                 </p>
                 <div className="flex items-baseline gap-2 mt-4">
-                  <span className="text-4xl font-bold">12,450</span>
+                  <span className="text-4xl font-bold">
+                    {rewards?.total_point}
+                  </span>
                   <span className="text-sm opacity-80 font-medium">Points</span>
                 </div>
                 <p className="text-sm opacity-80 mt-2">
                   Next tier unlock at 15,000 pts
                 </p>
-                <button className="mt-6 w-full py-2 bg-white text-primary rounded-lg text-sm font-bold hover:bg-slate-100 transition-colors">
+                <button
+                  onClick={() => navigate("/")}
+                  className="mt-6 w-full py-2 bg-white text-primary rounded-lg text-sm font-bold hover:bg-slate-100 transition-colors"
+                >
                   Redeem Rewards
                 </button>
               </div>
@@ -219,7 +321,10 @@ function MyProfile() {
           <section className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
             <h3 className="font-bold text-lg mb-6">Quick Actions</h3>
             <div className="grid grid-cols-1 gap-3">
-              <button className="w-full flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+              <button
+                onClick={() => navigate("/organizer/profile/edit")}
+                className="w-full flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+              >
                 <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 group-hover:bg-primary group-hover:text-white transition-colors">
                   <span className="material-symbols-outlined text-[20px]">
                     lock
@@ -227,7 +332,7 @@ function MyProfile() {
                 </div>
                 <span className="text-sm font-semibold">Change Password</span>
               </button>
-              <button className="w-full flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+              {/* <button className="w-full flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
                 <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 group-hover:bg-primary group-hover:text-white transition-colors">
                   <span className="material-symbols-outlined text-[20px]">
                     notifications_active
@@ -236,7 +341,7 @@ function MyProfile() {
                 <span className="text-sm font-semibold">
                   Manage Notifications
                 </span>
-              </button>
+              </button> */}
               <button className="w-full flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
                 <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 group-hover:bg-primary group-hover:text-white transition-colors">
                   <span className="material-symbols-outlined text-[20px]">
@@ -245,7 +350,10 @@ function MyProfile() {
                 </div>
                 <span className="text-sm font-semibold">Support Center</span>
               </button>
-              <button className="mt-4 w-full flex items-center justify-center gap-2 p-3 text-red-500 font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+              <button
+                onClick={handleLogout}
+                className="mt-4 w-full flex items-center justify-center gap-2 p-3 text-red-500 font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"
+              >
                 <span className="material-symbols-outlined text-[18px]">
                   logout
                 </span>

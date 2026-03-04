@@ -37,7 +37,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<Root />}>
             <Route index element={<Home />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="profile/edit" element={<EditProfile />} />
             <Route path="event/:id" element={<Event />} />
             <Route path="myticket" element={<MyTicket />} />
 
@@ -46,6 +45,7 @@ createRoot(document.getElementById("root")!).render(
           </Route>
           <Route path="organizer" element={<Organizer />}>
             <Route path="profile" element={<MyProfile />} />
+            <Route path="profile/edit" element={<EditProfile />} />
             <Route index element={<Dashboard />} />
             <Route path="events" element={<EventOrganizer />} />
             <Route
