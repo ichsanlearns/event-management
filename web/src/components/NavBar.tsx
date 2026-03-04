@@ -44,7 +44,7 @@ function Navbar() {
             <nav className="flex gap-8">
               {user?.role === "CUSTOMER" && (
                 <Link
-                  to="/myticket"
+                  to="/profile/myticket"
                   className="text-white/90 hover:text-white text-sm font-semibold transition-colors drop-shadow-sm"
                 >
                   My Ticket
@@ -52,7 +52,7 @@ function Navbar() {
               )}
               {user?.role === "EVENT_ORGANIZER" && (
                 <Link
-                  to="/organizer"
+                  to="/profile/events"
                   className="text-white/90 hover:text-white text-sm font-semibold transition-colors drop-shadow-sm"
                 >
                   Host an Event

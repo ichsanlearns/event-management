@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import SideBar from "../components/SideBar";
 
-function Organizer() {
+function RootProfile() {
   return (
     <div className="flex min-h-screen bg-slate-100 dark:bg-slate-900">
       {/* Sidebar */}
@@ -15,4 +15,4 @@ function Organizer() {
   );
 }
 
-export default Organizer;
+export default RootProfile;

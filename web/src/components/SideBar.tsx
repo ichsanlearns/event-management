@@ -5,6 +5,7 @@ import {
   Users,
   BarChart3,
   LogOut,
+  User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "../types/user.type";
@@ -21,10 +22,42 @@ function SideBar() {
   }, []);
 
   const menu = [
-    { label: "Dashboard", path: "/organizer", icon: LayoutDashboard },
-    { label: "Events", path: "/organizer/events", icon: Calendar },
-    { label: "Approval", path: "/organizer/approval", icon: Users },
-    { label: "Reports", path: "/organizer/report", icon: BarChart3 },
+    {
+      label: "My Profile",
+      path: "/profile",
+      icon: User,
+      role: ["EVENT_ORGANIZER", "CUSTOMER"],
+    },
+    {
+      label: "My Ticket",
+      path: "/profile/myticket",
+      icon: User,
+      role: "CUSTOMER",
+    },
+    {
+      label: "Dashboard",
+      path: "/profile/dashboard",
+      icon: LayoutDashboard,
+      role: "EVENT_ORGANIZER",
+    },
+    {
+      label: "Events",
+      path: "/profile/events",
+      icon: Calendar,
+      role: "EVENT_ORGANIZER",
+    },
+    {
+      label: "Approval",
+      path: "/profile/approval",
+      icon: Users,
+      role: "EVENT_ORGANIZER",
+    },
+    {
+      label: "Reports",
+      path: "/profile/report",
+      icon: BarChart3,
+      role: "EVENT_ORGANIZER",
+    },
   ];
 
   /* =======================
@@ -37,7 +70,7 @@ function SideBar() {
   };
 
   return (
-    <aside className="w-[20%] min-w-55 h-screen bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 hidden lg:flex flex-col">
+    <aside className="w-[20%] min-w-55 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 hidden lg:flex flex-col">
       {/* Logo */}
       <div
         onClick={() => navigate("/")}
@@ -53,27 +86,29 @@ function SideBar() {
         </p>
 
         {menu.map((item) => {
-          const Icon = item.icon;
+          if (item.role.includes(user?.role as string)) {
+            const Icon = item.icon;
 
-          return (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              end={item.path === "/organizer"}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium
+            return (
+              <NavLink
+                key={item.label}
+                to={item.path}
+                end={item.path === "/profile"}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium
         ${isActive ? "bg-indigo-600 text-white shadow-md" : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-600"}`
-              }
-            >
-              <Icon className="w-4 h-4" />
-              {item.label}
-            </NavLink>
-          );
+                }
+              >
+                <Icon className="w-4 h-4" />
+                {item.label}
+              </NavLink>
+            );
+          }
         })}
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+      <div className="fixed bottom-0 p-4 border-t border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-3">
           {/* Profile Link Area */}
           <NavLink
@@ -101,7 +136,7 @@ function SideBar() {
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className="text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"
+            className=" text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"
             aria-label="Logout"
             title="Logout"
           >
