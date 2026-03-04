@@ -5,6 +5,7 @@ import {
   Users,
   BarChart3,
   LogOut,
+  User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "../types/user.type";
@@ -21,7 +22,7 @@ function SideBar() {
   }, []);
 
   const menu = [
-    { label: "My Profile", path: "/organizer/profile", icon: LayoutDashboard },
+    { label: "My Profile", path: "/organizer/profile", icon: User },
     { label: "Dashboard", path: "/organizer", icon: LayoutDashboard },
     { label: "Events", path: "/organizer/events", icon: Calendar },
     { label: "Approval", path: "/organizer/approval", icon: Users },
