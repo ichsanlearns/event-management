@@ -17,7 +17,7 @@ function MyProfile() {
   const [loading, setLoading] = useState(true);
 
   const [image, setImage] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
 
   /* =======================
          FETCH DATA
@@ -47,42 +47,42 @@ function MyProfile() {
   /* =======================
        UPLOAD IMAGE
     ======================= */
-  const handleUploadImage = async () => {
-    if (!image) return;
+  // const handleUploadImage = async () => {
+  //   if (!image) return;
 
-    const formData = new FormData();
-    formData.append("image", image);
+  //   const formData = new FormData();
+  //   formData.append("image", image);
 
-    try {
-      setUploading(true);
-      toast.loading("Uploading profile image...");
+  //   try {
+  //     setUploading(true);
+  //     toast.loading("Uploading profile image...");
 
-      const res = await api.put("/user/profile/image", formData);
+  //     const res = await api.put("/user/profile/image", formData);
 
-      toast.dismiss();
-      toast.success("Successfully uploaded profile image...");
+  //     toast.dismiss();
+  //     toast.success("Successfully uploaded profile image...");
 
-      setUser((prev) => {
-        if (!prev) return prev;
+  //     setUser((prev) => {
+  //       if (!prev) return prev;
 
-        const updatedUser = {
-          ...prev,
-          profile_image: res.data.profile_image,
-        };
+  //       const updatedUser = {
+  //         ...prev,
+  //         profile_image: res.data.profile_image,
+  //       };
 
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        return updatedUser;
-      });
+  //       localStorage.setItem("user", JSON.stringify(updatedUser));
+  //       return updatedUser;
+  //     });
 
-      setImage(null);
-    } catch (error: any) {
-      console.error("UPLOAD ERROR:", error);
-      toast.error(error.response.data.message);
-      alert("Upload foto gagal");
-    } finally {
-      setUploading(false);
-    }
-  };
+  //     setImage(null);
+  //   } catch (error: any) {
+  //     console.error("UPLOAD ERROR:", error);
+  //     toast.error(error.response.data.message);
+  //     alert("Upload foto gagal");
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
   /* =======================
          LOGOUT
       ======================= */

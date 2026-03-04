@@ -5,8 +5,6 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Root from "./routes/Root";
 import Home from "./pages/Home";
 import Payment from "./pages/Payment";
-import Profile from "./pages/Profile";
-import Organizer from "./routes/RootProfile";
 import Dashboard from "./pages/organizer/Dashboard";
 import Approval from "./pages/organizer/Approval";
 import Report from "./pages/organizer/Report";
@@ -19,7 +17,6 @@ import EditProfile from "./pages/EditProfile";
 
 import { Toaster } from "react-hot-toast";
 import MyTicket from "./pages/customer/MyTicket";
-import OrgProfile from "./pages/OrgProfile";
 import AttendeePage from "./pages/organizer/Attendee";
 import { AuthProvider } from "./context/AuthContext";
 import MyProfile from "./pages/organizer/MyProfile";
