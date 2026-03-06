@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 function MyProfile() {
   const navigate = useNavigate();
   const storedUser = localStorage.getItem("user");
+  const [copied, setCopied] = useState(false);
 
   const [user, setUser] = useState<UserProfile | null>(
     storedUser ? JSON.parse(storedUser) : null,
@@ -92,6 +93,14 @@ function MyProfile() {
     navigate("/login");
   };
 
+  async function handleCopy() {
+    if (!user?.referral_code) return;
+    await navigator.clipboard.writeText(user?.referral_code);
+    setCopied(true);
+
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   /* =======================
          STATES
       ======================= */
@@ -143,7 +152,7 @@ function MyProfile() {
           </div>
           <div className="flex gap-3">
             <button
-              onClick={() => navigate("/organizer/profile/edit")}
+              onClick={() => navigate("/profile/edit")}
               className="px-10 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-all shadow-md shadow-primary/20"
             >
               Edit Profile
@@ -288,11 +297,16 @@ function MyProfile() {
                 their first event.
               </p>
               <div className="mt-4 relative group">
-                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-3 px-4 flex items-center justify-between">
+                <div
+                  className={` dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-3 px-4 flex items-center justify-between ${copied ? "" : "bg-white"}`}
+                >
                   <span className="font-mono text-sm font-bold tracking-wider text-slate-900 dark:text-slate-100 uppercase">
-                    ALEXRIVERS-PRO24
+                    {copied ? "Copied..." : user.referral_code}
                   </span>
-                  <button className="text-primary hover:text-primary/80">
+                  <button
+                    onClick={handleCopy}
+                    className={`text-primary hover:text-primary/80 ${copied ? "" : "cursor-pointer"}`}
+                  >
                     <span className="material-symbols-outlined text-[20px]">
                       content_copy
                     </span>

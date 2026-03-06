@@ -5,6 +5,10 @@ export function getProfile() {
   return api.get("/auth/me").then((res) => res.data);
 }
 
+// export function getUserProfile() {
+//   return api.get(API_ENDPOINTS.);
+// }
+
 export const updateProfile = (data: { name: string; email: string }) =>
   api.put("/user/me", data);
 
