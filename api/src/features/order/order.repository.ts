@@ -1,5 +1,8 @@
 import {prisma} from "../../shared/lib/prisma.lib.js";
 import { Status } from "../../generated/prisma/client.js";
+import type { PrismaClient, Prisma } from "../../generated/prisma/client.js";
+
+type DB = PrismaClient | Prisma.TransactionClient;
 
 export const create = async ({orderCode, customerId, ticketId, quantity, status, usingPoint, total}: {orderCode: string, customerId: string, ticketId: string, quantity: number, status: Status, usingPoint: number, total: number})=>{
     await prisma.order.create({
@@ -64,6 +67,20 @@ export const getById = async (id: string)=>{
       },
     },
   });
+}
+
+export const isExist = async (orderId: string)=>{
+    return prisma.order.findUnique({
+        where: { id: orderId },
+    })
+}
+
+export const updateStatus = async ({db, orderId, status}: {db: DB, orderId: string, status: Status})=>{
+    return db.order.update({
+        where: { id: orderId },
+        data: { status, ...(status === "WAITING_CONFIRMATION" && { expired_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) }) },
+      
+    })
 }
 
 export const getAll = async ()=>{
