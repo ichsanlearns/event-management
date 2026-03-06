@@ -6,15 +6,10 @@ import {
   approvedTemplate,
   rejectedTemplate,
 } from "../../shared/utils/email-template.util.js";
+import * as ApprovalRepository from "./approval.repository.js";
 
 export async function getOrdersByStatus(status: Status) {
-  return prisma.order.findMany({
-    where: { status },
-    include: {
-      Customer: true,
-      Ticket: true,
-    },
-  });
+  return ApprovalRepository.getOrdersByStatus(status);
 }
 
 export async function getApprovalQueue(organizerId: string) {
