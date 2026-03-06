@@ -165,7 +165,7 @@ function PaymentWaiting({ order }: { order: IOrder }) {
               check_circle
             </span>
           </div>
-          <div className="border-t border-slate-200 dark:border-slate-600 my-4"></div>
+          <div className="boqrder-t border-slate-200 dark:border-slate-600 my-4"></div>
           <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-4">
             <div>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">

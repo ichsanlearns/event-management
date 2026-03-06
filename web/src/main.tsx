@@ -21,6 +21,7 @@ import AttendeePage from "./pages/organizer/Attendee";
 import { AuthProvider } from "./context/AuthContext";
 import MyProfile from "./pages/organizer/MyProfile";
 import RootProfile from "./routes/RootProfile";
+import Profile from "./pages/Profile";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -34,7 +35,7 @@ createRoot(document.getElementById("root")!).render(
 
           <Route path="/" element={<Root />}>
             <Route index element={<Home />} />
-            {/* <Route path="profile" element={<Profile />} /> */}
+
             <Route path="event/:id" element={<Event />} />
 
             <Route path="payment/:id" element={<Payment />} />
@@ -46,6 +47,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="events" element={<EventOrganizer />} />
             <Route path="attendees/:eventId" element={<AttendeePage />} />
+            <Route path="old" element={<Profile />} />
 
             <Route path="approval" element={<Approval />} />
             <Route path="report" element={<Report />} />
