@@ -124,6 +124,18 @@ export const getOrderUpdatedVoucher = async ({
   });
 };
 
+export const getUserOrderCount = async ({
+  db,
+  eventId,
+}: {
+  db: DB;
+  eventId: string;
+}) => {
+  return await db.order.findMany({
+    where: { Ticket: { event_id: eventId }, deleted_at: { not: null } },
+  });
+};
+
 export const isExist = async ({ db, orderId }: { db: DB; orderId: string }) => {
   return await prisma.order.findUnique({
     where: { id: orderId },
