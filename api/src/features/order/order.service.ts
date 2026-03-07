@@ -25,7 +25,15 @@ export async function create({
 }) {
   return prisma.$transaction(async (tx) => {
     if (total > 0) {
-      const newOrder = await OrderRepository.create({orderCode, customerId, ticketId, quantity, status, usingPoint, total});
+      const newOrder = await OrderRepository.create({
+        orderCode,
+        customerId,
+        ticketId,
+        quantity,
+        status,
+        usingPoint,
+        total,
+      });
 
       if (usingPoint > 0) {
         const point = await tx.point.findUnique({
@@ -40,14 +48,22 @@ export async function create({
           throw new AppError(400, "Point not enough");
         }
 
-        await PointRepository.update(customerId, usingPoint);
+        await PointRepository.update(customerId, -usingPoint);
       }
 
       await TicketRepository.update(ticketId, quantity);
 
       return newOrder;
     } else {
-      const newOrder = await OrderRepository.create({orderCode, customerId, ticketId, quantity, status: "DONE", usingPoint, total});
+      const newOrder = await OrderRepository.create({
+        orderCode,
+        customerId,
+        ticketId,
+        quantity,
+        status: "DONE",
+        usingPoint,
+        total,
+      });
 
       await TicketRepository.update(ticketId, quantity);
 
@@ -127,7 +143,11 @@ export async function getByUserId(customerId: string, status: string) {
   let orders;
   if (status) {
     if (status === "active") {
-      orders = await OrderRepository.getByUserId(customerId, ["PAID", "WAITING_CONFIRMATION", "WAITING_PAYMENT"]);
+      orders = await OrderRepository.getByUserId(customerId, [
+        "PAID",
+        "WAITING_CONFIRMATION",
+        "WAITING_PAYMENT",
+      ]);
     } else if (status === "need_review") {
       orders = await OrderRepository.getByUserId(customerId, ["DONE"]);
     } else {

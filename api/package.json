@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
     "dev": "tsx --watch src/app.ts",
+    "build": "tsc && tsc-alias",
     "seed": "tsx prisma/manualseeding.ts",
-    "start": "npm run build && node dist/src/app.js",
-    "postinstall": "prisma generate",
+    "start": "node dist/src/app.js",
+    "delete": "tsx prisma/deleteeverything.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "delete": "tsx prisma/deleteeverything.ts"
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -46,6 +46,7 @@
     "@types/nodemailer-express-handlebars": "^4.0.6",
     "@types/pg": "^8.16.0",
     "prisma": "^7.3.0",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

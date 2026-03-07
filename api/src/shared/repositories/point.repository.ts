@@ -1,8 +1,18 @@
-import {prisma} from "../lib/prisma.lib.js";
+import type { PrismaClient, Prisma } from "@/generated/prisma/client.js";
 
-export const update = async (userId: string, amount: number)=>{
-    await prisma.point.update({
-        where: { user_id: userId },
-        data: { amount: { decrement: amount } },
-      });
-}
+type DB = PrismaClient | Prisma.TransactionClient;
+
+export const update = async ({
+  db,
+  userId,
+  amount,
+}: {
+  db: DB;
+  userId: string;
+  amount: number;
+}) => {
+  await db.point.update({
+    where: { user_id: userId },
+    data: { amount: { increment: amount } },
+  });
+};

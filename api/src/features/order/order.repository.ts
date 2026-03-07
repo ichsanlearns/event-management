@@ -1,26 +1,42 @@
-import {prisma} from "../../shared/lib/prisma.lib.js";
+import { prisma } from "../../shared/lib/prisma.lib.js";
 import { Status } from "../../generated/prisma/client.js";
 import type { PrismaClient, Prisma } from "../../generated/prisma/client.js";
 
 type DB = PrismaClient | Prisma.TransactionClient;
 
-export const create = async ({orderCode, customerId, ticketId, quantity, status, usingPoint, total}: {orderCode: string, customerId: string, ticketId: string, quantity: number, status: Status, usingPoint: number, total: number})=>{
-    await prisma.order.create({
-        data: {
-          order_code: orderCode,
-          customer_id: customerId,
-          ticket_id: ticketId,
-          quantity,
-          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
-          status,
-          using_point: usingPoint,
-          total: total - usingPoint,
-        },
-      });
-}
+export const create = async ({
+  orderCode,
+  customerId,
+  ticketId,
+  quantity,
+  status,
+  usingPoint,
+  total,
+}: {
+  orderCode: string;
+  customerId: string;
+  ticketId: string;
+  quantity: number;
+  status: Status;
+  usingPoint: number;
+  total: number;
+}) => {
+  await prisma.order.create({
+    data: {
+      order_code: orderCode,
+      customer_id: customerId,
+      ticket_id: ticketId,
+      quantity,
+      expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+      status,
+      using_point: usingPoint,
+      total: total - usingPoint,
+    },
+  });
+};
 
-export const getById = async (id: string)=>{
-    return await prisma.order.findUnique({
+export const getById = async (id: string) => {
+  return await prisma.order.findUnique({
     where: { id },
     select: {
       id: true,
@@ -67,62 +83,74 @@ export const getById = async (id: string)=>{
       },
     },
   });
-}
+};
 
-export const isExist = async (orderId: string)=>{
-    return prisma.order.findUnique({
-        where: { id: orderId },
-    })
-}
+export const isExist = async ({ db, orderId }: { db: DB; orderId: string }) => {
+  return await prisma.order.findUnique({
+    where: { id: orderId },
+  });
+};
 
-export const updateStatus = async ({db, orderId, status}: {db: DB, orderId: string, status: Status})=>{
-    return db.order.update({
-        where: { id: orderId },
-        data: { status, ...(status === "WAITING_CONFIRMATION" && { expired_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) }) },
-      
-    })
-}
+export const updateStatus = async ({
+  db,
+  orderId,
+  status,
+}: {
+  db: DB;
+  orderId: string;
+  status: Status;
+}) => {
+  return db.order.update({
+    where: { id: orderId },
+    data: {
+      status,
+      ...(status === "WAITING_CONFIRMATION" && {
+        expired_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      }),
+    },
+  });
+};
 
-export const getAll = async ()=>{
-    await prisma.order.findMany()
-}
+export const getAll = async () => {
+  await prisma.order.findMany();
+};
 
-export const getByUserId = async (customerId: string, status?: Status[])=>{
-   return await prisma.order.findMany({
-        where: {
-          customer_id: customerId,
-          ...(status && status.length > 0 && {status: { in: status }}),
-        },
+export const getByUserId = async (customerId: string, status?: Status[]) => {
+  return await prisma.order.findMany({
+    where: {
+      customer_id: customerId,
+      ...(status && status.length > 0 && { status: { in: status } }),
+    },
+    select: {
+      id: true,
+      order_code: true,
+      ticket_id: true,
+      voucher_id: true,
+      status: true,
+      quantity: true,
+      using_point: true,
+      total: true,
+      created_at: true,
+      Ticket: {
         select: {
-          id: true,
-          order_code: true,
-          ticket_id: true,
-          voucher_id: true,
-          status: true,
-          quantity: true,
-          using_point: true,
-          total: true,
-          created_at: true,
-          Ticket: {
+          event_id: true,
+          type: true,
+          price: true,
+          EventName: {
             select: {
-              event_id: true,
-              type: true,
-              price: true,
-              EventName: {
-                select: {
-                  id: true,
-                  name: true,
-                  city: true,
-                  hero_image: true,
-                  venue: true,
-                  start_date: true,
-                },
-              },
+              id: true,
+              name: true,
+              city: true,
+              hero_image: true,
+              venue: true,
+              start_date: true,
             },
           },
         },
-        orderBy: {
-          created_at: "desc",
-        },
-      });
-}
+      },
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+  });
+};
