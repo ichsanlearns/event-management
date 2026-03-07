@@ -48,10 +48,14 @@ export async function create({
           throw new AppError(400, "Point not enough");
         }
 
-        await PointRepository.update(customerId, -usingPoint);
+        await PointRepository.update({
+          db: tx,
+          userId: customerId,
+          amount: -usingPoint,
+        });
       }
 
-      await TicketRepository.update(ticketId, quantity);
+      await TicketRepository.update({ db: tx, ticketId, quantity });
 
       return newOrder;
     } else {
@@ -65,7 +69,7 @@ export async function create({
         total,
       });
 
-      await TicketRepository.update(ticketId, quantity);
+      await TicketRepository.update({ db: tx, ticketId, quantity });
 
       return newOrder;
     }

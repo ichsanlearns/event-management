@@ -17,7 +17,7 @@ export async function create(
     | "FAILED",
   proofImage?: string,
 ) {
-  const order = await OrderRepository.isExist(orderId)
+  const order = await OrderRepository.isExist({ db: prisma, orderId });
 
   if (!order) {
     throw new AppError(404, "Order not found");
@@ -32,19 +32,33 @@ export async function create(
     order.expired_at &&
     order.expired_at < new Date()
   ) {
-    await OrderRepository.updateStatus({db: prisma, orderId, status: "EXPIRED"})
+    await OrderRepository.updateStatus({
+      db: prisma,
+      orderId,
+      status: "EXPIRED",
+    });
     throw new AppError(400, "Order has expired");
   }
 
   return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    const payment = await PaymentRepository.create(tx, {orderId, amount, method, status, proofImage})
+    const payment = await PaymentRepository.create(tx, {
+      orderId,
+      amount,
+      method,
+      status,
+      proofImage,
+    });
 
-    await OrderRepository.updateStatus({db: tx, orderId, status: "WAITING_CONFIRMATION"})
+    await OrderRepository.updateStatus({
+      db: tx,
+      orderId,
+      status: "WAITING_CONFIRMATION",
+    });
 
     return payment;
   });
 }
 
 export async function get() {
-  return await PaymentRepository.get()
+  return await PaymentRepository.get();
 }

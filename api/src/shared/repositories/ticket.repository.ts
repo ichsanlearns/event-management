@@ -1,8 +1,19 @@
-import {prisma} from "../lib/prisma.lib.js";
+import { prisma } from "../lib/prisma.lib.js";
+import type { PrismaClient, Prisma } from "@/generated/prisma/client.js";
 
-export const update = async (ticketId: string, quantity: number)=>{
-    await prisma.ticket.update({
-        where: { id: ticketId },
-        data: { bought: { increment: quantity } },
-      });
-}
+type DB = PrismaClient | Prisma.TransactionClient;
+
+export const update = async ({
+  db,
+  ticketId,
+  quantity,
+}: {
+  db: DB;
+  ticketId: string;
+  quantity: number;
+}) => {
+  await db.ticket.update({
+    where: { id: ticketId },
+    data: { bought: { increment: quantity } },
+  });
+};

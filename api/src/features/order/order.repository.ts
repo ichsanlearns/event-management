@@ -85,6 +85,45 @@ export const getById = async (id: string) => {
   });
 };
 
+export const getOrderUpdatedVoucher = async ({
+  db,
+  orderId,
+}: {
+  db: DB;
+  orderId: string;
+}) => {
+  return await db.order.findUnique({
+    where: { id: orderId },
+    select: {
+      id: true,
+      voucher_id: true,
+      customer_id: true,
+      status: true,
+      total: true,
+      order_code: true,
+      quantity: true,
+      using_point: true,
+      expired_at: true,
+      Voucher: {
+        select: { id: true, code: true, discount_amount: true, quota: true },
+      },
+      Ticket: {
+        select: {
+          event_id: true,
+          type: true,
+          price: true,
+          EventName: { select: { name: true, city: true, hero_image: true } },
+        },
+      },
+      Customer: {
+        select: {
+          Coupon: { select: { id: true, amount: true, expired_at: true } },
+        },
+      },
+    },
+  });
+};
+
 export const isExist = async ({ db, orderId }: { db: DB; orderId: string }) => {
   return await prisma.order.findUnique({
     where: { id: orderId },
@@ -107,6 +146,26 @@ export const updateStatus = async ({
       ...(status === "WAITING_CONFIRMATION" && {
         expired_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
       }),
+    },
+  });
+};
+
+export const updateTotal = async ({
+  db,
+  orderId,
+  voucherId,
+  discountAmount,
+}: {
+  db: DB;
+  orderId: string;
+  voucherId: string;
+  discountAmount: number;
+}) => {
+  return await db.order.update({
+    where: { id: orderId },
+    data: {
+      voucher_id: voucherId,
+      total: { decrement: discountAmount },
     },
   });
 };
