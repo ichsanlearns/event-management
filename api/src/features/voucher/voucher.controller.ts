@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from "express";
-import { create, get, getByCode } from "./voucher.service.js";
+import { create, getAll, getByCode } from "./voucher.service.js";
 import { catchAsync } from "../../shared/utils/catch-async.util.js";
 
 export async function createVoucher(req: Request, res: Response) {
@@ -25,7 +25,7 @@ export async function createVoucher(req: Request, res: Response) {
 
 export async function getVoucher(req: Request, res: Response) {
   try {
-    const voucher = await get();
+    const voucher = await getAll();
 
     res.status(200).json({ message: "Event voucher fetched", data: voucher });
   } catch (error) {

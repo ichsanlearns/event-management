@@ -1,7 +1,12 @@
 import { prisma } from "../../shared/lib/prisma.lib.js";
 import { type EventInput } from "../../shared/types/event.type.js";
 import { AppError } from "../../shared/utils/app-error.util.js";
-import { Types } from "../../generated/prisma/enums.js";
+import { Prisma } from "@/generated/prisma/client.js";
+
+import * as EventRepository from "@/features/event/event.repository.js";
+import * as TicketRepository from "@/shared/repositories/ticket.repository.js";
+import * as OrderRepository from "@/features/order/order.repository.js";
+import * as UserRepository from "@/features/user/user.repository.js";
 
 export async function create({
   name,
@@ -18,7 +23,8 @@ export async function create({
   endDate,
 }: EventInput) {
   return await prisma.$transaction(async () => {
-    const event = await prisma.event.create({
+    const event = await EventRepository.create({
+      db: prisma,
       data: {
         name,
         price,
@@ -26,46 +32,27 @@ export async function create({
         category,
         venue,
         city,
-        available_seats: availableSeats,
-        organizer_id: organizerId,
-        hero_image: heroImage,
-        about: about,
-        start_date: startDate,
-        end_date: endDate,
+        availableSeats,
+        organizerId,
+        heroImage,
+        about,
+        startDate,
+        endDate,
       },
     });
 
     if (price !== 0) {
-      await prisma.ticket.createMany({
-        data: [
-          {
-            event_id: event.id,
-            type: Types.EARLYBIRD,
-            price: Math.floor(Number(event.price) * 0.7),
-            quota: Math.floor(availableSeats * (1 / 4)),
-          },
-          {
-            event_id: event.id,
-            type: Types.REGULER,
-            price: Number(event.price),
-            quota: Math.floor(availableSeats * (2 / 4)),
-          },
-          {
-            event_id: event.id,
-            type: Types.VIP,
-            price: Math.floor(Number(event.price) * 1.8),
-            quota: Math.floor(availableSeats * (1 / 4)),
-          },
-        ],
+      await TicketRepository.createMany({
+        db: prisma,
+        eventId: event.id,
+        eventPrice: price,
+        availableSeats,
       });
     } else {
-      await prisma.ticket.create({
-        data: {
-          event_id: event.id,
-          type: Types.VIP,
-          price: 0,
-          quota: availableSeats,
-        },
+      await TicketRepository.create({
+        db: prisma,
+        eventId: event.id,
+        availableSeats,
       });
     }
 
@@ -86,13 +73,7 @@ export async function getAll(limit: number, query?: string) {
     });
   }
 
-  const events = await prisma.event.findMany({
-    include: { Tickets: true },
-    take: limit,
-    orderBy: {
-      start_date: "asc",
-    },
-  });
+  const events = await EventRepository.getAll({ db: prisma, limit });
 
   const mapped = events.map((event: any) => {
     return {
@@ -133,50 +114,27 @@ export async function getSearch({
   category?: string;
   location?: string;
 }) {
-  const where: any = {
-    AND: [],
-  };
-
-  if (query) {
-    where.AND.push({
+  const where: Prisma.EventWhereInput = {
+    ...(query && {
       OR: [
         { name: { startsWith: query, mode: "insensitive" } },
         { name: { contains: query, mode: "insensitive" } },
       ],
-    });
-  }
+    }),
 
-  if (category) {
-    where.AND.push({
+    ...(category && {
       category: category.toUpperCase(),
-    });
-  }
+    }),
 
-  if (location) {
-    where.AND.push({
+    ...(location && {
       city: {
         equals: location,
         mode: "insensitive",
       },
-    });
-  }
+    }),
+  };
 
-  const events = await prisma.event.findMany({
-    where: where.AND.length ? where : undefined,
-    select: {
-      id: true,
-      name: true,
-      venue: true,
-      city: true,
-      start_date: true,
-      category: true,
-      hero_image: true,
-      Tickets: {
-        select: { price: true },
-        orderBy: { price: "asc" },
-      },
-    },
-  });
+  const events = await EventRepository.getSearch({ db: prisma, where });
 
   const mapped = events.map((event) => ({
     id: event.id,
@@ -193,22 +151,20 @@ export async function getSearch({
 }
 
 export async function getById(id: string) {
-  const event = await prisma.event.findUnique({
-    where: { id },
-    include: { Tickets: true },
-  });
+  const event = await EventRepository.isExist({ db: prisma, eventId: id });
 
   if (!event) {
     throw new AppError(404, "Event not found");
   }
 
-  const orderCounts = await prisma.order.findMany({
-    where: { Ticket: { event_id: id }, deleted_at: { not: null } },
+  const orderCounts = await OrderRepository.getUserOrderCount({
+    db: prisma,
+    eventId: id,
   });
 
-  const organizer = await prisma.user.findUnique({
-    where: { id: event.organizer_id },
-    select: { id: true, name: true },
+  const organizer = await UserRepository.getById({
+    db: prisma,
+    userId: event.organizer_id,
   });
 
   const mapped = {
@@ -242,16 +198,9 @@ export async function getById(id: string) {
 }
 
 export async function getByOrganizerId(organizerId: string) {
-  const events = await prisma.event.findMany({
-    where: {
-      organizer_id: organizerId,
-    },
-    include: {
-      Tickets: true,
-    },
-    orderBy: {
-      start_date: "desc",
-    },
+  const events = await EventRepository.getEventsByOrganizerId({
+    db: prisma,
+    organizerId,
   });
 
   const mapped = events.map((event: any) => {
@@ -283,34 +232,17 @@ export async function getByOrganizerId(organizerId: string) {
 }
 
 export async function updateById(id: string, data: any) {
-  return prisma.event.update({
-    where: { id },
-    data: {
-      name: data.name,
-      price: data.price,
-      tagline: data.tagline,
-      category: data.category,
-      venue: data.venue,
-      city: data.city,
-      available_seats: data.availableSeats,
-      hero_image: data.heroImage,
-      about: data.about,
-      start_date: data.startDate,
-      end_date: data.endDate,
-    },
-  });
+  return await EventRepository.updatebyId({ db: prisma, data, id });
 }
 
 export async function remove(id: string) {
-  const event = await prisma.event.findUnique({ where: { id } });
+  const event = await EventRepository.isExist({ db: prisma, eventId: id });
 
   if (!event) {
     throw new AppError(404, "Event not found");
   }
 
-  await prisma.event.delete({
-    where: { id },
-  });
+  await EventRepository.deleteById({ db: prisma, eventId: id });
 
   return true;
 }

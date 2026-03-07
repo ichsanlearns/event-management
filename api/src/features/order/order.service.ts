@@ -2,6 +2,9 @@ import { Prisma } from "../../generated/prisma/client.js";
 import type { Status } from "../../generated/prisma/enums.js";
 import { prisma } from "../../shared/lib/prisma.lib.js";
 import { AppError } from "../../shared/utils/app-error.util.js";
+import * as OrderRepository from "./order.repository.js";
+import * as TicketRepository from "../../shared/repositories/ticket.repository.js";
+import * as PointRepository from "../../shared/repositories/point.repository.js";
 
 export async function create({
   orderCode,
@@ -22,17 +25,14 @@ export async function create({
 }) {
   return prisma.$transaction(async (tx) => {
     if (total > 0) {
-      const newOrder = await tx.order.create({
-        data: {
-          order_code: orderCode,
-          customer_id: customerId,
-          ticket_id: ticketId,
-          quantity,
-          expired_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
-          status,
-          using_point: usingPoint,
-          total: total - usingPoint,
-        },
+      const newOrder = await OrderRepository.create({
+        orderCode,
+        customerId,
+        ticketId,
+        quantity,
+        status,
+        usingPoint,
+        total,
       });
 
       if (usingPoint > 0) {
@@ -48,40 +48,28 @@ export async function create({
           throw new AppError(400, "Point not enough");
         }
 
-        await tx.point.update({
-          where: { user_id: customerId },
-          data: {
-            amount: {
-              decrement: usingPoint,
-            },
-          },
+        await PointRepository.update({
+          db: tx,
+          userId: customerId,
+          amount: -usingPoint,
         });
       }
 
-      await tx.ticket.update({
-        where: { id: ticketId },
-        data: { bought: { increment: quantity } },
-      });
+      await TicketRepository.update({ db: tx, ticketId, quantity });
 
       return newOrder;
     } else {
-      const newOrder = await tx.order.create({
-        data: {
-          order_code: orderCode,
-          customer_id: customerId,
-          ticket_id: ticketId,
-          quantity,
-          expired_at: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-          status: "DONE",
-          using_point: usingPoint,
-          total: total - usingPoint,
-        },
+      const newOrder = await OrderRepository.create({
+        orderCode,
+        customerId,
+        ticketId,
+        quantity,
+        status: "DONE",
+        usingPoint,
+        total,
       });
 
-      await tx.ticket.update({
-        where: { id: ticketId },
-        data: { bought: { increment: quantity } },
-      });
+      await TicketRepository.update({ db: tx, ticketId, quantity });
 
       return newOrder;
     }
@@ -89,56 +77,10 @@ export async function create({
 }
 
 export async function getById(id: string) {
-  const order = await prisma.order.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      voucher_id: true,
-      coupon_id: true,
-      customer_id: true,
-      ticket_id: true,
-      status: true,
-      total: true,
-      order_code: true,
-      quantity: true,
-      using_point: true,
-      expired_at: true,
-      Payments: {
-        select: {
-          id: true,
-          proof_image: true,
-          amount: true,
-          created_at: true,
-        },
-        orderBy: { created_at: "desc" },
-      },
-      Voucher: {
-        select: { id: true, code: true, discount_amount: true, quota: true },
-      },
-      Coupon: {
-        select: { id: true, amount: true, expired_at: true },
-      },
-      Ticket: {
-        select: {
-          event_id: true,
-          type: true,
-          price: true,
-          EventName: { select: { name: true, city: true, hero_image: true } },
-        },
-      },
-      Customer: {
-        select: {
-          Coupon: {
-            where: { deleted_at: null },
-            select: { id: true, amount: true, expired_at: true },
-          },
-        },
-      },
-    },
-  });
+  const order = await OrderRepository.getById(id);
 
   if (!order) {
-    throw new AppError(404, "Event not found");
+    throw new AppError(404, "Order not found");
   }
 
   const mapped = {
@@ -198,152 +140,25 @@ export async function getById(id: string) {
 }
 
 export async function getAll() {
-  return prisma.order.findMany();
+  return OrderRepository.getAll();
 }
 
 export async function getByUserId(customerId: string, status: string) {
   let orders;
   if (status) {
     if (status === "active") {
-      orders = await prisma.order.findMany({
-        where: {
-          customer_id: customerId,
-          status: { in: ["PAID", "WAITING_CONFIRMATION", "WAITING_PAYMENT"] },
-        },
-        select: {
-          id: true,
-          order_code: true,
-          ticket_id: true,
-          voucher_id: true,
-          status: true,
-          quantity: true,
-          using_point: true,
-          total: true,
-          created_at: true,
-          Ticket: {
-            select: {
-              event_id: true,
-              type: true,
-              price: true,
-              EventName: {
-                select: {
-                  id: true,
-                  name: true,
-                  city: true,
-                  hero_image: true,
-                  venue: true,
-                  start_date: true,
-                },
-              },
-            },
-          },
-        },
-      });
+      orders = await OrderRepository.getByUserId(customerId, [
+        "PAID",
+        "WAITING_CONFIRMATION",
+        "WAITING_PAYMENT",
+      ]);
     } else if (status === "need_review") {
-      orders = await prisma.order.findMany({
-        where: {
-          customer_id: customerId,
-          status: "DONE",
-        },
-        select: {
-          id: true,
-          order_code: true,
-          ticket_id: true,
-          voucher_id: true,
-          status: true,
-          quantity: true,
-          using_point: true,
-          total: true,
-          created_at: true,
-          Ticket: {
-            select: {
-              event_id: true,
-              type: true,
-              price: true,
-              EventName: {
-                select: {
-                  id: true,
-                  name: true,
-                  city: true,
-                  hero_image: true,
-                  venue: true,
-                  start_date: true,
-                },
-              },
-            },
-          },
-        },
-      });
+      orders = await OrderRepository.getByUserId(customerId, ["DONE"]);
     } else {
-      orders = await prisma.order.findMany({
-        where: {
-          customer_id: customerId,
-        },
-        select: {
-          id: true,
-          order_code: true,
-          ticket_id: true,
-          voucher_id: true,
-          status: true,
-          quantity: true,
-          using_point: true,
-          total: true,
-          created_at: true,
-          Ticket: {
-            select: {
-              event_id: true,
-              type: true,
-              price: true,
-              EventName: {
-                select: {
-                  id: true,
-                  name: true,
-                  city: true,
-                  hero_image: true,
-                  venue: true,
-                  start_date: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          created_at: "desc",
-        },
-      });
+      orders = await OrderRepository.getByUserId(customerId);
     }
   } else {
-    orders = await prisma.order.findMany({
-      where: { customer_id: customerId },
-      select: {
-        id: true,
-        order_code: true,
-        ticket_id: true,
-        voucher_id: true,
-        status: true,
-        quantity: true,
-        using_point: true,
-        total: true,
-        created_at: true,
-        Ticket: {
-          select: {
-            event_id: true,
-            type: true,
-            price: true,
-            EventName: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-                hero_image: true,
-                venue: true,
-                start_date: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    orders = await OrderRepository.getByUserId(customerId);
   }
 
   const mapped = orders.map((order) => ({

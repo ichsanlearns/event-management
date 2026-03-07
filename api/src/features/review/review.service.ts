@@ -1,13 +1,16 @@
-import { Prisma } from "../../generated/prisma/client.js";
-import { prisma } from "../../shared/lib/prisma.lib.js";
-import type { ReviewInput } from "../../shared/types/review.type.js";
+import { Prisma } from "@/generated/prisma/client.js";
+import { prisma } from "@/shared/lib/prisma.lib.js";
+import type { ReviewInput } from "@/shared/types/review.type.js";
+
+import * as OrderRepository from "@/features/order/order.repository.js";
+import * as ReviewRepository from "@/features/review/review.repository.js";
+import * as PointRepository from "@/shared/repositories/point.repository.js";
 
 export async function create(data: ReviewInput) {
   await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    const order = await tx.order.findUnique({
-      where: {
-        id: data.orderId,
-      },
+    const order = await OrderRepository.isExist({
+      db: tx,
+      orderId: data.orderId,
     });
 
     if (!order) {
@@ -18,42 +21,18 @@ export async function create(data: ReviewInput) {
       throw new Error("Event not completed yet");
     }
 
-    await tx.review.create({
-      data: {
-        user_id: data.userId,
-        event_id: data.eventId,
-        order_id: data.orderId,
-        comment: data.comment,
-        rating: data.rating,
-      },
-    });
+    await ReviewRepository.create({ db: tx, data });
 
-    await tx.point.update({
-      where: {
-        user_id: data.userId,
-      },
-      data: {
-        amount: {
-          increment: 50,
-        },
-      },
-    });
+    await PointRepository.update({ db: tx, userId: data.userId, amount: -50 });
 
-    await tx.order.update({
-      where: {
-        id: data.orderId,
-      },
-      data: {
-        status: "REVIEWED",
-      },
+    await OrderRepository.updateStatus({
+      db: tx,
+      orderId: data.orderId,
+      status: "REVIEWED",
     });
   });
 }
 
 export async function getByEventId(eventId: string) {
-  return await prisma.review.findMany({
-    where: {
-      event_id: eventId,
-    },
-  });
+  return await ReviewRepository.getByEventId({ db: prisma, eventId });
 }

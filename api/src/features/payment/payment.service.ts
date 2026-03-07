@@ -2,6 +2,9 @@ import { Prisma } from "../../generated/prisma/client.js";
 import { prisma } from "../../shared/lib/prisma.lib.js";
 import { AppError } from "../../shared/utils/app-error.util.js";
 
+import * as OrderRepository from "../order/order.repository.js";
+import * as PaymentRepository from "./payment.repository.js";
+
 export async function create(
   orderId: string,
   amount: number,
@@ -14,9 +17,7 @@ export async function create(
     | "FAILED",
   proofImage?: string,
 ) {
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-  });
+  const order = await OrderRepository.isExist({ db: prisma, orderId });
 
   if (!order) {
     throw new AppError(404, "Order not found");
@@ -31,33 +32,27 @@ export async function create(
     order.expired_at &&
     order.expired_at < new Date()
   ) {
-    await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        status: "EXPIRED",
-      },
+    await OrderRepository.updateStatus({
+      db: prisma,
+      orderId,
+      status: "EXPIRED",
     });
     throw new AppError(400, "Order has expired");
   }
 
   return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    const payment = await tx.payment.create({
-      data: {
-        order_id: orderId,
-        amount,
-        method,
-        status: status ?? "WAITING_CONFIRMATION",
-        proof_image: proofImage ?? null,
-        paid_at: new Date(),
-      },
+    const payment = await PaymentRepository.create(tx, {
+      orderId,
+      amount,
+      method,
+      status,
+      proofImage,
     });
 
-    await tx.order.update({
-      where: { id: orderId },
-      data: {
-        status: "WAITING_CONFIRMATION",
-        expired_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      },
+    await OrderRepository.updateStatus({
+      db: tx,
+      orderId,
+      status: "WAITING_CONFIRMATION",
     });
 
     return payment;
@@ -65,5 +60,5 @@ export async function create(
 }
 
 export async function get() {
-  return await prisma.payment.findMany();
+  return await PaymentRepository.get();
 }

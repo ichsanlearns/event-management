@@ -1,6 +1,9 @@
 import { prisma } from "../../shared/lib/prisma.lib.js";
 import { AppError } from "../../shared/utils/app-error.util.js";
 
+import * as voucherRepository from "./voucher.repository.js";
+import * as orderRepository from "../order/order.repository.js";
+
 export async function create(
   eventId: string,
   code: string,
@@ -9,20 +12,19 @@ export async function create(
   startDate: string,
   endDate: string,
 ) {
-  return prisma.voucher.create({
-    data: {
-      event_id: eventId,
-      code,
-      discount_amount: discountAmount,
-      quota,
-      start_date: new Date(startDate),
-      end_date: new Date(endDate),
-    },
+  return await voucherRepository.create({
+    db: prisma,
+    eventId,
+    code,
+    discountAmount,
+    quota,
+    startDate,
+    endDate,
   });
 }
 
-export async function get() {
-  return prisma.voucher.findMany();
+export async function getAll() {
+  return await voucherRepository.getAll({ db: prisma });
 }
 
 export async function getByCode({
@@ -34,37 +36,35 @@ export async function getByCode({
   eventId: string;
   orderId: string;
 }) {
-  await prisma.$transaction(async () => {
-    const result = await prisma.voucher.updateMany({
-      where: { code, event_id: eventId, quota: { gt: 0 } },
-      data: { quota: { decrement: 1 } },
+  await prisma.$transaction(async (tx) => {
+    const result = await voucherRepository.updateMany({
+      db: tx,
+      eventId,
+      code,
     });
 
     if (result.count === 1) {
-      const voucherPick = await prisma.voucher.findUnique({
-        where: { code, event_id: eventId },
-        select: { id: true, code: true, discount_amount: true, quota: true },
+      const voucherPick = await voucherRepository.getByCode({
+        db: tx,
+        code,
+        eventId,
       });
 
       if (!voucherPick) {
         throw new AppError(400, "Voucher can't be found");
       }
 
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          voucher_id: voucherPick?.id,
-          total: { decrement: voucherPick?.discount_amount },
-        },
+      await orderRepository.updateTotal({
+        db: tx,
+        orderId,
+        voucherId: voucherPick?.id,
+        discountAmount: voucherPick?.discount_amount,
       });
 
       return voucherPick;
     }
 
-    const voucherError = await prisma.voucher.findUnique({
-      where: { code },
-      select: { event_id: true, quota: true },
-    });
+    const voucherError = await voucherRepository.isExist({ db: tx, code });
 
     if (!voucherError) {
       throw new AppError(404, "Voucher not found for this event");
@@ -79,35 +79,9 @@ export async function getByCode({
     }
   });
 
-  const updatedOrder = await prisma.order.findUnique({
-    where: { id: orderId },
-    select: {
-      id: true,
-      voucher_id: true,
-      customer_id: true,
-      status: true,
-      total: true,
-      order_code: true,
-      quantity: true,
-      using_point: true,
-      expired_at: true,
-      Voucher: {
-        select: { id: true, code: true, discount_amount: true, quota: true },
-      },
-      Ticket: {
-        select: {
-          event_id: true,
-          type: true,
-          price: true,
-          EventName: { select: { name: true, city: true, hero_image: true } },
-        },
-      },
-      Customer: {
-        select: {
-          Coupon: { select: { id: true, amount: true, expired_at: true } },
-        },
-      },
-    },
+  const updatedOrder = await orderRepository.getOrderUpdatedVoucher({
+    db: prisma,
+    orderId,
   });
 
   if (!updatedOrder) {
