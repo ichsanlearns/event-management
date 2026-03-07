@@ -1,15 +1,11 @@
 import { prisma } from "../../shared/lib/prisma.lib.js";
 
+import * as CouponRepository from "./coupon.repository.js";
+
 export const getByUserId = async (userId: string) => {
-  const vouchers = await prisma.coupon.findMany({
-    where: { user_id: userId },
-    select: {
-      id: true,
-      user_id: true,
-      amount: true,
-      expired_at: true,
-      referrer_id: true,
-    },
+  const vouchers = await CouponRepository.getCouponByUserId({
+    db: prisma,
+    userId,
   });
 
   const mapped = vouchers.map((voucher) => ({
