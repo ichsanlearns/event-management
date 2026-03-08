@@ -1,8 +1,6 @@
 import { prisma } from "../../shared/lib/prisma.lib.js";
 import { Status } from "../../generated/prisma/client.js";
-import type { PrismaClient, Prisma } from "../../generated/prisma/client.js";
-
-type DB = PrismaClient | Prisma.TransactionClient;
+import type { dB } from "@/shared/types/db.type.js";
 
 export const create = async ({
   orderCode,
@@ -89,7 +87,7 @@ export const getOrderUpdatedVoucher = async ({
   db,
   orderId,
 }: {
-  db: DB;
+  db: dB;
   orderId: string;
 }) => {
   return await db.order.findUnique({
@@ -128,7 +126,7 @@ export const getUserOrderCount = async ({
   db,
   eventId,
 }: {
-  db: DB;
+  db: dB;
   eventId: string;
 }) => {
   return await db.order.findMany({
@@ -136,9 +134,25 @@ export const getUserOrderCount = async ({
   });
 };
 
-export const isExist = async ({ db, orderId }: { db: DB; orderId: string }) => {
-  return await prisma.order.findUnique({
+export const isExist = async ({ db, orderId }: { db: dB; orderId: string }) => {
+  return await db.order.findUnique({
     where: { id: orderId },
+  });
+};
+
+export const findWithCustomerEvent = async ({
+  db,
+  orderId,
+}: {
+  db: dB;
+  orderId: string;
+}) => {
+  return await db.order.findUnique({
+    where: { id: orderId },
+    include: {
+      Customer: true,
+      Ticket: { include: { EventName: true } },
+    },
   });
 };
 
@@ -147,7 +161,7 @@ export const updateStatus = async ({
   orderId,
   status,
 }: {
-  db: DB;
+  db: dB;
   orderId: string;
   status: Status;
 }) => {
@@ -168,7 +182,7 @@ export const updateTotal = async ({
   voucherId,
   discountAmount,
 }: {
-  db: DB;
+  db: dB;
   orderId: string;
   voucherId: string;
   discountAmount: number;

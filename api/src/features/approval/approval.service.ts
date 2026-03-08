@@ -7,46 +7,25 @@ import {
   rejectedTemplate,
 } from "../../shared/utils/email-template.util.js";
 import * as ApprovalRepository from "./approval.repository.js";
+import * as OrderRepository from "../order/order.repository.js";
+import * as TicketRepository from "../../shared/repositories/ticket.repository.js";
+import * as VoucherRepository from "../voucher/voucher.repository.js";
+import * as PointRepository from "@/shared/repositories/point.repository.js";
 
 export async function getOrdersByStatus(status: Status) {
-  return ApprovalRepository.getOrdersByStatus(status);
+  return ApprovalRepository.getOrdersByStatus({ db: prisma, status });
 }
 
 export async function getApprovalQueue(organizerId: string) {
-  return prisma.order.findMany({
-    where: {
-      status: Status.WAITING_CONFIRMATION,
-      Ticket: {
-        EventName: {
-          organizer_id: organizerId,
-        },
-      },
-    },
-    include: {
-      Customer: true,
-      Ticket: {
-        include: {
-          EventName: true,
-        },
-      },
-      Payments: true,
-      Voucher: true,
-    },
-    orderBy: {
-      created_at: "desc",
-    },
-  });
+  return await ApprovalRepository.getApprovalQueue({ db: prisma, organizerId });
 }
 
 export async function approveOrder(orderId: string, organizerId: string) {
   const result = await prisma.$transaction(
     async (tx: Prisma.TransactionClient) => {
-      const order = await tx.order.findUnique({
-        where: { id: orderId },
-        include: {
-          Customer: true,
-          Ticket: { include: { EventName: true } },
-        },
+      const order = await OrderRepository.findWithCustomerEvent({
+        db: tx,
+        orderId,
       });
 
       if (!order) throw new Error("Order not found");
@@ -64,26 +43,11 @@ export async function approveOrder(orderId: string, organizerId: string) {
         throw new Error("Seats not enough");
       }
 
-      // UPDATE COUNTER
-      await tx.ticket.update({
-        where: { id: order.ticket_id },
-        data: {
-          bought: { increment: order.quantity },
-        },
-      });
-
-      //  KURANGI SEATS EVENT
-      await tx.event.update({
-        where: { id: order.Ticket.event_id },
-        data: {
-          available_seats: { decrement: order.quantity },
-        },
-      });
-
       //  UPDATE STATUS ORDER
-      const updated = await tx.order.update({
-        where: { id: orderId },
-        data: { status: Status.DONE },
+      const updated = await OrderRepository.updateStatus({
+        db: tx,
+        orderId,
+        status: Status.DONE,
       });
 
       return {
@@ -116,13 +80,9 @@ export async function approveOrder(orderId: string, organizerId: string) {
 export async function rejectOrder(orderId: string, organizerId: string) {
   const result = await prisma.$transaction(
     async (tx: Prisma.TransactionClient) => {
-      const order = await tx.order.findUnique({
-        where: { id: orderId },
-        include: {
-          Customer: true,
-          Ticket: { include: { EventName: true } },
-          Voucher: true,
-        },
+      const order = await OrderRepository.findWithCustomerEvent({
+        db: tx,
+        orderId,
       });
 
       if (!order) throw new Error("Order not found");
@@ -131,40 +91,32 @@ export async function rejectOrder(orderId: string, organizerId: string) {
         throw new Error("Forbidden");
       }
 
-      await tx.ticket.update({
-        where: { id: order.ticket_id },
-        data: {
-          bought: { decrement: order.quantity },
-        },
-      });
-
-      await tx.event.update({
-        where: { id: order.Ticket.event_id },
-        data: {
-          available_seats: { increment: order.quantity },
-        },
+      await TicketRepository.update({
+        db: tx,
+        ticketId: order.ticket_id,
+        quantity: -order.quantity,
       });
 
       if (order.voucher_id) {
-        await tx.voucher.update({
-          where: { id: order.voucher_id },
-          data: { quota: { increment: 1 } },
+        await VoucherRepository.updateQuota({
+          db: tx,
+          voucherId: order.voucher_id,
+          quantity: 1,
         });
       }
 
       if (order.using_point > 0) {
-        await tx.point.create({
-          data: {
-            user_id: order.customer_id,
-            amount: order.using_point,
-            expired_at: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-          },
+        await PointRepository.update({
+          db: tx,
+          userId: order.customer_id,
+          amount: order.using_point,
         });
       }
 
-      const updated = await tx.order.update({
-        where: { id: orderId },
-        data: { status: Status.REJECTED },
+      const updated = await OrderRepository.updateStatus({
+        db: tx,
+        orderId,
+        status: Status.REJECTED,
       });
 
       return {

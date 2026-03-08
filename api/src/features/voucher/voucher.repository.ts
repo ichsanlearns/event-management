@@ -58,6 +58,21 @@ export const updateMany = async ({
   });
 };
 
+export const updateQuota = async ({
+  db,
+  voucherId,
+  quantity,
+}: {
+  db: DB;
+  voucherId: string;
+  quantity: number;
+}) => {
+  return await db.voucher.update({
+    where: { id: voucherId },
+    data: { quota: { increment: quantity } },
+  });
+};
+
 export const getByCode = async ({
   db,
   code,

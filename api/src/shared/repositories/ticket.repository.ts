@@ -1,16 +1,12 @@
-import { prisma } from "../lib/prisma.lib.js";
-import type { PrismaClient, Prisma } from "@/generated/prisma/client.js";
-import type { EventInput } from "../types/event.type.js";
 import { Types } from "../../generated/prisma/enums.js";
-
-type DB = PrismaClient | Prisma.TransactionClient;
+import type { dB } from "../types/db.type.js";
 
 export const update = async ({
   db,
   ticketId,
   quantity,
 }: {
-  db: DB;
+  db: dB;
   ticketId: string;
   quantity: number;
 }) => {
@@ -25,7 +21,7 @@ export const create = async ({
   eventId,
   availableSeats,
 }: {
-  db: DB;
+  db: dB;
   eventId: string;
   availableSeats: number;
 }) => {
@@ -45,7 +41,7 @@ export const createMany = async ({
   eventPrice,
   availableSeats,
 }: {
-  db: DB;
+  db: dB;
   eventId: string;
   eventPrice: number;
   availableSeats: number;
