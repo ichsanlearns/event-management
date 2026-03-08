@@ -1,12 +1,33 @@
-import { Prisma, PrismaClient } from "@/generated/prisma/client.js";
+import type { dB } from "@/shared/types/db.type.js";
 
-type DB = PrismaClient | Prisma.TransactionClient;
+export const create = async ({
+  db,
+  userId,
+  referrerId,
+  amount,
+  expiredAt,
+}: {
+  db: dB;
+  userId: string;
+  referrerId: string;
+  amount: number;
+  expiredAt: Date;
+}) => {
+  return await db.coupon.create({
+    data: {
+      user_id: userId,
+      referrer_id: referrerId,
+      amount: amount,
+      expired_at: expiredAt,
+    },
+  });
+};
 
 export const getCouponByUserId = async ({
   db,
   userId,
 }: {
-  db: DB;
+  db: dB;
   userId: string;
 }) => {
   return await db.coupon.findMany({
