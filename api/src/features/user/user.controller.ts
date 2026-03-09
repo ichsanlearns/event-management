@@ -18,7 +18,10 @@ export const getUserPointAndCoupon = catchAsync(
     const { points, coupons } = await getPointAndCoupon({ userId });
 
     return res.json({
-      total_point: points.reduce((sum, p) => sum + p.amount, 0),
+      total_point: points.reduce(
+        (sum: number, p: { amount: number }) => sum + p.amount,
+        0,
+      ),
       points,
       coupons,
     });

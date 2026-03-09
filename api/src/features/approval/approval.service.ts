@@ -10,7 +10,7 @@ import * as ApprovalRepository from "./approval.repository.js";
 import * as OrderRepository from "../order/order.repository.js";
 import * as TicketRepository from "../../shared/repositories/ticket.repository.js";
 import * as VoucherRepository from "../voucher/voucher.repository.js";
-import * as PointRepository from "@/shared/repositories/point.repository.js";
+import * as PointRepository from "../../shared/repositories/point.repository.js";
 
 export async function getOrdersByStatus(status: Status) {
   return ApprovalRepository.getOrdersByStatus({ db: prisma, status });

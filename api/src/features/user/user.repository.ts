@@ -1,5 +1,5 @@
-import type { Role } from "@/generated/prisma/enums.js";
-import type { dB } from "@/shared/types/db.type.js";
+import type { Role } from "../../generated/prisma/enums.js";
+import type { dB } from "../../shared/types/db.type.js";
 
 export const create = async ({
   db,

@@ -1,4 +1,3 @@
-import { prisma } from "../../shared/lib/prisma.lib.js";
 import type { PrismaClient, Prisma } from "../../generated/prisma/client.js";
 import type { ReviewInput } from "../../shared/types/review.type.js";
 

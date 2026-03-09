@@ -1,7 +1,4 @@
-import { prisma } from "@/shared/lib/prisma.lib.js";
-import type { PrismaClient, Prisma } from "@/generated/prisma/client.js";
-
-type DB = PrismaClient | Prisma.TransactionClient;
+import type { dB } from "../../shared/types/db.type.js";
 
 export const create = async ({
   db,
@@ -12,7 +9,7 @@ export const create = async ({
   startDate,
   endDate,
 }: {
-  db: DB;
+  db: dB;
   eventId: string;
   code: string;
   discountAmount: number;
@@ -20,7 +17,7 @@ export const create = async ({
   startDate: string;
   endDate: string;
 }) => {
-  return await prisma.voucher.create({
+  return await db.voucher.create({
     data: {
       event_id: eventId,
       code,
@@ -32,11 +29,11 @@ export const create = async ({
   });
 };
 
-export const getAll = async ({ db }: { db: DB }) => {
+export const getAll = async ({ db }: { db: dB }) => {
   return await db.voucher.findMany();
 };
 
-export const isExist = async ({ db, code }: { db: DB; code: string }) => {
+export const isExist = async ({ db, code }: { db: dB; code: string }) => {
   return await db.voucher.findUnique({
     where: { code },
     select: { event_id: true, quota: true },
@@ -48,7 +45,7 @@ export const updateMany = async ({
   eventId,
   code,
 }: {
-  db: DB;
+  db: dB;
   eventId: string;
   code: string;
 }) => {
@@ -63,7 +60,7 @@ export const updateQuota = async ({
   voucherId,
   quantity,
 }: {
-  db: DB;
+  db: dB;
   voucherId: string;
   quantity: number;
 }) => {
@@ -78,7 +75,7 @@ export const getByCode = async ({
   code,
   eventId,
 }: {
-  db: DB;
+  db: dB;
   code: string;
   eventId: string;
 }) => {

@@ -1,12 +1,12 @@
 import { prisma } from "../../shared/lib/prisma.lib.js";
 import { type EventInput } from "../../shared/types/event.type.js";
 import { AppError } from "../../shared/utils/app-error.util.js";
-import { Prisma } from "@/generated/prisma/client.js";
+import { Prisma } from "../../generated/prisma/client.js";
 
-import * as EventRepository from "@/features/event/event.repository.js";
-import * as TicketRepository from "@/shared/repositories/ticket.repository.js";
-import * as OrderRepository from "@/features/order/order.repository.js";
-import * as UserRepository from "@/features/user/user.repository.js";
+import * as EventRepository from "../../features/event/event.repository.js";
+import * as TicketRepository from "../../shared/repositories/ticket.repository.js";
+import * as OrderRepository from "../../features/order/order.repository.js";
+import * as UserRepository from "../../features/user/user.repository.js";
 
 export async function create({
   name,

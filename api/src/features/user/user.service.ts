@@ -1,9 +1,9 @@
-import { AppError } from "@/shared/utils/app-error.util.js";
+import { AppError } from "../../shared/utils/app-error.util.js";
 import { prisma } from "../../shared/lib/prisma.lib.js";
-import { comparePassword, hashPassword } from "@/shared/utils/hash.util.js";
+import { comparePassword, hashPassword } from "../../shared/utils/hash.util.js";
 
-import * as PointRepository from "@/shared/repositories/point.repository.js";
-import * as CouponRepository from "@/features/coupon/coupon.repository.js";
+import * as PointRepository from "../../shared/repositories/point.repository.js";
+import * as CouponRepository from "../../features/coupon/coupon.repository.js";
 import * as UserRepository from "./user.repository.js";
 
 export const getPointAndCoupon = async ({ userId }: { userId: string }) => {

@@ -1,4 +1,3 @@
-import { Prisma } from "../../generated/prisma/client.js";
 import { type Request, type Response } from "express";
 import { Role } from "../../generated/prisma/enums.js";
 import { createUser, findByEmail, findByReferral } from "./auth.service.js";

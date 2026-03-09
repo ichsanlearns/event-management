@@ -3,8 +3,8 @@ import { prisma } from "../../shared/lib/prisma.lib.js";
 import { Role } from "../../generated/prisma/enums.js";
 
 import * as UserRepository from "../user/user.repository.js";
-import * as PointRepository from "@/shared/repositories/point.repository.js";
-import * as CouponRepository from "@/features/coupon/coupon.repository.js";
+import * as PointRepository from "../../shared/repositories/point.repository.js";
+import * as CouponRepository from "../../features/coupon/coupon.repository.js";
 
 export async function createUser(
   name: string,

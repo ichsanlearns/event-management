@@ -1,5 +1,5 @@
-import { Prisma, PrismaClient } from "@/generated/prisma/client.js";
-import type { EventInput } from "@/shared/types/event.type.js";
+import { Prisma, PrismaClient } from "../../generated/prisma/client.js";
+import type { EventInput } from "../../shared/types/event.type.js";
 
 type DB = PrismaClient | Prisma.TransactionClient;
 

@@ -1,10 +1,10 @@
-import { Prisma } from "@/generated/prisma/client.js";
-import { prisma } from "@/shared/lib/prisma.lib.js";
-import type { ReviewInput } from "@/shared/types/review.type.js";
+import { Prisma } from "../../generated/prisma/client.js";
+import { prisma } from "../../shared/lib/prisma.lib.js";
+import type { ReviewInput } from "../../shared/types/review.type.js";
 
-import * as OrderRepository from "@/features/order/order.repository.js";
-import * as ReviewRepository from "@/features/review/review.repository.js";
-import * as PointRepository from "@/shared/repositories/point.repository.js";
+import * as OrderRepository from "../order/order.repository.js";
+import * as ReviewRepository from "../review/review.repository.js";
+import * as PointRepository from "../../shared/repositories/point.repository.js";
 
 export async function create(data: ReviewInput) {
   await prisma.$transaction(async (tx: Prisma.TransactionClient) => {

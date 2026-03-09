@@ -1,4 +1,4 @@
-import type { dB } from "@/shared/types/db.type.js";
+import type { dB } from "../../shared/types/db.type.js";
 
 export const create = async ({
   db,
