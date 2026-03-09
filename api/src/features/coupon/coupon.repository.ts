@@ -31,7 +31,12 @@ export const getCouponByUserId = async ({
   userId: string;
 }) => {
   return await db.coupon.findMany({
-    where: { user_id: userId },
+    where: {
+      user_id: userId,
+      expired_at: {
+        gt: new Date(),
+      },
+    },
     select: {
       id: true,
       user_id: true,
@@ -39,5 +44,6 @@ export const getCouponByUserId = async ({
       expired_at: true,
       referrer_id: true,
     },
+    orderBy: { expired_at: "asc" },
   });
 };

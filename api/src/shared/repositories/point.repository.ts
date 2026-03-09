@@ -1,6 +1,4 @@
-import type { PrismaClient, Prisma } from "@/generated/prisma/client.js";
-
-type DB = PrismaClient | Prisma.TransactionClient;
+import type { dB } from "../types/db.type.js";
 
 export const create = async ({
   db,
@@ -8,7 +6,7 @@ export const create = async ({
   amount,
   expiredAt,
 }: {
-  db: DB;
+  db: dB;
   userId: string;
   amount: number;
   expiredAt: Date;
@@ -28,7 +26,7 @@ export const update = async ({
   amount,
   expiredAt,
 }: {
-  db: DB;
+  db: dB;
   userId: string;
   amount: number;
   expiredAt?: Date;
@@ -39,5 +37,17 @@ export const update = async ({
       amount: { increment: amount },
       ...(expiredAt && { expired_at: expiredAt }),
     },
+  });
+};
+
+export const get = async ({ db, userId }: { db: dB; userId: string }) => {
+  return await db.point.findMany({
+    where: {
+      user_id: userId,
+      expired_at: {
+        gt: new Date(),
+      },
+    },
+    orderBy: { expired_at: "asc" },
   });
 };

@@ -1,6 +1,4 @@
 import { type Request, type Response } from "express";
-import { prisma } from "../../shared/lib/prisma.lib.js";
-import { comparePassword, hashPassword } from "../../shared/utils/hash.util.js";
 import { uploadToCloudinary } from "../../shared/services/image.service.js";
 import { catchAsync } from "../../shared/utils/catch-async.util.js";
 import {
@@ -12,7 +10,6 @@ import {
 } from "./user.service.js";
 
 import { getPointAndCoupon } from "./user.service.js";
-import { AppError } from "@/shared/utils/app-error.util.js";
 
 export const getUserPointAndCoupon = catchAsync(
   async (req: Request, res: Response) => {

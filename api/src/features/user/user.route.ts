@@ -4,7 +4,7 @@ import {
   getUserPointAndCoupon,
   updateUserProfile,
   getMe,
-  changePassword,
+  changeUserPassword,
   uploadProfileImage,
   getOrgById,
 } from "./user.controller.js";
@@ -14,7 +14,7 @@ const router = Router();
 
 router.get("/me", authMiddleware, getMe);
 router.put("/me", authMiddleware, updateUserProfile);
-router.put("/change-password", authMiddleware, changePassword);
+router.put("/change-password", authMiddleware, changeUserPassword);
 router.get("/rewards", authMiddleware, getUserPointAndCoupon);
 router.put(
   "/profile/image",

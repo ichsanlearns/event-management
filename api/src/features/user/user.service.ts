@@ -2,42 +2,23 @@ import { AppError } from "@/shared/utils/app-error.util.js";
 import { prisma } from "../../shared/lib/prisma.lib.js";
 import { comparePassword, hashPassword } from "@/shared/utils/hash.util.js";
 
-export const getPointAndCoupon = async ({ userId }: { userId: string }) => {
-  const points = await prisma.point.findMany({
-    where: {
-      user_id: userId,
-      expired_at: {
-        gt: new Date(),
-      },
-    },
-    orderBy: { expired_at: "asc" },
-  });
+import * as PointRepository from "@/shared/repositories/point.repository.js";
+import * as CouponRepository from "@/features/coupon/coupon.repository.js";
+import * as UserRepository from "./user.repository.js";
 
-  const coupons = await prisma.coupon.findMany({
-    where: {
-      user_id: userId,
-      expired_at: {
-        gt: new Date(),
-      },
-    },
-    orderBy: { expired_at: "asc" },
+export const getPointAndCoupon = async ({ userId }: { userId: string }) => {
+  const points = await PointRepository.get({ db: prisma, userId });
+
+  const coupons = await CouponRepository.getCouponByUserId({
+    db: prisma,
+    userId,
   });
 
   return { points, coupons };
 };
 
 export const getUser = async ({ userId }: { userId: string }) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      referral_code: true,
-      Points: true,
-    },
-  });
+  const user = await UserRepository.getById({ db: prisma, userId });
 
   if (!user) {
     throw new AppError(404, "User tidak ditemukan");
@@ -53,10 +34,7 @@ export const updateImage = async ({
   userId: string;
   imageUrl: string;
 }) => {
-  return await prisma.user.update({
-    where: { id: userId },
-    data: { profile_image: imageUrl },
-  });
+  return await UserRepository.updateImage({ db: prisma, userId, imageUrl });
 };
 
 export const changePassword = async ({
@@ -76,15 +54,14 @@ export const changePassword = async ({
     throw new AppError(400, "Confirm password wrong");
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
+  const user = await UserRepository.isExist({ db: prisma, userId });
 
   if (!user) {
     throw new AppError(404, "User not found");
   }
 
   const isMatch = await comparePassword(oldPassword, user.password);
+
   if (!isMatch) {
     throw new AppError(400, "Password does not match");
   }
@@ -92,9 +69,10 @@ export const changePassword = async ({
   const hashedPassword = await hashPassword(newPassword);
 
   if (change) {
-    return await prisma.user.update({
-      where: { id: userId },
-      data: { password: hashedPassword },
+    return UserRepository.updatePassword({
+      db: prisma,
+      userId,
+      password: hashedPassword,
     });
   }
 
@@ -129,50 +107,18 @@ export const updateProfile = async ({
     change: false,
   });
 
-  return await prisma.user.update({
-    where: { id: userId },
-    data: dataToUpdate,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      referral_code: true,
-    },
+  return await UserRepository.updateProfile({
+    db: prisma,
+    userId,
+    dataToUpdate,
   });
 };
 
 export async function getById(orgId: string) {
-  const org = await prisma.user.findFirst({
-    where: { id: orgId, role: "EVENT_ORGANIZER" },
-    select: {
-      name: true,
-      email: true,
-      profile_image: true,
-      Events: {
-        select: {
-          id: true,
-          name: true,
-          price: true,
-          tagline: true,
-          category: true,
-          venue: true,
-          city: true,
-          hero_image: true,
-          about: true,
-          start_date: true,
-          GotReviewed: {
-            select: {
-              id: true,
-              comment: true,
-              rating: true,
-              created_at: true,
-              Customer: { select: { name: true, profile_image: true } },
-            },
-          },
-        },
-      },
-    },
+  const org = await UserRepository.getOrgById({
+    db: prisma,
+    orgId,
+    role: "EVENT_ORGANIZER",
   });
 
   const mapped = {
