@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authMiddleware } from "../../shared/middleware/auth.middleware.js";
 import {
   getUserPointAndCoupon,
-  updateProfile,
+  updateUserProfile,
   getMe,
   changePassword,
   uploadProfileImage,
@@ -13,7 +13,7 @@ import { uploadCloud } from "../../shared/middleware/upload.middleware.js";
 const router = Router();
 
 router.get("/me", authMiddleware, getMe);
-router.put("/me", authMiddleware, updateProfile);
+router.put("/me", authMiddleware, updateUserProfile);
 router.put("/change-password", authMiddleware, changePassword);
 router.get("/rewards", authMiddleware, getUserPointAndCoupon);
 router.put(
