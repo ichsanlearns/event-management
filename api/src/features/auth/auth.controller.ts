@@ -1,7 +1,7 @@
 import { Prisma } from "../../generated/prisma/client.js";
 import { type Request, type Response } from "express";
 import { Role } from "../../generated/prisma/enums.js";
-import { findByEmail, findByReferral } from "./auth.service.js";
+import { createUser, findByEmail, findByReferral } from "./auth.service.js";
 import { generateReferralCode } from "../../shared/utils/referral.util.js";
 import { hashPassword, comparePassword } from "../../shared/utils/hash.util.js";
 import { generateToken } from "../../shared/utils/jwt.util.js";
@@ -34,68 +34,13 @@ export async function register(req: Request, res: Response) {
   const hashedPassword = await hashPassword(password);
 
   // TRANSACTION BIAR AMAN
-  const result = await prisma.$transaction(
-    async (tx: Prisma.TransactionClient) => {
-      // Create user
-      const newUser = await tx.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          role,
-          referral_code: referralCode,
-        },
-      });
-
-      // Jika pakai referral
-      if (referred_by) {
-        const referrer = await tx.user.findUnique({
-          where: { referral_code: referred_by },
-        });
-
-        if (!referrer) {
-          throw new Error("Referral code tidak valid");
-        }
-
-        if (referrer.id === newUser.id) {
-          throw new Error("Tidak bisa menggunakan referral sendiri");
-        }
-
-        if (referrer) {
-          const expiredAt = new Date();
-          expiredAt.setMonth(expiredAt.getMonth() + 3);
-
-          // POINT UNTUK REFERRER
-          await tx.point.upsert({
-            where: {
-              user_id: referrer.id,
-            },
-            update: {
-              amount: {
-                increment: 10000,
-              },
-              expired_at: expiredAt,
-            },
-            create: {
-              user_id: referrer.id,
-              amount: 10000,
-              expired_at: expiredAt,
-            },
-          });
-          // COUPON UNTUK USER BARU
-          await tx.coupon.create({
-            data: {
-              user_id: newUser.id,
-              referrer_id: referrer.id,
-              amount: 10000, // contoh diskon
-              expired_at: expiredAt,
-            },
-          });
-        }
-      }
-
-      return newUser;
-    },
+  const result = await createUser(
+    name,
+    email,
+    hashedPassword,
+    role,
+    referralCode,
+    referred_by,
   );
 
   res.status(201).json({

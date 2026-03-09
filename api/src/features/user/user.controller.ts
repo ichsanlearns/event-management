@@ -1,70 +1,40 @@
 import { type Request, type Response } from "express";
-import { prisma } from "../../shared/lib/prisma.lib.js";
-import { comparePassword, hashPassword } from "../../shared/utils/hash.util.js";
 import { uploadToCloudinary } from "../../shared/services/image.service.js";
 import { catchAsync } from "../../shared/utils/catch-async.util.js";
-import { getById } from "./user.service.js";
+import {
+  changePassword,
+  getById,
+  getUser,
+  updateImage,
+  updateProfile,
+} from "./user.service.js";
 
-export const getUserPointAndCoupon = async (req: Request, res: Response) => {
-  try {
-    const userId = req.user!.id;
+import { getPointAndCoupon } from "./user.service.js";
 
-    const points = await prisma.point.findMany({
-      where: {
-        user_id: userId,
-        expired_at: {
-          gt: new Date(),
-        },
-      },
-      orderBy: { expired_at: "asc" },
-    });
+export const getUserPointAndCoupon = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user!.id as string;
 
-    const coupons = await prisma.coupon.findMany({
-      where: {
-        user_id: userId,
-        expired_at: {
-          gt: new Date(),
-        },
-      },
-      orderBy: { expired_at: "asc" },
-    });
+    const { points, coupons } = await getPointAndCoupon({ userId });
 
     return res.json({
       total_point: points.reduce((sum, p) => sum + p.amount, 0),
       points,
       coupons,
     });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Failed to get rewards",
-    });
-  }
-};
+  },
+);
 
-export async function getMe(req: Request, res: Response) {
+export const getMe = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user!.id;
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      referral_code: true,
-      Points: true,
-    },
-  });
-
-  if (!user) {
-    return res.status(404).json({ message: "User tidak ditemukan" });
-  }
+  const user = await getUser({ userId });
 
   res.json(user);
-}
+});
 
-export async function uploadProfileImage(req: Request, res: Response) {
-  try {
+export const uploadProfileImage = catchAsync(
+  async (req: Request, res: Response) => {
     if (!req.file) {
       return res.status(400).json({ message: "File tidak ditemukan" });
     }
@@ -73,88 +43,37 @@ export async function uploadProfileImage(req: Request, res: Response) {
 
     const imageUrl = await uploadToCloudinary(req.file.buffer, "profile");
 
-    await prisma.user.update({
-      where: { id: userId },
-      data: { profile_image: imageUrl },
-    });
+    await updateImage({ userId, imageUrl });
 
     res.json({
       message: "Upload berhasil",
       profile_image: imageUrl,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Upload gagal" });
-  }
-}
+  },
+);
 
-export async function updateProfile(req: Request, res: Response) {
-  try {
+export const updateUserProfile = catchAsync(
+  async (req: Request, res: Response) => {
     const userId = req.user!.id;
     const { name, email, oldPassword, newPassword, confirmPassword } = req.body;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      return res.status(404).json({ message: "User tidak ditemukan" });
-    }
-
-    const dataToUpdate: any = {
+    const updatedUser = await updateProfile({
+      userId,
       name,
       email,
-    };
-
-    // =====================
-    // OPTIONAL CHANGE PASSWORD
-    // =====================
-    if (oldPassword || newPassword || confirmPassword) {
-      if (!oldPassword || !newPassword || !confirmPassword) {
-        return res.status(400).json({
-          message: "Semua field password wajib diisi",
-        });
-      }
-
-      if (newPassword !== confirmPassword) {
-        return res.status(400).json({
-          message: "Konfirmasi password tidak sama",
-        });
-      }
-
-      const isMatch = await comparePassword(oldPassword, user.password);
-      if (!isMatch) {
-        return res.status(400).json({
-          message: "Password lama salah",
-        });
-      }
-
-      dataToUpdate.password = await hashPassword(newPassword);
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: dataToUpdate,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        referral_code: true,
-      },
+      oldPassword,
+      newPassword,
+      confirmPassword,
     });
 
     res.json({
       message: "Profile berhasil diperbarui",
       user: updatedUser,
     });
-  } catch (error) {
-    console.error("UPDATE PROFILE ERROR:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-}
+  },
+);
 
-export async function changePassword(req: Request, res: Response) {
+export async function changeUserPassword(req: Request, res: Response) {
   const userId = req.user!.id;
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
@@ -162,28 +81,12 @@ export async function changePassword(req: Request, res: Response) {
     return res.status(400).json({ message: "Semua field wajib diisi" });
   }
 
-  if (newPassword !== confirmPassword) {
-    return res.status(400).json({ message: "Konfirmasi password tidak sama" });
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-
-  if (!user) {
-    return res.status(404).json({ message: "User tidak ditemukan" });
-  }
-
-  const isMatch = await comparePassword(oldPassword, user.password);
-  if (!isMatch) {
-    return res.status(400).json({ message: "Password lama salah" });
-  }
-
-  const hashedPassword = await hashPassword(newPassword);
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: { password: hashedPassword },
+  await await changePassword({
+    userId,
+    oldPassword,
+    newPassword,
+    confirmPassword,
+    change: true,
   });
 
   res.status(200).json({ message: "Password berhasil diubah" });
